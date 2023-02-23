@@ -141,6 +141,12 @@ man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 10e-9, dy=None, dz
 r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
 r2.show()
 
+# simulate waveguide and its guidedness 
+waveguide = Waveguide(structures=waveguide_cells_R,
+engine=engine
+)
+r3 = waveguide.simulate("guidedness",target_freq=target_frequency)
+print(r3["x"])
 
 # file = open("OptimizeList.txt","a") 
 # file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
