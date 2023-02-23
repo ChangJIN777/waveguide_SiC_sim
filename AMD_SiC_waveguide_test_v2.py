@@ -138,20 +138,18 @@ P = (Q*Qsc) / (Vmode*Vmode)
 print("Q: %f, P: %f" % ( Q, P))
 
 Vmode_value = Vmode*((resonance_f/n_f)**3)
-fitness = np.sqrt((Qsc/Qwvg)*(Q*Qsc/(Vmode_value**2))*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
+fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
 
 r1 = cavity.get_results("resonance")[0]
 print(r1['res']["xyprofile"].max_loc())
 print(r1['res']["yzprofile"].max_loc())
-print("Fitness %f.2"%(fitness))
+print("Fitness %f"%(fitness))
 r1["sess_res"].show()
 # ======================================================================================
 
 # # evaluate the quasipotential
 # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
 # r2.show()
-
-
 
 # file = open("OptimizeList.txt","a") 
 # file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
