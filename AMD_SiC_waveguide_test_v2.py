@@ -96,7 +96,7 @@ waveguide_cells_R = []
 for i in range(WN):
     waveguide_box_R = BoxStructure(Vec3(0), Vec3(a-((i+1)*a_wvg_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
     waveguide_hole_R = CylinderStructure(Vec3(0), h0, r0-((i+1)*r_wvg_tr), DielectricMaterial(1, order=1, color="blue"))
-    waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a-(i*a_wvg_tr)), engine=engine)]
+    waveguide_cells_R += [Waveguide(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a-(i*a_wvg_tr)), engine=engine)]
 
 cavity = Cavity1D(
 unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + waveguide_cells_R,
@@ -137,10 +137,10 @@ man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 10e-9, dy=None, dz
 # r1["sess_res"].show()
 # # ======================================================================================
 
-# # evaluate the quasipotential
-# r2 = cavity.simulate("quasipotential", target_freq=target_frequency, k=0.47)
-# r2.show()
+# evaluate the quasipotential
+r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
+r2.show()
 
-file = open("OptimizeList.txt","a") 
-file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
-file.close()
+# file = open("OptimizeList.txt","a") 
+# file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
+# file.close()
