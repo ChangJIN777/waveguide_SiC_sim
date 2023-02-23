@@ -124,7 +124,6 @@ print("Q: %f, P: %f" % ( Q, P))
 # debugging 
 print("Qsc: %f Qwvg: %f" %(Qsc, Qsc))
 
-Vmode_value = Vmode*((resonance_f/n_f)**3)
 fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
 
 r1 = cavity.get_results("resonance")[0]
