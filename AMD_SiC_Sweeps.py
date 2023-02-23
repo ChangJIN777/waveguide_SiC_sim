@@ -21,6 +21,7 @@ def fitness(params):
 	t = params[3] # taper prefactor
 	# added parameter for simulating the waveguide 
 	cellNum_R = params[4]
+	cellNum_R = int(cellNum_R)
     
     # define geometry parameters
     #taper cell number
