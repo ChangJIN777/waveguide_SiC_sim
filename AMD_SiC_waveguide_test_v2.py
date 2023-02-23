@@ -137,14 +137,17 @@ Q = 1/((1/Qsc) + (1/Qwvg))
 P = (Q*Qsc) / (Vmode*Vmode)
 print("Q: %f, P: %f" % ( Q, P))
 
-Vmode_value = Vmode*((resonance_f/n_f)**3)
-fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
+# debugging 
+print("Qsc: %f Qwvg: %f" %(Qsc, Qsc))
 
-r1 = cavity.get_results("resonance")[0]
-print(r1['res']["xyprofile"].max_loc())
-print(r1['res']["yzprofile"].max_loc())
-print("Fitness %f"%(fitness))
-r1["sess_res"].show()
+# Vmode_value = Vmode*((resonance_f/n_f)**3)
+# fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
+
+# r1 = cavity.get_results("resonance")[0]
+# print(r1['res']["xyprofile"].max_loc())
+# print(r1['res']["yzprofile"].max_loc())
+# print("Fitness %f"%(fitness))
+# r1["sess_res"].show()
 # ======================================================================================
 
 # # evaluate the quasipotential
