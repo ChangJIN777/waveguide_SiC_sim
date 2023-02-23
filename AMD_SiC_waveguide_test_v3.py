@@ -54,18 +54,10 @@ r0 = (d*a)/2
 amin = t*a
 #min taper hole diameter 
 rmin = (t*d*a)/2
-#min tapered lattice (waveguide)
-amin_wvg = t_wvg*a 
-#min taper hole diameter (waveguide)
-rmin_wvg = d*amin_wvg/2
 #radius taper rate (for the defect taper region)
 r_tr = (r0-rmin) / TN
 #lattice taper rate
 a_tr = (a-amin) / TN
-#radius taper rate (for the waveguide region)
-r_wvg_tr = (r0-rmin_wvg)/WN
-#lattice taper rate (for the waveguide region)
-a_wvg_tr = (a-amin_wvg)/WN
 #refractive index of the material we are trying to simulate (SiC = 2.6)
 n_f = 2.6
 
