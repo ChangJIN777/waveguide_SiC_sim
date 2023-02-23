@@ -130,7 +130,7 @@ def fitness(params):
 
 	return -1*fitness
 
-p0 = [3.20e-07, 6.56e-01, 1.75e+00, 7.00e-01]
+p0 = [3.20e-07, 6.56e-01, 1.75e+00, 7.00e-01, 3]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
 
 
