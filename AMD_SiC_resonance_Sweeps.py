@@ -108,6 +108,9 @@ def fitness(params):
 	Vmode = r1["vmode"]
 	F = r1["freq"]
 
+	resonance_f = float(F) # the resonance frequency 
+	resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
+	
 	Q = 1/((1/Qsc) + (1/Qwvg))
 	P = (Q*Qsc) / (Vmode*Vmode)
 	print("Q: %f, P: %f" % ( Q, P))
@@ -120,7 +123,9 @@ def fitness(params):
 	file.write("\n" + str(params) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
 	file.close()
 
-	return -1*Q
+	# define the fitness as Q/V with the resonance frequency Gaussian penalty
+	fitness = P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25)
+	return -1*fitness
 
 p0 = [2.90e-07, 6.56e-01, 1.75e+00, 7.00e-01]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
