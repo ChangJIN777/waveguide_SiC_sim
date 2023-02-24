@@ -124,7 +124,7 @@ def fitness(params):
 	file.close()
 
 	# define the fitness as Q/V with the resonance frequency Gaussian penalty
-	fitness = P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25)
+	fitness = (Q/Vmode)*np.exp(-((target_wavelength-resonance_wavelength)**2)/25)
 	return -1*fitness
 
 p0 = [2.90e-07, 6.56e-01, 1.75e+00, 7.00e-01]
