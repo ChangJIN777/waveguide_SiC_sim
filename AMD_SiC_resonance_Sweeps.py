@@ -118,17 +118,24 @@ def fitness(params):
 
 	r1 = cavity.get_results("resonance")[0]
 
-	print(a)
-	file = open("OptimizeListFull_2.txt","a") 
-	#file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
-	file.write("\n" + str(params) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
-	file.close()
-
 	# define the fitness as Q/V with the resonance frequency Gaussian penalty
 	fitness = (Q/Vmode)*np.exp(-((target_wavelength-resonance_wavelength)**2)/25)
+ 
+	print(a)
+	# store the parameter data 
+	file_param = open("OptimizeListFull_param_2.txt","a") 
+	for i in params:
+		file_param.write(str(i) + " ")
+	file_param.write("\n")
+	file_param.close()
+	file = open("OptimizeListFull_2.txt","a") 
+	#file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
+	file.write("\n" + str(Q) + " " + str(Vmode)+ " " + str(F) + str(fitness) + "\n")
+	file.close()
+	
 	return -1*fitness
 
-p0 = [2.90e-07, 6.56e-01, 1.75e+00, 7.00e-01]
+p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
 
 # print out the results
