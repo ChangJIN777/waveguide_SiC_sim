@@ -130,7 +130,7 @@ def fitness(params):
 	file_param.close()
 	file = open("OptimizeListFull_2.txt","a") 
 	#file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
-	file.write("\n" + str(Q) + " " + str(Vmode)+ " " + str(F) + str(fitness) + "\n")
+	file.write("\n" + str(Q) + "," + str(Vmode)+ "," + str(F) + "," + str(fitness) + "\n")
 	file.close()
 	
 	return -1*fitness

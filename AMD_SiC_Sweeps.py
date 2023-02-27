@@ -16,8 +16,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation 
 from matplotlib import style
 
-def animate(i):
-	
 
 def fitness(params):
 
@@ -130,7 +128,7 @@ def fitness(params):
 	r1 = cavity.get_results("resonance")[0]
 
 	print(a)
-	file = open("OptimizeListFull_2.txt","a") 
+	file = open("OptimizeListFull_waveguide_sweep.txt","a") 
 	#file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
 	file.write("\n" + str(params) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
 	file.close()
@@ -139,7 +137,7 @@ def fitness(params):
 
 	return -1*fitness
 
-p0 = [2.90e-07, 6.56e-01, 1.75e+00, 7.00e-01, 3]
+p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01, 3]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
 
 
