@@ -15,7 +15,7 @@ import matplotlib.animation as animation
 from matplotlib import style
 
 # simulating the unit cell band structures
-def bandStructSim(a,d,w,n_f,h0=220e-9,kmin,kmax,k_grating):
+def bandStructSim(a,d,w,n_f,kmin,kmax,k_grating,h0=220e-9):
     """this function simulate the band structure of a unit cell with parameters given by the inputs
         a: the lattice constant 
         d: hole diameter prefactor 
@@ -52,4 +52,4 @@ n_f = 2.6
 kmin = -np.pi/a
 kmax = np.pi/a
 k_grating = 10
-bandStructSim(a,d,w,n_f,h0=220e-9,kmin,kmax,k_grating)
+bandStructSim(a,d,w,n_f,kmin,kmax,k_grating)
