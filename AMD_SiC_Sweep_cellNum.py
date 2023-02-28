@@ -9,56 +9,56 @@ import os
 import csv
 import struct
 
-import matplotlib.pyplot as plt 
-import matplotlib.animation as animation 
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from matplotlib import style
 
+
 def fitness(params):
-    
-	# added parameter for simulating the waveguide 
+
+	# added parameter for simulating the waveguide
 	cellNum_R = params[0]
     cellNum_L = params[1]
 	cellNum_R = int(cellNum_R)
     cellNum_L = int(cellNum_L)
-    
     # define geometry parameters
-    #taper cell number
+    # taper cell number
 	TN = 8
-    #mirror cell number (on the left side)
+    # mirror cell number (on the left side)
 	# MN = 24-TN
     # MN = cellNum_L
-    #defect cell number
+    # defect cell number
 	CN = 0
-    #lattice constant
+    # lattice constant
 	a = 2.97688965e-07
-    #hole diameter prefactor
+    # hole diameter prefactor
 	d = 6.63014844e-01
-    #beam width prefactor
+    # beam width prefactor
 	w = 1.73572998e+00
-    #taper prefactor
+    # taper prefactor
 	t = 7.48911133e-01
-    #beam height (set by epi-layer thickness)
+    # beam height (set by epi-layer thickness)
 	h0 = 220e-9
     # cavity beam length
 	l = 15e-6
     # The target resonance frequency, in Hz
 	target_frequency = 327.3e12 # 327THz
 	target_wavelength = 9.16e-07 # 916nm
- 
+
     # Define geometry dependencies
-    #beam width
+    # beam width
 	w0 = w*a
     # Radius of the air holes in the cells
 	r0 = (d*a)/2
-    #min tapered lattice
+    # min tapered lattice
 	amin = t*a
-    #min taper hole diameter 
+    # min taper hole diameter 
 	rmin = (t*d*a)/2
-    #radius taper rate
+    # radius taper rate
 	r_tr = (r0-rmin) / TN
-    #lattice taper rate
+    # lattice taper rate
 	a_tr = (a-amin) / TN
-	#refractive index of the material we are trying to simulate (SiC = 2.6)
+	# refractive index of the material we are trying to simulate (SiC = 2.6)
 	n_f = 2.6
 
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
@@ -100,7 +100,7 @@ def fitness(params):
     # By setting the save path here, the cavity will save itself after each simulation to this file
 	cavity.save("cavity.obj")
 
-    #define mesh size (use 10nm for accuracy, currently set to 12nm)
+    # define mesh size (use 10nm for accuracy, currently set to 12nm)
 	man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
 
 	r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,4))
