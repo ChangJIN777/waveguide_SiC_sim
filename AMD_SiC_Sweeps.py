@@ -150,7 +150,7 @@ def fitness(params):
 	return -1*fitness
 
 p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01, 5]
-bnds = ((2.95e-07,3.00e-07),(0.5,0.7),(0,None),(0,0.8),(3,16))
+bnds = ((0,None),(0,None),(0,None),(0,None),(3,16))
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead',bounds=bnds)
 
 
