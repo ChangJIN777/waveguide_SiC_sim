@@ -12,6 +12,7 @@ import scipy.optimize
 import numpy as np
 import os
 import csv
+import struct
 
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation 
@@ -139,11 +140,12 @@ def fitness(params):
 	# writing the data into a csv file instead of a txt file for easier data analysis 
 	with open("OptimizeListFull_waveguide_parameters.csv","wb") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
-		params_str = ["%f" % x for x in params]
-		writer.writerow(params_str)
+		params_bytes = bytes()
+		params_bytes = params_bytes.join((struct.pack('f',val) for val in params))
+		writer.writerow(params_bytes)
 	with open("OptimizeListFull_waveguide_char.csv","wb") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
-		writer.writerow([str(Q),str(Vmode),str(F),str(detuning_wavelength),str(fitness)])
+		writer.writerow([bytes(Q),bytes(Vmode),bytes(F),bytes(detuning_wavelength),bytes(fitness)])
 
 
 	return -1*fitness
