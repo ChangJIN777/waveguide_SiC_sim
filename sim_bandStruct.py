@@ -28,7 +28,7 @@ def bandStructSim(a,d,w,n_f,fmin,fmax,f_grating,h0=220e-9):
     # Radius of the air holes in the cells
     r0 = (d*a)/2
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-    engine = LumericalEngine(mesh_accuracy=4, hide=False, lumerical_path=FDTDloc, working_path="./fsps", save_fsp=False)
+    engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, working_path="./fsps", save_fsp=False)
 
     # building the unit cell 
     # the sim material is set to be SiC with refractive index = 2.6 
