@@ -138,10 +138,10 @@ def fitness(params):
 	# file.write("\n" + str(params) + "\t" + str(Q) + "\t" + str(Vmode)+ "\t" + str(F) + "\n")
 	# file.close()
 	# writing the data into a csv file instead of a txt file for easier data analysis 
-	with open("OptimizeListFull_waveguide_parameters.csv","wb") as file_csv:
+	with open("OptimizeListFull_waveguide_parameters.csv","w") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
 		writer.writerow(params)
-	with open("OptimizeListFull_waveguide_char.csv","wb") as file_csv:
+	with open("OptimizeListFull_waveguide_char.csv","w") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
 		writer.writerow([Q,Vmode,F,detuning_wavelength,fitness])
 
