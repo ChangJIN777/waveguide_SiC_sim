@@ -14,7 +14,7 @@ import matplotlib.animation as animation
 from matplotlib import style
 
 
-def fitness(params):
+def simulate_fitness(params):
 
     # added parameter for simulating the waveguide
     cellNum_R = params
@@ -135,7 +135,7 @@ def fitness(params):
     return -1*fitness
 
 for i in range(3,16):
-    sim_Fitness = fitness(i)
+    sim_Fitness = simulate_fitness(i)
         
 
 # p0 = [5,16]
