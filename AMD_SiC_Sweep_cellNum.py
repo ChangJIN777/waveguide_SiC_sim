@@ -17,7 +17,7 @@ from matplotlib import style
 def fitness(params):
 
     # added parameter for simulating the waveguide
-    cellNum_R = params[0]
+    cellNum_R = params
     cellNum_R = int(cellNum_R)
     # define geometry parameters
     # taper cell number
