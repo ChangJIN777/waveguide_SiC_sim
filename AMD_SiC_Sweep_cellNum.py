@@ -135,7 +135,7 @@ def fitness(params):
     return -1*fitness
 
 for i in range(3,16):
-    fitness = fitness(i)
+    sim_Fitness = fitness(i)
         
 
 # p0 = [5,16]
