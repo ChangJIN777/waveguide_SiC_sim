@@ -36,7 +36,7 @@ def bandStructSim(a,d,w,n_f,kmin,kmax,k_grating,h0=220e-9):
     mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
     simulate_unit_cell = UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)
     
-    cell.simulate("bandstructure", ks=(0, 0.5, 50), freqs=(kmin, kmax, k_grating))
+    simulate_unit_cell.simulate("bandstructure", ks=(0, 0.5, 50), freqs=(kmin, kmax, k_grating))
     
     return 
 
