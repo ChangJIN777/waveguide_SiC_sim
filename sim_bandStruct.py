@@ -49,9 +49,9 @@ w = 1.73572998
 #refractive index of the dielectric material 
 n_f = 2.6
 #define the frequency range 
-target_frequency = 327.3e12 
-freq_span = 300e12
+target_frequency = 327.3e12 #Hz 
+freq_span = 50e12 #Hz
 fmin = target_frequency-freq_span
 fmax = target_frequency+freq_span
-f_grating = 50
+f_grating = 5
 bandStructSim(a,d,w,n_f,fmin,fmax,f_grating)
