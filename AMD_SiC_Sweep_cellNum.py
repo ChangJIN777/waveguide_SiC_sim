@@ -63,11 +63,6 @@ def fitness(params):
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
     engine = LumericalEngine(mesh_accuracy=3, hide=True, lumerical_path=FDTDloc, save_fsp=False) # not saving the file 
     # engine = LumericalEngine(mesh_accuracy=3, hide=True, lumerical_path=FDTDloc, working_path="./fsps", save_fsp=False)
-    
-    # record the parameter list
-    with open("OptimizeListFull_waveguide_Sweep_cellNum.csv","a") as file_csv:
-        writer = csv.writer(file_csv, delimiter="\t")
-        writer.writerow(params)
 
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
@@ -135,7 +130,7 @@ def fitness(params):
     # writing the data into a csv file instead of a txt file for easier data analysis 
     with open("OptimizeListFull_waveguide_Sweep_char.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
-        writer.writerow([Q,Vmode,F,detuning_wavelength,fitness])
+        writer.writerow([params,Q,Vmode,F,detuning_wavelength,fitness])
 
     return -1*fitness
 
