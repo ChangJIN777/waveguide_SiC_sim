@@ -18,15 +18,13 @@ def fitness(params):
 
     # added parameter for simulating the waveguide
     cellNum_R = params[0]
-    cellNum_L = params[1]
     cellNum_R = int(cellNum_R)
-    cellNum_L = int(cellNum_L)
     # define geometry parameters
     # taper cell number
     TN = 8
     # mirror cell number (on the left side)
     # MN = 24-TN
-    # MN = cellNum_L
+    cellNum_L = 24-TN
     # defect cell number
     CN = 0
     # lattice constant
@@ -139,10 +137,13 @@ def fitness(params):
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([Q,Vmode,F,detuning_wavelength,fitness])
 
-
     return -1*fitness
 
-p0 = [5,16]
-bnds = ((3,16),(3,30))
-popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead',bounds=bnds)
+for i in range(3,16):
+    fitness = fitness(i)
+        
+
+# p0 = [5,16]
+# bnds = ((3,16),(3,30))
+# popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead',bounds=bnds)
 
