@@ -1,0 +1,84 @@
+Ansys Lumerical 2021 R2 FDTD Solver Version 8.26.2717 (Linux 64bit)
+ expires (month/day/year): 10/14/2023
+using config file: Ansys Licensing set with ANSYSLMD_LICENSE_FILE
+license host: 1055@research-license-ansys.int.seas.harvard.edu
+current time: Tue Feb 28 18:52:01 2023
+Running on host: holy7c24101.rc.fas.harvard.edu
+host available memory (GB): 96.894161
+All processes are communicating and ready to proceed to simulation...
+Running fsp file: /n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/bin/fdtd-engine-mpich2nem -t 1 -remote /n/home11/cjin/fasrc/waveguide_SiC_sim/fsps/2200a9d4-17be-49ba-a3ff-a988cb0145ad/2200a9d4-17be-49ba-a3ff-a988cb0145ad.fsp
+number of processors is 16
+processors are distributed as: 2x2x4
+Running 3D Simulation
+Starting meshing
+Simulation size in gridpoints: 11 x 16 x 13
+Refined 0 mesh cells (0%)
+Completed meshing!
+Meshing complete in 0.01 seconds of CPU time
+0 0
+Starting meshing
+Simulation size in gridpoints: 11 x 16 x 13
+Refined 0 mesh cells (0%)
+Completed meshing!
+Meshing complete in 0 seconds of CPU time
+0 0
+Starting meshing
+Simulation size in gridpoints: 11 x 16 x 13
+Refined 0 mesh cells (0%)
+Completed meshing!
+Meshing complete in 0 seconds of CPU time
+0 0
+finished material properties
+Meshing Time: 0.001885 seconds, Init Electrical Material Time: 0.000273 seconds, Init Magnetic Material Time: 9e-06
+Using selected optimization level: 2
+Selecting 3d kernel for splitFieldDirection=0 and optLevel=2
+-----------------------------------------
+Beginning initialization of 3D Simulation
+Starting to add sources to simulation
+Adding 3D point source
+Adding 3D point source
+Adding 3D point source
+Adding 3D point source
+Adding 3D point source
+Starting to add boundary conditions to simulation
+Adding 3D Parallel bloch BC
+Adding 3D Parallel BC
+Adding 3D Anti-Symmetric BC
+Adding 3D Parallel BC
+Adding 3D PML BC
+Adding 3D Parallel BC
+Starting to add monitors to Simulation
+Adding analysis monitor
+Adding 3D Time monitor
+Adding 3D Time monitor
+Adding 3D Time monitor
+Adding 3D Time monitor
+Adding 3D Time monitor
+Finished initialization of 3D Simulation
+-----------------------------------------
+All processes are communicating and ready to proceed to simulation...
+Starting 19042 total iterations
+0.25208% complete. Max time remaining: 6 secs. Auto Shutoff: 1
+1.2604% complete. Max time remaining: 5 secs. Auto Shutoff: 1
+2.60483% complete. Max time remaining: 5 secs. Auto Shutoff: 1
+5.29369% complete. Max time remaining: 5 secs. Auto Shutoff: 1
+10.6714% complete. Max time remaining: 5 secs. Auto Shutoff: 0.772272
+21.4268% complete. Max time remaining: 4 secs. Auto Shutoff: 0.773533
+42.9377% complete. Max time remaining: 3 secs. Auto Shutoff: 0.769073
+64.4486% complete. Max time remaining: 2 secs. Auto Shutoff: 0.768775
+85.9594% complete. Max time remaining: 1 secs. Auto Shutoff: 0.759934
+100% complete. Max time remaining: 0 secs. Auto Shutoff: 0.762144
+Completed 19042 iterations, or 6.000145e-13s of Simulation Time
+Process 0 starting to collect data
+    collecting monitor data
+    collecting source data
+Finished collecting data
+Simulation completed successfully at: Tue Feb 28 18:52:48 2023
+Overall wall time measurements in seconds: 53.2921
+    time to mesh and initialize: 0.047566
+    time to run FDTD simulation: 47.0952
+    time to checkpoint simulation: 1e-06
+    time to finalize data and save to files: 0.134123
+    miscellaneous time: 6.01526
+    FDTD solver speed on process 0: 0.925107 Mnodes/s
+    total FDTD solver speed on 16 processes: 14.8017 Mnodes/s
