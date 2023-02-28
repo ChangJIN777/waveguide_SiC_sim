@@ -2,7 +2,7 @@
 % solver 
 clear; clc;
 %% import and store the data from the txt file 
-data = importdata("OptimizeListFull_2.txt");
+data = importdata("OptimizeListFull_waveguide_sweep.txt");
 Q_sim = data.data(:,1);
 V_sim = data.data(:,2); 
 resonance_f = data.data(:,3);

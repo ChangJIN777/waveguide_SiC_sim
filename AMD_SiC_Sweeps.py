@@ -11,6 +11,7 @@ from wvgsolver.engine import LumericalEngine
 import scipy.optimize
 import numpy as np
 import os
+import csv
 
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation 
@@ -120,7 +121,8 @@ def fitness(params):
  
 	resonance_f = float(F) # the resonance frequency 
 	resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
-
+	detuning_wavelength = target_wavelength-resonance_wavelength
+ 
 	Q = 1/((1/Qsc) + (1/Qwvg))
 	P = (Q*Qsc) / (Vmode*Vmode)
 	print("Q: %f, P: %f" % ( Q, P))
@@ -128,17 +130,26 @@ def fitness(params):
 	r1 = cavity.get_results("resonance")[0]
 
 	print(a)
-	file = open("OptimizeListFull_waveguide_sweep.txt","a") 
-	#file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
-	file.write("\n" + str(params) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
-	file.close()
+	fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength)**2)/25))
 
-	fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
+	# file = open("OptimizeListFull_waveguide_sweep.txt","a") 
+	# #file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
+	# file.write("\n" + str(params) + "\t" + str(Q) + "\t" + str(Vmode)+ "\t" + str(F) + "\n")
+	# file.close()
+	# writing the data into a csv file instead of a txt file for easier data analysis 
+	with open("OptimizeListFull_waveguide_parameters.csv","wb") as file_csv:
+		writer = csv.writer(file_csv, delimiter="\t")
+		writer.writerow(params)
+	with open("OptimizeListFull_waveguide_char.csv","wb") as file_csv:
+		writer = csv.writer(file_csv, delimiter="\t")
+		writer.writerow([str(Q),str(Vmode),str(F),str(detuning_wavelength),str(fitness)])
+
 
 	return -1*fitness
 
-p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01, 3]
-popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
+p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01, 5]
+bnds = ((2.95e-07,3.00e-07),(0.5,0.7),(0,None),(0,0.8),(3,16))
+popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead',bounds=bnds)
 
 
 
