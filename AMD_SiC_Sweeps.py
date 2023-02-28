@@ -74,7 +74,7 @@ def fitness(params):
 	# engine = LumericalEngine(mesh_accuracy=3, hide=True, lumerical_path=FDTDloc, working_path="./fsps", save_fsp=False)
 	
 	# record the parameter list
-	with open("OptimizeListFull_waveguide_parameters.csv","w") as file_csv:
+	with open("OptimizeListFull_waveguide_parameters.csv","a") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
 		writer.writerow(params)
 
@@ -142,7 +142,7 @@ def fitness(params):
 	# file.write("\n" + str(params) + "\t" + str(Q) + "\t" + str(Vmode)+ "\t" + str(F) + "\n")
 	# file.close()
 	# writing the data into a csv file instead of a txt file for easier data analysis 
-	with open("OptimizeListFull_waveguide_char.csv","w") as file_csv:
+	with open("OptimizeListFull_waveguide_char.csv","a") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
 		writer.writerow([Q,Vmode,F,detuning_wavelength,fitness])
 
