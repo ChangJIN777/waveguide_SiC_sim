@@ -15,7 +15,7 @@ import matplotlib.animation as animation
 from matplotlib import style
 
 # simulating the unit cell band structures
-def bandStructSim(a,d,w,n_f,kmin,kmax,k_grating,h0=220e-9):
+def bandStructSim(a,d,w,n_f,fmin,fmax,f_grating,h0=220e-9):
     """this function simulate the band structure of a unit cell with parameters given by the inputs
         a: the lattice constant 
         d: hole diameter prefactor 
@@ -36,7 +36,7 @@ def bandStructSim(a,d,w,n_f,kmin,kmax,k_grating,h0=220e-9):
     mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
     simulate_unit_cell = UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)
     
-    simulate_unit_cell.simulate("bandstructure", ks=(0, 0.5, 50), freqs=(kmin, kmax, k_grating))
+    simulate_unit_cell.simulate("bandstructure", freqs=(fmin, fmax, f_grating))
     
     return 
 
@@ -48,8 +48,10 @@ d = 0.663014844
 w = 1.73572998
 #refractive index of the dielectric material 
 n_f = 2.6
-#define the wave vectors 
-kmin = -np.pi/a
-kmax = np.pi/a
-k_grating = 10
-bandStructSim(a,d,w,n_f,kmin,kmax,k_grating)
+#define the frequency range 
+target_frequency = 327.3e12 
+freq_span = 300e12
+fmin = target_frequency-freq_span
+fmax = target_frequency+freq_span
+f_grating = 50
+bandStructSim(a,d,w,n_f,fmin,fmax,f_grating)
