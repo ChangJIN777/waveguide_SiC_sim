@@ -140,12 +140,10 @@ def fitness(params):
 	# writing the data into a csv file instead of a txt file for easier data analysis 
 	with open("OptimizeListFull_waveguide_parameters.csv","wb") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
-		params_bytes = []
-		for i in params: params_bytes.append(bytes(i))
-		writer.writerow(params_bytes)
+		writer.writerow(params)
 	with open("OptimizeListFull_waveguide_char.csv","wb") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
-		writer.writerow([bytes(Q),bytes(Vmode),bytes(F),bytes(detuning_wavelength),bytes(fitness)])
+		writer.writerow([Q,Vmode,F,detuning_wavelength,fitness])
 
 
 	return -1*fitness
