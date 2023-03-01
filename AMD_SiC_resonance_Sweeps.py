@@ -135,10 +135,9 @@ def fitness(params):
     # file.write("\n" + str(Q) + "," + str(Vmode)+ "," + str(F) + "," + str(fitness) + "\n")
     # file.close()
     
-    sim_data = params + [Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness]
     with open("./sim_data/OptimizeListFull_resonance_sweep.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
-        writer.writerow(sim_data)
+        writer.writerow([a,d,w,t,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
     
     return -1*fitness
 
