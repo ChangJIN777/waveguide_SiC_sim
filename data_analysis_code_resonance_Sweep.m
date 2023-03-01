@@ -2,22 +2,31 @@
 % solver 
 clear; clc;
 %% import and store the data from the txt file 
-data = importdata("OptimizeListFull_waveguide_Sweep_char.csv");
-cellNum = data(:,1);
-Q_sim = data(:,2); 
-resonance_f = data(:,4);
-resonance_wavelength = (3e8)./resonance_f;
-wavelength_detune = data(:,5);
-calc_fitness = data(:,6)
+data = importdata("OptimizeListFull_resonance_sweep.csv");
+sim_run = linspace(1,length(a),60);
+a = data(:,1);
+d = data(:,2); 
+w = data(:,3);
+t = data(:,4);
+Q_sim = data(:,5);
+Q_sc = data(:,6);
+Q_wvg = data(:,7);
+V_mode = data(:,8);
+wavelength_detune = data(:,9);
+calc_fitness = data(:,10);
 %% plot the Q 
 figure; hold off;
-plot(cellNum,Q_sim);
-xlabel("Weak mirror cell num"); ylabel("simulated Q");
-%% plot the mode volume 
+plot(sim_run,calc_fitness);
+xlabel("simulation run"); ylabel("simulated fitness");
+%% plot the wavelength detune
 figure; hold off;
-plot(cellNum,wavelength_detune);
-xlabel("Weak mirror cell num"); ylabel("simulated detuning (m)");
-%% plot the wavelength detune 
+plot(sim_run,wavelength_detune);
+xlabel("simulation run"); ylabel("simulated detuning (m)");
+%% plot the Q_scatter
 figure; hold off;
-plot(cellNum,calc_fitness);
-xlabel("Weak mirror cell num"); ylabel("simulated fitness");
+plot(sim_run,Q_sc);
+xlabel("simulation run"); ylabel("simulated Q scatter");
+%% plot the Q_waveguide
+figure; hold off;
+plot(sim_run,Q_wvg);
+xlabel("simulation run"); ylabel("simulated Q waveguide");

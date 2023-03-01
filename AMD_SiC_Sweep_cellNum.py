@@ -28,13 +28,13 @@ def simulate_fitness(params):
     # defect cell number
     CN = 0
     # lattice constant
-    a = 2.97688965e-07
+    a = 3.099696960314788e-07
     # hole diameter prefactor
-    d = 6.63014844e-01
+    d = 0.666313707301812
     # beam width prefactor
-    w = 1.73572998e+00
+    w = 1.685635464014841
     # taper prefactor
-    t = 7.48911133e-01
+    t = 0.797063997763745
     # beam height (set by epi-layer thickness)
     h0 = 220e-9
     # cavity beam length
