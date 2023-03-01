@@ -16,14 +16,10 @@ import scipy.constants
 # in this script, we will be using the traditional method of putting different number of mirror unit cells on each side of the defect region
 
 # Define geometry paramaters 
-#waveguide taper cell number
-WN = 6 
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
 MN_L = 24-TN
-#mirror cell number (right region)
-MN_R = 12-TN
 #defect cell number
 CN = 0
 #lattice constant
@@ -33,7 +29,7 @@ d = 0.64
 #beam width prefactor
 w = 1.75
 #taper prefactor (for the defect region)
-t = 0.7
+t = 7.48911133e-01
 #beam height (set by epi-layer thickness)
 h0 = 220e-9
 # cavity beam length
@@ -43,6 +39,14 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 target_wavelength = 9.16e-07
+# the number of unit cells in the weaker mirror region
+cellNum_R = 4
+    
+# added waveguide region ===========================================
+t_wvg = 7.48911133e-01
+# the taper cell number for the waveguide region 
+waveguide_TN = 6
+
 
 # Define geometry dependencies
 
@@ -60,6 +64,16 @@ r_tr = (r0-rmin) / TN
 a_tr = (a-amin) / TN
 #refractive index of the material we are trying to simulate (SiC = 2.6)
 n_f = 2.6
+# added specifically for the waveguide region of the device =============
+#min tapered lattice in the waveguide region 
+amin_wvg = t_wvg*a
+#min taper hole radius 
+rmin_wvg = d*amin_wvg/2
+#radius taper rate (waveguide region)
+r_tr_wvg = (r0-rmin_wvg) / waveguide_TN
+#lattice taper rate (waveguide region)
+a_tr_wvg = (a-amin_wvg) / waveguide_TN
+
 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
@@ -69,12 +83,13 @@ engine = LumericalEngine(mesh_accuracy=4, hide=False, lumerical_path=FDTDloc, wo
 cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
 mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
 mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_L
-mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_R
+mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * cellNum_R
 cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
 
 i = 1
 taper_cells_L = []
 taper_cells_R = []
+wvg_cells_R = []
 while i < TN: 
     taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
@@ -86,8 +101,14 @@ while i < TN:
 
     i = i+1 
 
+# construct the waveguide region 
+for i in range(waveguide_TN):
+	wvg_box_R = BoxStructure(Vec3(0), Vec3(a-((i+1)*a_tr_wvg),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+	wvg_hole_R = CylinderStructure(Vec3(0), h0, r0-((i+1)*r_tr_wvg), DielectricMaterial(1, order=1, color="blue"))
+	wvg_cells_R += [UnitCell(structures=[ wvg_box_R, wvg_hole_R ], size=Vec3(a-((i+1)*a_tr_wvg)), engine=engine)]
+ 
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right,
+unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + wvg_cells_R,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 engine=engine
 )
@@ -133,10 +154,10 @@ print("Fitness %f"%(fitness))
 r1["sess_res"].show()
 # ======================================================================================
 
-# # evaluate the quasipotential
-# r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
-# r2.show()
+# evaluate the quasipotential
+r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
+r2.show()
 
-# file = open("OptimizeList.txt","a") 
-# file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
-# file.close()
+file = open("OptimizeList_test_waveguide.txt","a") 
+file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
+file.close()
