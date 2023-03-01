@@ -43,7 +43,7 @@ target_wavelength = 9.16e-07
 cellNum_R = 4
     
 # added waveguide region ===========================================
-t_wvg = 7.48911133e-01
+t_wvg = 6.24e-01
 # the taper cell number for the waveguide region 
 waveguide_TN = 5
 
