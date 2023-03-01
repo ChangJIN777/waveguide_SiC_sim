@@ -121,7 +121,7 @@ def runSim(params):
     )
     ##======================================================================================================
     # By setting the save path here, the cavity will save itself after each simulation to this file
-    # cavity.save("cavity.obj")
+    cavity.save("cavity.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 15nm)
     man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
@@ -131,12 +131,10 @@ def runSim(params):
 
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
-    r1["freq"], r1["vmode"],
-    1/(1/r1["qxmin"] + 1/r1["qxmax"]),
-    1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+        r1["freq"], r1["vmode"],
+        1/(1/r1["qxmin"] + 1/r1["qxmax"]),
+        1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     ))
-    r1["xyprofile"].show()
-    r1["yzprofile"].show()
 
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
@@ -150,7 +148,9 @@ def runSim(params):
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f" % ( Q, P))
 
-    # debugging 
+    r1 = cavity.get_results("resonance")[0]
+    
+    # for debugging purposes  
     print("Qsc: %f Qwvg: %f" %(Qsc, Qwvg))
 
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
