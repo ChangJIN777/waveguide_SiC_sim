@@ -119,7 +119,7 @@ def fitness(params):
  
  
 	cavity = Cavity1D(
-      unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + wvg_cells_R ,
+      unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right  ,
       structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
       engine=engine
     )
