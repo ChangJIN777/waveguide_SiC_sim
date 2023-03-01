@@ -45,7 +45,7 @@ cellNum_R = 4
 # added waveguide region ===========================================
 t_wvg = 7.48911133e-01
 # the taper cell number for the waveguide region 
-waveguide_TN = 6
+waveguide_TN = 5
 
 
 # Define geometry dependencies
@@ -143,7 +143,7 @@ P = (Q*Qsc) / (Vmode*Vmode)
 print("Q: %f, P: %f" % ( Q, P))
 
 # debugging 
-print("Qsc: %f Qwvg: %f" %(Qsc, Qsc))
+print("Qsc: %f Qwvg: %f" %(Qsc, Qwvg))
 
 fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
 
@@ -159,5 +159,5 @@ r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
 r2.show()
 
 file = open("OptimizeList_test_waveguide.txt","a") 
-file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + " " + str(fitness) + "\n") 
+file.write("\n" + str(a) + " " + str(Q) + " " + str(Qwvg) + " " + str(Qsc) + " " + str(Vmode)+ " " + str(F) + " " + str(fitness) + "\n") 
 file.close()
