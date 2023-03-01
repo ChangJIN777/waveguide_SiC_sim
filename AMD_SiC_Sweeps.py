@@ -100,6 +100,7 @@ def fitness(params):
 	i = 1
 	taper_cells_L = []
 	taper_cells_R = []
+	wvg_cells_R = []
 	while i < TN: 
 		taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
 		taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
