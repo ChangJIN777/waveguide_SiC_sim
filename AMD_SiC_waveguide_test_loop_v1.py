@@ -168,9 +168,9 @@ def runSim(params):
 
 
 cellNum_R_min = 3
-cellNum_R_max = 4 # set to 16 after testing 
+cellNum_R_max = 16 # set to 16 after testing 
 waveguide_TN_min = 3
-waveguide_TN_max = 4 # set to 10 after testing
+waveguide_TN_max = 10 # set to 10 after testing
 
 for cellNum_R in range(cellNum_R_min,cellNum_R_max):
     for waveguide_TN in range(waveguide_TN_min,waveguide_TN_max):
