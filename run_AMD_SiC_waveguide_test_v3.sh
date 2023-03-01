@@ -1,4 +1,3 @@
-#!/bin/bash
 module load Anaconda3 #Load Anaconda module
 source activate wv_sol_env # activate the wavesolver environment
 module load intel/21.2.0-fasrc01
