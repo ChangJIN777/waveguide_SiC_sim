@@ -116,8 +116,8 @@ engine=engine
 # By setting the save path here, the cavity will save itself after each simulation to this file
 # cavity.save("cavity.obj")
 
-#define mesh size (use 12nm for accuracy, currently set to 50nm)
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
+#define mesh size (use 12nm for accuracy, currently set to 20nm)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q =================================================
 r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,4))
@@ -148,10 +148,10 @@ print("Qsc: %f Qwvg: %f" %(Qsc, Qsc))
 fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
 
 r1 = cavity.get_results("resonance")[0]
-print(r1['res']["xyprofile"].max_loc())
-print(r1['res']["yzprofile"].max_loc())
-print("Fitness %f"%(fitness))
-r1["sess_res"].show()
+# print(r1['res']["xyprofile"].max_loc())
+# print(r1['res']["yzprofile"].max_loc())
+# print("Fitness %f"%(fitness))
+# r1["sess_res"].show()
 # ======================================================================================
 
 # evaluate the quasipotential
@@ -159,5 +159,5 @@ r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
 r2.show()
 
 file = open("OptimizeList_test_waveguide.txt","a") 
-file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
+file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + " " + str(fitness) + "\n") 
 file.close()
