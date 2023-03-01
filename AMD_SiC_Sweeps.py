@@ -25,9 +25,13 @@ def fitness(params):
 	d = params[1] # hole diameter prefactor 
 	w = params[2] # beam width prefactor 
 	t = params[3] # taper prefactor
+	t_wvg = params[4] # the taper prefactor of the waveguide region
 	# added parameter for simulating the waveguide 
-	cellNum_R = params[4]
-	cellNum_R = int(cellNum_R)
+ 
+	# the number of unit cells in the weaker mirror region
+	cellNum_R = 4
+	# the taper cell number for the waveguide region 
+	waveguide_TN = 6
     
     # define geometry parameters
     #taper cell number
@@ -59,7 +63,7 @@ def fitness(params):
 	r0 = (d*a)/2
     #min tapered lattice
 	amin = t*a
-    #min taper hole diameter 
+    #min taper hole radius 
 	rmin = (t*d*a)/2
     #radius taper rate
 	r_tr = (r0-rmin) / TN
@@ -67,6 +71,15 @@ def fitness(params):
 	a_tr = (a-amin) / TN
 	#refractive index of the material we are trying to simulate (SiC = 2.6)
 	n_f = 2.6
+	# added specifically for the waveguide region of the device =============
+	#min tapered lattice in the waveguide region 
+	amin_wvg = t_wvg*a
+	#min taper hole radius 
+	rmin_wvg = d*amin_wvg/2
+	#radius taper rate (waveguide region)
+	r_tr_wvg = (r0-rmin_wvg) / waveguide_TN
+    #lattice taper rate (waveguide region)
+	a_tr_wvg = (a-amin_wvg) / waveguide_TN
 
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 	FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
@@ -74,7 +87,7 @@ def fitness(params):
 	# engine = LumericalEngine(mesh_accuracy=3, hide=True, lumerical_path=FDTDloc, working_path="./fsps", save_fsp=False)
 	
 	# record the parameter list
-	with open("OptimizeListFull_waveguide_parameters.csv","a") as file_csv:
+	with open("OptimizeListFull_with_waveguide_parameters.csv","a") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
 		writer.writerow(params)
 
@@ -97,9 +110,15 @@ def fitness(params):
 		taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
 
 		i = i+1 
-
+	# construct the waveguide region 
+	for i in range(waveguide_TN):
+		wvg_box_R = BoxStructure(Vec3(0), Vec3(a-((i+1)*a_tr_wvg),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+		wvg_hole_R = CylinderStructure(Vec3(0), h0, r0-((i+1)*r_tr_wvg), DielectricMaterial(1, order=1, color="blue"))
+		wvg_cells_R += [UnitCell(structures=[ wvg_box_R, wvg_hole_R ], size=Vec3(a-((i+1)*a_tr_wvg)), engine=engine)]
+ 
+ 
 	cavity = Cavity1D(
-      unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right ,
+      unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + wvg_cells_R ,
       structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
       engine=engine
     )
@@ -142,15 +161,15 @@ def fitness(params):
 	# file.write("\n" + str(params) + "\t" + str(Q) + "\t" + str(Vmode)+ "\t" + str(F) + "\n")
 	# file.close()
 	# writing the data into a csv file instead of a txt file for easier data analysis 
-	with open("OptimizeListFull_waveguide_char.csv","a") as file_csv:
+	with open("OptimizeListFull_with_waveguide_char.csv","a") as file_csv:
 		writer = csv.writer(file_csv, delimiter="\t")
 		writer.writerow([Q,Vmode,F,detuning_wavelength,fitness])
 
 
 	return -1*fitness
 
-p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01, 5]
-bnds = ((0,None),(0,None),(0,None),(0,None),(3,16))
+p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01, 7.48911133e-01]
+bnds = ((0,None),(0,None),(0,None),(0,1),(0,1))
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead',bounds=bnds)
 
 
