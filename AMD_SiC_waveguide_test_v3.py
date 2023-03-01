@@ -41,6 +41,8 @@ target_frequency = 327.3e12
 target_wavelength = 9.16e-07
 # the number of unit cells in the weaker mirror region
 cellNum_R = 4
+#the prefactor characterizing the right mirror region 
+prefactor_mirror_R = 0.9
     
 # added waveguide region ===========================================
 t_wvg = 7.9075e-01
@@ -83,7 +85,11 @@ engine = LumericalEngine(mesh_accuracy=4, hide=False, lumerical_path=FDTDloc, sa
 cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
 mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
 mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_L
-mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * cellNum_R
+# added to modify the quasipotential associated with the right mirror region 
+a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
+cell_box_R = BoxStructure(Vec3(0), Vec3(a_R,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+mirror_hole_R = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
+mirror_cells_right = [UnitCell(structures=[ cell_box_R, mirror_hole_R ], size=Vec3(a), engine=engine)] * cellNum_R
 cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
 
 i = 1
