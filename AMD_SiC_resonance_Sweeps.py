@@ -146,16 +146,6 @@ def fitness(params):
     fitness = P*np.exp(-((detuning_wavelength)**2)/25)
  
     print(a)
-    # # store the parameter data 
-    # file_param = open("OptimizeListFull_param_2.txt","a") 
-    # for i in params:
-    # 	file_param.write(str(i) + " ")
-    # file_param.write("\n")
-    # file_param.close()
-    # file = open("OptimizeListFull_2.txt","a") 
-    # #file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n")
-    # file.write("\n" + str(Q) + "," + str(Vmode)+ "," + str(F) + "," + str(fitness) + "\n")
-    # file.close()
     
     with open("./sim_data/OptimizeListFull_resonance_sweep.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
@@ -163,21 +153,8 @@ def fitness(params):
     
     return -1*fitness
 
-sim_run = 0
-fig = plt.figure()
-ax = fig.add_subplot(1,1,1)
-xs = []
-ys = []
-
 p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
-sim_rum = 1 + sim_run
 
-# live plot the optimization progress
-yi = popt.fun
-animate(ax,sim_rum,yi,xs,ys)
-
-# print out the results
-print(popt.fun)
 
 
