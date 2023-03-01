@@ -23,11 +23,11 @@ MN_L = 24-TN
 #defect cell number
 CN = 0
 #lattice constant
-a = 290e-9
+a = 2.97688965e-07
 #hole diameter prefactor 
-d = 0.64
+d = 6.63014844e-01
 #beam width prefactor
-w = 1.75
+w = 1.73572998e+00
 #taper prefactor (for the defect region)
 t = 7.48911133e-01
 #beam height (set by epi-layer thickness)
@@ -77,7 +77,7 @@ a_tr_wvg = (a-amin_wvg) / waveguide_TN
 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-engine = LumericalEngine(mesh_accuracy=4, hide=False, lumerical_path=FDTDloc, working_path="./fsps", save_fsp=False)
+engine = LumericalEngine(mesh_accuracy=4, hide=False, lumerical_path=FDTDloc, save_fsp=False)
 
 # the sim material is set to be SiC with refractive index = 2.6 
 cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
@@ -114,7 +114,7 @@ engine=engine
 )
 
 # By setting the save path here, the cavity will save itself after each simulation to this file
-cavity.save("cavity.obj")
+# cavity.save("cavity.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 50nm)
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 10e-9, dy=None, dz=None)
