@@ -145,6 +145,6 @@ p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
 
 # print out the results
-print(popt)
+print(popt.fun)
 
 
