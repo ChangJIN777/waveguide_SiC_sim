@@ -7,12 +7,34 @@ from wvgsolver import Cavity1D, UnitCell, Vec3
 from wvgsolver.geometry import BoxStructure, CylinderStructure, DielectricMaterial, MeshRegion
 from wvgsolver.utils import BBox
 from wvgsolver.engine import LumericalEngine
+import datetime as dt 
+import matplotlib.pyplot as plt 
+import matplotlib.animation as animation 
 
 import scipy.optimize
 import numpy as np
 import os
 import csv 
 
+# animation function 
+def animate(ax,xi,yi, xs, ys):
+    """
+    ax: the figure to plot the data on
+    xi, yi: the input x and y values to be added to the plot 
+    xs, ys: the x and y lists containing all the data
+    """
+    # Add x and y to lists
+    xs.append(xi)
+    ys.append(yi)
+    
+    # Draw x and y lists
+    ax.clear()
+    ax.plot(xs, ys)
+
+    # Format plot
+    plt.xticks(rotation=45, ha='right')
+    plt.xlabel('sim run')
+    plt.ylabel('Fitness value')
 
 def fitness(params):
 
@@ -141,8 +163,19 @@ def fitness(params):
     
     return -1*fitness
 
+sim_run = 0
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
+xs = []
+ys = []
+
 p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
+sim_rum = 1 + sim_run
+
+# live plot the optimization progress
+yi = popt.fun
+animate(ax,sim_rum,yi,xs,ys)
 
 # print out the results
 print(popt.fun)
