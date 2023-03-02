@@ -123,8 +123,8 @@ def runSim(params):
     # By setting the save path here, the cavity will save itself after each simulation to this file
     cavity.save("cavity.obj")
 
-    #define mesh size (use 12nm for accuracy, currently set to 15nm)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
+    #define mesh size (use 12nm for accuracy, currently set to 12nm)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,0.9e-6,0.75e-6)), 12e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q =================================================
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,4))
