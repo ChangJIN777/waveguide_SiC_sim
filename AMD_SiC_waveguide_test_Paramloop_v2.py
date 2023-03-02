@@ -186,10 +186,10 @@ t_wvg_max = 1
 t_wvg_list = np.linspace(t_wvg_min,t_wvg_max,5)
 
 # loop through the list of parameters 
-for t_wvg in tqdm(t_wvg_list):
+for t_wvg in t_wvg_list:
     for prefactor_mirror_R in prefactor_mirror_R_list:
         for cellNum_R in range(cellNum_R_min,cellNum_R_max):
-            for waveguide_TN in range(waveguide_TN_min,waveguide_TN_max):
+            for waveguide_TN in tqdm(range(waveguide_TN_min,waveguide_TN_max)):
                 test_params = [cellNum_R,waveguide_TN,prefactor_mirror_R,t_wvg]
                 temp = runSim(test_params)
                 print("the calculated fitness: %f" % (temp))
