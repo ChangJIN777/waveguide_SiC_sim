@@ -150,6 +150,7 @@ def runSim(params):
 
     r1 = cavity.get_results("resonance")[0]
     
+    Vmode_exp = 0.4
     # for debugging purposes  
     print("Qsc: %f Qwvg: %f" %(Qsc, Qwvg))
 
