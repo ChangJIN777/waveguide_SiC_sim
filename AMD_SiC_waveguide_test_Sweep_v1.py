@@ -124,7 +124,7 @@ def runSim(params):
     cavity.save("cavity.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,0.75e-6,0.625e-6)), 12e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q =================================================
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,4))
@@ -135,7 +135,11 @@ def runSim(params):
         1/(1/r1["qxmin"] + 1/r1["qxmax"]),
         1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     ))
-
+    
+    # for debugging purposes 
+    Qy =  1/(2/r1["qymax"])
+    Qz = 1/(1/r1["qzmin"] + 1/r1["qzmax"])
+    
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     Vmode = r1["vmode"]
@@ -152,7 +156,7 @@ def runSim(params):
     
     Vmode_exp = 0.4
     # for debugging purposes  
-    print("Qsc: %f Qwvg: %f" %(Qsc, Qwvg))
+    print("Qz: %f Qy: %f Qwvg: %f" %(Qz, Qy, Qwvg))
 
     fitness = (Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
 
