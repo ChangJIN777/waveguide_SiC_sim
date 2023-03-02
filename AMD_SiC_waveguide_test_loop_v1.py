@@ -25,13 +25,13 @@ def runSim(params):
     #defect cell number
     CN = 0
     #lattice constant
-    a = 3.099696960314788e-07
+    a = 2.921072969062500e-07
     #hole diameter prefactor 
-    d = 0.666313707301812
+    d = 0.697201546893750
     #beam width prefactor
-    w = 1.685635464014841
+    w = 1.825228557093750
     #taper prefactor (for the defect region)
-    t = 0.797063997763745
+    t = 0.684551582507813
     #beam height (set by epi-layer thickness)
     h0 = 220e-9
     # cavity beam length
@@ -144,6 +144,9 @@ def runSim(params):
     resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
     detuning_wavelength = target_wavelength-resonance_wavelength
     
+    # prevent the mode volume from going to an unrealistic value 
+    Vmode_exp = 0.6
+    
     Q = 1/((1/Qsc) + (1/Qwvg))
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f" % ( Q, P))
@@ -153,14 +156,14 @@ def runSim(params):
     # for debugging purposes  
     print("Qsc: %f Qwvg: %f" %(Qsc, Qwvg))
 
-    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_t2.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_t3.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([cellNum_R,waveguide_TN,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
   
