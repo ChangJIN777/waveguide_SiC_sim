@@ -46,10 +46,10 @@ def runSim(params):
     # the taper cell number for the waveguide region 
     waveguide_TN = 6
     #the prefactor characterizing the right mirror region 
-    prefactor_mirror_R = params[1]
+    prefactor_mirror_R = params[0]
         
     # added waveguide region ===========================================
-    t_wvg = params[2] # set to 7.9075e-01 previously
+    t_wvg = params[1] # set to 7.9075e-01 previously
 
     # Define geometry dependencies
     #beam width
