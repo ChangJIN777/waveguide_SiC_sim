@@ -81,6 +81,8 @@ def fitness(params):
     a_tr = (a-amin) / TN
     #the refractive index of SiC 
     n_f = 2.6
+    #V mode expected 
+    Vmode_exp = 0.6
  
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
@@ -143,11 +145,11 @@ def fitness(params):
     r1 = cavity.get_results("resonance")[0]
 
     # define the fitness as P with the resonance frequency Gaussian penalty
-    fitness = P*np.exp(-((detuning_wavelength)**2)/25)
+    fitness = P*np.exp(-((detuning_wavelength)**2)/25)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
  
     print(a)
     
-    with open("./sim_data/OptimizeListFull_resonance_sweep.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_resonance_sweep_v2.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,t,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
     
