@@ -14,7 +14,9 @@ import matplotlib.animation as animation
 import scipy.optimize
 import numpy as np
 import os
-import csv 
+import csv
+from datetime import datetime
+
 
 # animation function 
 def animate(ax,xi,yi, xs, ys):
@@ -38,6 +40,7 @@ def animate(ax,xi,yi, xs, ys):
 
 def fitness(params):
 
+    start_time = datetime.now()
     a = params[0] # the lattice constant 
     d = params[1] # hole diameter prefactor 
     w = params[2] # beam width prefactor 
@@ -118,8 +121,7 @@ def fitness(params):
     cavity.save("cavity.obj")
 
     #define mesh size (use 10nm for accuracy, currently set to 12nm)
-    # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,0.9e-6,0.75e-6)), 10e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
 
 
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,4))
@@ -151,9 +153,12 @@ def fitness(params):
  
     print(a)
     
-    with open("./sim_data/OptimizeListFull_resonance_sweep_v2.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_resonance_sweep_v3.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,t,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
+    
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
     
     return -1*fitness
 

@@ -12,10 +12,12 @@ import struct
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib import style
+from datetime import datetime
 
 
 def simulate_fitness(params):
 
+    start_time = datetime.now()
     # added parameter for simulating the waveguide
     cellNum_R = params
     cellNum_R = int(cellNum_R)
@@ -94,7 +96,7 @@ def simulate_fitness(params):
     cavity.save("cavity.obj")
 
     # define mesh size (use 10nm for accuracy, currently set to 12nm)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3( )), 12e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
 
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,4))
 
@@ -128,10 +130,12 @@ def simulate_fitness(params):
     # file.write("\n" + str(params) + "\t" + str(Q) + "\t" + str(Vmode)+ "\t" + str(F) + "\n")
     # file.close()
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("OptimizeListFull_waveguide_Sweep_char.csv","a") as file_csv:
+    with open("OptimizeListFull_waveguide_Sweep_char_t1.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([params,Q,Vmode,F,detuning_wavelength,fitness])
-
+    
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
     return -1*fitness
 
 for i in range(3,16):
