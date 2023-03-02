@@ -163,7 +163,7 @@ def runSim(params):
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_t3.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_t4.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([cellNum_R,waveguide_TN,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
   
