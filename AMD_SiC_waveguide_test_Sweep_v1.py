@@ -160,7 +160,7 @@ def runSim(params):
     # for debugging purposes  
     print("Qz: %f Qy: %f Qwvg: %f" %(Qz, Qy, Qwvg))
 
-    fitness = (Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
+    fitness = (Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/4)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
