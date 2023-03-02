@@ -25,13 +25,13 @@ def runSim(params):
     #defect cell number
     CN = 0
     #lattice constant
-    a = 2.97688965e-07
+    a = 2.921072969062500e-07
     #hole diameter prefactor 
-    d = 6.63014844e-01
+    d = 0.697201546893750
     #beam width prefactor
-    w = 1.73572998e+00
+    w = 1.825228557093750
     #taper prefactor (for the defect region)
-    t = 7.48911133e-01
+    t = 0.684551582507813
     #beam height (set by epi-layer thickness)
     h0 = 220e-9
     # cavity beam length
@@ -42,14 +42,14 @@ def runSim(params):
     target_frequency = 327.3e12
     target_wavelength = 9.16e-07
     # the number of unit cells in the weaker mirror region
-    cellNum_R = 10
+    cellNum_R = 3
     # the taper cell number for the waveguide region 
-    waveguide_TN = 5
+    waveguide_TN = 6
     #the prefactor characterizing the right mirror region 
-    prefactor_mirror_R = params[0]
+    prefactor_mirror_R = params[1]
         
     # added waveguide region ===========================================
-    t_wvg = params[1] # set to 7.9075e-01 previously
+    t_wvg = params[2] # set to 7.9075e-01 previously
 
     # Define geometry dependencies
     #beam width
@@ -123,8 +123,8 @@ def runSim(params):
     # By setting the save path here, the cavity will save itself after each simulation to this file
     cavity.save("cavity.obj")
 
-    #define mesh size (use 12nm for accuracy, currently set to 15nm)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
+    #define mesh size (use 12nm for accuracy, currently set to 12nm)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,0.75e-6,0.625e-6)), 12e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q =================================================
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,4))
@@ -153,7 +153,7 @@ def runSim(params):
     # for debugging purposes  
     print("Qsc: %f Qwvg: %f" %(Qsc, Qwvg))
 
-    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
