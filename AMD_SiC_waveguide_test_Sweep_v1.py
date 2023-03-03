@@ -185,6 +185,6 @@ def runSim(params):
     return -1*fitness
 
 
-p0 = [2.921072969062500e-07, 0.697201546893750, 1.825228557093750, 0.684551582507813, 0.5, 7.9075e-01]
+p0 = [2.921072969062500e-07, 0.697201546893750, 1.825228557093750, 0.684551582507813, 0.9, 0.8]
 bnds = ((0,1),(0,None))
 popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead',bounds=bnds)
