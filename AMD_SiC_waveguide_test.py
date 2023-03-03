@@ -105,6 +105,7 @@ cavity = Cavity1D(
 unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + waveguide_cells_R ,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(2.6, order=2, color="red")) ],
 center_cell=centerCell,
+center_shift=0,
 engine=engine
 )
 
