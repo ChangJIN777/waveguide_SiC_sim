@@ -14,19 +14,20 @@ Q_wvg = data(:,7);
 V_mode = data(:,8);
 wavelength_detune = data(:,9);
 calc_fitness = data(:,10);
+wavelength_detune = abs(wavelength_detune);
+wavelength_detune = wavelength_detune * (10^9); % converting to nm
 %% plot the calculated fitness
 figure; hold off;
 plot(sim_run,calc_fitness);
 xlabel("simulation run"); ylabel("simulated fitness");
 %% plot the wavelength detune
 figure; hold off;
-wavelength_detune = abs(wavelength_detune);
 plot(sim_run,wavelength_detune);
 xlabel("simulation run"); ylabel("simulated detuning (m)");
-%% plot the Q_scatter
+%% plot the detuning vs the lattice constant
 figure; hold off;
-plot(sim_run,Q_sc);
-xlabel("simulation run"); ylabel("simulated Q scatter");
+plot(a,wavelength_detune,'ro');
+xlabel("lattice constant"); ylabel("wavelength detuning (nm)");
 %% plot the Q_waveguide
 figure; hold off;
 plot(sim_run,Q_wvg);
