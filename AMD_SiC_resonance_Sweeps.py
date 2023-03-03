@@ -149,11 +149,11 @@ def fitness(params):
     r1 = cavity.get_results("resonance")[0]
 
     # define the fitness as P with the resonance frequency Gaussian penalty
-    fitness = P*np.exp(-((detuning_wavelength)**2)/25)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
+    fitness = (Qsc/Vmode)*np.exp(-((detuning_wavelength)**2)/25)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
  
     print(a)
     
-    with open("./sim_data/OptimizeListFull_resonance_sweep_v3.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_resonance_sweep_v4.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,t,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
     
