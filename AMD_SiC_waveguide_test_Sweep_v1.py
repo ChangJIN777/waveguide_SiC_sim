@@ -27,13 +27,13 @@ def runSim(params):
     #defect cell number
     CN = 0
     #lattice constant
-    a = 2.921072969062500e-07
+    # a = 2.921072969062500e-07
     #hole diameter prefactor 
-    d = 0.697201546893750
+    # d = 0.697201546893750
     #beam width prefactor
-    w = 1.825228557093750
+    # w = 1.825228557093750
     #taper prefactor (for the defect region)
-    t = 0.684551582507813
+    # t = 0.684551582507813
     #beam height (set by epi-layer thickness)
     h0 = 220e-9
     # cavity beam length
@@ -47,11 +47,19 @@ def runSim(params):
     cellNum_R = 3
     # the taper cell number for the waveguide region 
     waveguide_TN = 6
+    #lattice constant
+    a = params[0]
+    #hole diameter prefactor 
+    d = params[1]
+    #beam width prefactor
+    w = params[2]
+    #taper prefactor (for the defect region)
+    t = params[3]
     #the prefactor characterizing the right mirror region 
-    prefactor_mirror_R = params[0]
+    prefactor_mirror_R = params[4]
         
     # added waveguide region ===========================================
-    t_wvg = params[1] # set to 7.9075e-01 previously
+    t_wvg = params[5] # set to 7.9075e-01 previously
 
     # Define geometry dependencies
     #beam width
@@ -160,14 +168,14 @@ def runSim(params):
     # for debugging purposes  
     print("Qz: %f Qy: %f Qwvg: %f" %(Qz, Qy, Qwvg))
 
-    fitness = (Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/4)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
+    fitness = (Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/4)*np.exp(-((Vmode-Vmode_exp)**2)/(0.09))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_t5.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_t4.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 
@@ -177,6 +185,6 @@ def runSim(params):
     return -1*fitness
 
 
-p0 = [0.5, 7.9075e-01]
+p0 = [2.921072969062500e-07, 0.697201546893750, 1.825228557093750, 0.684551582507813, 0.5, 7.9075e-01]
 bnds = ((0,1),(0,None))
 popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead',bounds=bnds)
