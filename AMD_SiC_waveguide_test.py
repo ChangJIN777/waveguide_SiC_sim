@@ -14,13 +14,13 @@ import os
 
 # Define geometry paramaters 
 #waveguide taper cell number
-WN = 6 
+WN = 3
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
 MN_L = 24-TN
 #mirror cell number (right region)
-MN_R = 12-TN
+MN_R = 6
 #defect cell number
 CN = 0
 #lattice constant
@@ -99,7 +99,7 @@ waveguide_cells_R = []
 for i in range(WN):
     waveguide_box_R = BoxStructure(Vec3(0), Vec3(a-((i+1)*a_wvg_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
     waveguide_hole_R = CylinderStructure(Vec3(0), h0, r0-((i+1)*r_wvg_tr), DielectricMaterial(1, order=1, color="blue"))
-    waveguide_cells_R += [Waveguide(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a-(i*a_wvg_tr)), engine=engine)]
+    waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a-((i+1)*a_wvg_tr)), engine=engine)]
 
 cavity = Cavity1D(
 unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + waveguide_cells_R ,
