@@ -50,7 +50,7 @@ def fitness(params):
     #taper cell number
     TN = 8
     #mirror cell number
-    MN = 24-TN
+    MN = 18-TN
     #defect cell number
     CN = 0
     #lattice constant
@@ -62,7 +62,7 @@ def fitness(params):
     #taper prefactor
     #t = 0.7
     #beam height (set by epi-layer thickness)
-    h0 = 220e-9
+    h0 = 250e-9
     # cavity beam length
     l = 15e-6
     # The target resonance frequency, in Hz
@@ -162,7 +162,7 @@ def fitness(params):
     
     return -1*fitness
 
-p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01]
+p0 = [2.75e-07, 0.64, 1.75, 0.84]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
 
 

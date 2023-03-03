@@ -2,7 +2,7 @@
 % solver 
 clear; clc;
 %% import and store the data from the txt file 
-data = importdata("OptimizeListFull_resonance_sweep_v4.csv");
+data = importdata("OptimizeListFull_resonance_sweep_v5.csv");
 a = data(:,1);
 sim_run = linspace(1,length(a),length(a));
 d = data(:,2); 
@@ -20,6 +20,7 @@ plot(sim_run,calc_fitness);
 xlabel("simulation run"); ylabel("simulated fitness");
 %% plot the wavelength detune
 figure; hold off;
+wavelength_detune = abs(wavelength_detune);
 plot(sim_run,wavelength_detune);
 xlabel("simulation run"); ylabel("simulated detuning (m)");
 %% plot the Q_scatter
