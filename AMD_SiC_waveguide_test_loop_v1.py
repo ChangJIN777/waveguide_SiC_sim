@@ -13,10 +13,12 @@ import numpy as np
 import os
 import scipy.constants
 import csv 
+from datetime import datetime
 
 # in this script, we will use a for loop to iterate through different number of unit cells in the weak 
 # mirror region and the waveguide region and calculate the properties of the resulting cavities 
 def runSim(params):
+    start_time = datetime.now()
     # Define geometry paramaters 
     #taper cell number (left mirror region)
     TN = 8
@@ -166,7 +168,10 @@ def runSim(params):
     with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_v5.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([cellNum_R,waveguide_TN,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
-  
+
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
+    
     return -1*fitness
 
 
