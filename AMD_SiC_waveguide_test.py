@@ -115,16 +115,16 @@ cavity.save("cavity.obj")
 #define mesh size (use 12nm for accuracy, currently set to 50nm)
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
 
-# # simulating the resonance and the Q =================================================
-# r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions =
-#         [man_mesh], sim_size=Vec3(4,4,10))
+# simulating the resonance and the Q =================================================
+r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions =
+        [man_mesh], sim_size=Vec3(4,4,10))
 
-# # Print the reults and plot the electric field profiles
-# print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
-# r1["freq"], r1["vmode"],
-# 1/(1/r1["qxmin"] + 1/r1["qxmax"]),
-# 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
-# ))
+# Print the reults and plot the electric field profiles
+print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
+r1["freq"], r1["vmode"],
+1/(1/r1["qxmin"] + 1/r1["qxmax"]),
+1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+))
 # r1["xyprofile"].show()
 # r1["yzprofile"].show()
 
