@@ -91,6 +91,9 @@ while i < TN:
 
     i = i+1 
 
+#set the center of the device 
+centerCell = MN_L+TN
+
 # adding waveguide region to the cavity 
 waveguide_cells_R = []
 for i in range(WN):
@@ -101,6 +104,7 @@ for i in range(WN):
 cavity = Cavity1D(
 unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + waveguide_cells_R ,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(2.6, order=2, color="red")) ],
+center_cell=centerCell,
 engine=engine
 )
 
