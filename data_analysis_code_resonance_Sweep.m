@@ -2,9 +2,9 @@
 % solver 
 clear; clc;
 %% import and store the data from the txt file 
-data = importdata("OptimizeListFull_resonance_sweep.csv");
-sim_run = linspace(1,length(a),60);
+data = importdata("OptimizeListFull_resonance_sweep_v4.csv");
 a = data(:,1);
+sim_run = linspace(1,length(a),length(a));
 d = data(:,2); 
 w = data(:,3);
 t = data(:,4);
@@ -14,7 +14,7 @@ Q_wvg = data(:,7);
 V_mode = data(:,8);
 wavelength_detune = data(:,9);
 calc_fitness = data(:,10);
-%% plot the Q 
+%% plot the calculated fitness
 figure; hold off;
 plot(sim_run,calc_fitness);
 xlabel("simulation run"); ylabel("simulated fitness");

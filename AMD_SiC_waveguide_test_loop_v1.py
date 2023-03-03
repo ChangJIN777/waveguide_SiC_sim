@@ -25,13 +25,13 @@ def runSim(params):
     #defect cell number
     CN = 0
     #lattice constant
-    a = 2.921072969062500e-07
+    a = 2.890948494148460e-07
     #hole diameter prefactor 
-    d = 0.697201546893750
+    d = 0.690922976745075
     #beam width prefactor
-    w = 1.825228557093750
+    w = 1.770091999979795
     #taper prefactor (for the defect region)
-    t = 0.684551582507813
+    t = 0.729313652459577
     #beam height (set by epi-layer thickness)
     h0 = 220e-9
     # cavity beam length
@@ -46,10 +46,10 @@ def runSim(params):
     # the taper cell number for the waveguide region 
     waveguide_TN = params[1]
     #the prefactor characterizing the right mirror region 
-    prefactor_mirror_R = 0.8
+    prefactor_mirror_R = 1
         
     # added waveguide region ===========================================
-    t_wvg = 7.9075e-01
+    t_wvg = t 
 
     # Define geometry dependencies
     #beam width
@@ -124,7 +124,7 @@ def runSim(params):
     cavity.save("cavity.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,0.9e-6,0.75e-6)), 12e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,0.9e-6,0.75e-6)), 15e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q =================================================
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,4))
@@ -163,7 +163,7 @@ def runSim(params):
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_t4.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_v5.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([cellNum_R,waveguide_TN,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
   
@@ -171,9 +171,9 @@ def runSim(params):
 
 
 cellNum_R_min = 3
-cellNum_R_max = 16 # set to 16 after testing 
+cellNum_R_max = 16 # set to 16 for testing 
 waveguide_TN_min = 3
-waveguide_TN_max = 10 # set to 10 after testing
+waveguide_TN_max = 10 # set to 10 for testing
 
 for cellNum_R in range(cellNum_R_min,cellNum_R_max):
     for waveguide_TN in range(waveguide_TN_min,waveguide_TN_max):
