@@ -23,23 +23,22 @@ def runSim(params):
     #taper cell number (left mirror region)
     TN = 8
     #mirror cell number (left region) 
-    MN_L = 24-TN
+    MN_L = 18-TN
     #defect cell number
     CN = 0
     #lattice constant
-    a = 2.890948494148460e-07
+    a = 2.878030949557177e-07
     #hole diameter prefactor 
-    d = 0.690922976745075
+    d = 0.64
     #beam width prefactor
-    w = 1.770091999979795
+    w = 1.75
     #taper prefactor (for the defect region)
-    t = 0.729313652459577
+    t = 0.84
     #beam height (set by epi-layer thickness)
-    h0 = 220e-9
+    h0 = 250e-9
     # cavity beam length
     l = 15e-6
     # The target resonance frequency, in Hz
-    # 1280nm = 234.212857812500e12
     # 916nm = 327.3e12
     target_frequency = 327.3e12
     target_wavelength = 9.16e-07
@@ -110,6 +109,9 @@ def runSim(params):
 
         i = i+1 
 
+    # define the location of the dipole within the device 
+    centerCell = MN_L+TN
+    
     # construct the waveguide region 
     for i in range(waveguide_TN):
         wvg_box_R = BoxStructure(Vec3(0), Vec3(a-((i+1)*a_tr_wvg),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
@@ -119,6 +121,7 @@ def runSim(params):
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + wvg_cells_R,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+    center_cell=centerCell,
     engine=engine
     )
     ##======================================================================================================
@@ -165,7 +168,7 @@ def runSim(params):
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_v5.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_v7.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([cellNum_R,waveguide_TN,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 

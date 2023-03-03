@@ -18,23 +18,23 @@ WN = 3
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
-MN_L = 24-TN
+MN_L = 18-TN
 #mirror cell number (right region)
 MN_R = 6
 #defect cell number
 CN = 0
 #lattice constant
-a = 290e-9
+a = 250e-9
 #hole diameter prefactor 
 d = 0.64
 #beam width prefactor
 w = 1.75
 #taper prefactor (for the defect region)
-t = 0.7
+t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.7
+t_wvg = 0.84
 #beam height (set by epi-layer thickness)
-h0 = 220e-9
+h0 = 250e-9
 # cavity beam length
 l = 15e-6
 # The target resonance frequency, in Hz
