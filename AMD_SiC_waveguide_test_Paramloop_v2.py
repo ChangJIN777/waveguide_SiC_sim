@@ -164,7 +164,7 @@ def runSim(params):
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_params_loop_v2.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_params_loop_v3.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([cellNum_R,waveguide_TN,prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
     
@@ -172,17 +172,17 @@ def runSim(params):
 
 # limits on the number of unit cells in the weak mirror region
 cellNum_R_min = 3
-cellNum_R_max = 3
+cellNum_R_max = 10
 # limits on the number of unit cells in the waveguide region
 waveguide_TN_min = 6
-waveguide_TN_max = 6
+waveguide_TN_max = 10
 # taper factor of the weak mirror region
-prefactor_mirror_R_min = 0.6
-prefactor_mirror_R_max = 1    
+prefactor_mirror_R_min = 0.1
+prefactor_mirror_R_max = 0.6    
 prefactor_mirror_R_list = np.linspace(prefactor_mirror_R_min,prefactor_mirror_R_max,5)    
 # taper factor of the waveguide region
-t_wvg_min = 0.6
-t_wvg_max = 1
+t_wvg_min = 0.1
+t_wvg_max = 0.6
 t_wvg_list = np.linspace(t_wvg_min,t_wvg_max,5)
 
 # # loop through the list of parameters 
