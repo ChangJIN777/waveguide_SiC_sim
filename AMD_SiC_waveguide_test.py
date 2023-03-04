@@ -77,9 +77,6 @@ mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a)
 mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_R
 cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
 
-# define the location of the dipole within the device 
-centerShift = MN_L*a
-
 i = 1
 taper_cells_L = []
 taper_cells_R = []
@@ -91,12 +88,10 @@ while i < TN:
     taper_box_R = BoxStructure(Vec3(0), Vec3(amin+(i*a_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
     taper_hole_R = CylinderStructure(Vec3(0), h0, rmin+(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
     taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
-    centerShift += a-(i*a_tr)
     i = i+1 
 
 #set the center of the device 
-# centerCell = MN_L+TN
-
+centerCell = MN_L+TN-1
 
 # adding waveguide region to the cavity 
 waveguide_cells_R = []
@@ -108,7 +103,7 @@ for i in range(WN):
 cavity = Cavity1D(
 unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + waveguide_cells_R ,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(2.6, order=2, color="red")) ],
-center_shift=centerShift,
+center_cell=centerCell,
 engine=engine
 )
 
