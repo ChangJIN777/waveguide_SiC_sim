@@ -80,7 +80,7 @@ def runSim(params):
 
 
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
-    FDTDloc="/n/home11/cjin/sw_cjin/lumerical-2021-R2-2717-7bf43e7149_seas/"
+    FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
     engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
     # building the cavity structure =======================================================================
