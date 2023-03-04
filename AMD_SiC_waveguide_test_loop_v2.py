@@ -28,7 +28,7 @@ def runSim(params):
     #defect cell number
     CN = 0
     #lattice constant
-    a = 2.878030949557177e-07
+    a = 2.748043533042073e-07 
     #hole diameter prefactor 
     d = 0.64
     #beam width prefactor
@@ -100,10 +100,8 @@ def runSim(params):
     taper_cells_R = []
     wvg_cells_R = []
     
-    # define the location of the dipole within the device 
-    centerShift = MN_L*a
     
-    while i < TN: 
+    while i <= TN: 
         taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
         taper_cells_L += [UnitCell(structures=[ taper_box_L, taper_hole_L ], size=Vec3(a-(i*a_tr)), engine=engine)]
@@ -113,8 +111,9 @@ def runSim(params):
         taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
 
         i = i+1 
-        centerShift += a-(i*a_tr)
 
+    #set the center of the device 
+    centerCell = MN_L+TN-1
     
     # construct the waveguide region 
     for i in range(waveguide_TN):
@@ -126,11 +125,12 @@ def runSim(params):
     unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + wvg_cells_R,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
     engine=engine,
-    center_shift=centerShift
+    center_cell=centerCell,
+    center_shift=0,
     )
     ##======================================================================================================
     # By setting the save path here, the cavity will save itself after each simulation to this file
-    cavity.save("cavity.obj")
+    cavity.save("cavity_sweep.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 15nm)
     man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
@@ -153,9 +153,6 @@ def runSim(params):
     resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
     detuning_wavelength = target_wavelength-resonance_wavelength
     
-    # prevent the mode volume from going to an unrealistic value 
-    Vmode_exp = 0.6
-    
     Q = 1/((1/Qsc) + (1/Qwvg))
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f" % ( Q, P))
@@ -165,14 +162,14 @@ def runSim(params):
     # for debugging purposes  
     print("Qsc: %f Qwvg: %f" %(Qsc, Qwvg))
 
-    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_v8.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_loop_v9.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([cellNum_R,waveguide_TN,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 

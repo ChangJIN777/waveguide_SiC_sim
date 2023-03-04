@@ -30,9 +30,9 @@ d = 0.64
 #beam width prefactor
 w = 1.75
 #taper prefactor (for the defect region)
-t = 0.84
+t = 0.5
 #taper prefactor (for the waveguide region)
-t_wvg = 0.84
+t_wvg = 0.5
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -68,7 +68,7 @@ a_wvg_tr = (a-amin_wvg)/WN
 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-engine = LumericalEngine(mesh_accuracy=4, hide=False, lumerical_path=FDTDloc, working_path="./fsps", save_fsp=False)
+engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 
 # the sim material is set to be SiC with refractive index = 2.6 
 cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
@@ -80,7 +80,7 @@ cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine
 i = 1
 taper_cells_L = []
 taper_cells_R = []
-while i < TN: 
+while i <= TN: 
     taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
     taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
     taper_cells_L += [UnitCell(structures=[ taper_box_L, taper_hole_L ], size=Vec3(a-(i*a_tr)), engine=engine)]
@@ -88,11 +88,11 @@ while i < TN:
     taper_box_R = BoxStructure(Vec3(0), Vec3(amin+(i*a_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
     taper_hole_R = CylinderStructure(Vec3(0), h0, rmin+(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
     taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
-
     i = i+1 
 
 #set the center of the device 
-centerCell = MN_L+TN
+centerCell = MN_L+TN-1
+# centerCell = 0 # testing the code
 
 # adding waveguide region to the cavity 
 waveguide_cells_R = []
@@ -110,13 +110,13 @@ engine=engine
 )
 
 # By setting the save path here, the cavity will save itself after each simulation to this file
-cavity.save("cavity.obj")
+cavity.save("cavity_testing.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 50nm)
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q =================================================
-r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
+r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
 
 # Print the reults and plot the electric field profiles
 print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -124,9 +124,10 @@ r1["freq"], r1["vmode"],
 1/(1/r1["qxmin"] + 1/r1["qxmax"]),
 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
 ))
-# r1["xyprofile"].show()
-# r1["yzprofile"].show()
+r1["xyprofile"].show()
+r1["yzprofile"].show()
 
+cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
 # Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
 # Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
 # Vmode = r1["vmode"]
@@ -136,10 +137,10 @@ r1["freq"], r1["vmode"],
 # P = (Q*Qsc) / (Vmode*Vmode)
 # print("Q: %f, P: %f" % ( Q, P))
 
-# r1 = cavity.get_results("resonance")[0]
-# print(r1['res']["xyprofile"].max_loc())
-# print(r1['res']["yzprofile"].max_loc())
-# r1["sess_res"].show()
+r1 = cavity.get_results("resonance")[-1]
+print(r1['res']["xyprofile"].max_loc())
+print(r1['res']["yzprofile"].max_loc())
+r1["sess_res"].show()
 # # ======================================================================================
 
 # # # evaluate the quasipotential
