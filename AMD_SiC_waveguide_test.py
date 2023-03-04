@@ -68,7 +68,7 @@ a_wvg_tr = (a-amin_wvg)/WN
 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-engine = LumericalEngine(mesh_accuracy=4, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
+engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 
 # the sim material is set to be SiC with refractive index = 2.6 
 cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
@@ -92,7 +92,7 @@ while i < TN:
 
 #set the center of the device 
 centerCell = MN_L+TN-1
-centerCell = 3 # testing the code
+# centerCell = 3 # testing the code
 
 # adding waveguide region to the cavity 
 waveguide_cells_R = []
