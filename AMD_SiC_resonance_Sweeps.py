@@ -121,7 +121,7 @@ def fitness(params):
     cavity.save("cavity.obj")
 
     #define mesh size (use 10nm for accuracy, currently set to 20nm)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
 
 
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
@@ -149,7 +149,7 @@ def fitness(params):
     r1 = cavity.get_results("resonance")[0]
 
     # define the fitness as P with the resonance frequency Gaussian penalty
-    fitness = P*np.exp(-((detuning_wavelength)**2)/25)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
+    fitness = P*np.exp(-((detuning_wavelength)**2)/4)*np.exp(-((Vmode-Vmode_exp)**2)/(0.09))
  
     print(a)
     
