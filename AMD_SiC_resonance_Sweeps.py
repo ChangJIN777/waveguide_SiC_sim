@@ -153,7 +153,7 @@ def fitness(params):
  
     print(a)
     
-    with open("./sim_data/OptimizeListFull_resonance_sweep_v5.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_resonance_sweep_v6.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,t,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
     
@@ -162,7 +162,7 @@ def fitness(params):
     
     return -1*fitness
 
-p0 = [2.75e-07, 0.64, 1.75, 0.84]
+p0 = [2.878030949557177e-07, 0.64, 1.75, 0.84]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
 
 
