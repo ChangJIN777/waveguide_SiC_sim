@@ -124,9 +124,10 @@ r1["freq"], r1["vmode"],
 1/(1/r1["qxmin"] + 1/r1["qxmax"]),
 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
 ))
-# r1["xyprofile"].show()
-# r1["yzprofile"].show()
+r1["xyprofile"].show()
+r1["yzprofile"].show()
 
+cavity = Cavity1D(load_path="cavity.obj",engine=engine)
 # Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
 # Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
 # Vmode = r1["vmode"]
@@ -136,10 +137,10 @@ r1["freq"], r1["vmode"],
 # P = (Q*Qsc) / (Vmode*Vmode)
 # print("Q: %f, P: %f" % ( Q, P))
 
-# r1 = cavity.get_results("resonance")[0]
-# print(r1['res']["xyprofile"].max_loc())
-# print(r1['res']["yzprofile"].max_loc())
-# r1["sess_res"].show()
+r1 = cavity.get_results("resonance")[0]
+print(r1['res']["xyprofile"].max_loc())
+print(r1['res']["yzprofile"].max_loc())
+r1["sess_res"].show()
 # # ======================================================================================
 
 # # # evaluate the quasipotential
