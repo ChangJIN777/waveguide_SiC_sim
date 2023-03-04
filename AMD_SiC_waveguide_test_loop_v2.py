@@ -110,7 +110,7 @@ def runSim(params):
         i = i+1 
 
     # define the location of the dipole within the device 
-    centerCell = MN_L+TN-1
+    centerCell = MN_L+TN+1
     
     # construct the waveguide region 
     for i in range(waveguide_TN):
