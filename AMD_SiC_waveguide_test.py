@@ -92,6 +92,7 @@ while i < TN:
 
 #set the center of the device 
 centerCell = MN_L+TN
+centerCell = 3 # testing the code
 
 # adding waveguide region to the cavity 
 waveguide_cells_R = []
