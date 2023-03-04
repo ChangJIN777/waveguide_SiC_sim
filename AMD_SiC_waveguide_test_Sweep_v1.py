@@ -46,7 +46,7 @@ def runSim(params):
     # the number of unit cells in the weaker mirror region
     cellNum_R = 3
     # the taper cell number for the waveguide region 
-    waveguide_TN = 6
+    waveguide_TN = 4
     #lattice constant
     a = params[0]
     #hole diameter prefactor 
