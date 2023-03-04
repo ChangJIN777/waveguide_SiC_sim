@@ -18,6 +18,7 @@ from datetime import datetime
 # in this script, we will use a for loop to iterate through different number of unit cells in the weak 
 # mirror region and the waveguide region and calculate the properties of the resulting cavities 
 def runSim(params):
+    print("Starting sim") # for debugging purpose
     start_time = datetime.now()
     # Define geometry paramaters 
     #taper cell number (left mirror region)
