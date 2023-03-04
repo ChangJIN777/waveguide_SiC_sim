@@ -46,7 +46,7 @@ def runSim(params):
     # the number of unit cells in the weaker mirror region
     cellNum_R = 3
     # the taper cell number for the waveguide region 
-    waveguide_TN = 6
+    waveguide_TN = 4
     #lattice constant
     a = params[0]
     #hole diameter prefactor 
@@ -180,7 +180,7 @@ def runSim(params):
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v5.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v6.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 
