@@ -23,7 +23,7 @@ def runSim(params):
     #taper cell number (left mirror region)
     TN = 8
     #mirror cell number (left region) 
-    MN_L = 24-TN
+    MN_L = 18-TN
     #defect cell number
     CN = 0
     #lattice constant
@@ -35,7 +35,7 @@ def runSim(params):
     #taper prefactor (for the defect region)
     # t = 0.684551582507813
     #beam height (set by epi-layer thickness)
-    h0 = 220e-9
+    h0 = 250e-9
     # cavity beam length
     l = 15e-6
     # The target resonance frequency, in Hz
@@ -57,8 +57,7 @@ def runSim(params):
     t = params[3]
     #the prefactor characterizing the right mirror region 
     prefactor_mirror_R = params[4]
-        
-    # added waveguide region ===========================================
+    # added waveguide region 
     t_wvg = params[5] # set to 7.9075e-01 previously
 
     # Define geometry dependencies
@@ -103,10 +102,14 @@ def runSim(params):
     mirror_cells_right = [UnitCell(structures=[ cell_box_R, mirror_hole_R ], size=Vec3(a), engine=engine)] * cellNum_R
     cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
 
+    # define the location of the dipole within the device 
+    centerShift = MN_L*a
+    
     i = 1
     taper_cells_L = []
     taper_cells_R = []
     wvg_cells_R = []
+    
     while i < TN: 
         taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
@@ -117,6 +120,7 @@ def runSim(params):
         taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
 
         i = i+1 
+        centerShift += a-(i*a_tr)
 
     # construct the waveguide region 
     for i in range(waveguide_TN):
@@ -127,14 +131,15 @@ def runSim(params):
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + wvg_cells_R,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-    engine=engine
+    engine=engine,
+    center_shift=centerShift
     )
     ##======================================================================================================
     # By setting the save path here, the cavity will save itself after each simulation to this file
     cavity.save("cavity.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 20nm)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q =================================================
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
@@ -164,18 +169,18 @@ def runSim(params):
 
     r1 = cavity.get_results("resonance")[0]
     
-    Vmode_exp = 0.4
+    Vmode_exp = 0.6
     # for debugging purposes  
     print("Qz: %f Qy: %f Qwvg: %f" %(Qz, Qy, Qwvg))
 
-    fitness = (Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/4)*np.exp(-((Vmode-Vmode_exp)**2)/(0.09))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/4)*np.exp(-((Vmode-Vmode_exp)**2)/(0.16)))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_t4.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v5.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 
@@ -185,6 +190,5 @@ def runSim(params):
     return -1*fitness
 
 
-p0 = [2.921072969062500e-07, 0.697201546893750, 1.825228557093750, 0.684551582507813, 0.9, 0.8]
-bnds = ((0,1),(0,None))
-popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead',bounds=bnds)
+p0 = [2.878030949557177e-07, 0.64, 1.75, 0.84, 0.9, 0.84]
+popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead')
