@@ -30,9 +30,9 @@ d = 0.64
 #beam width prefactor
 w = 1.75
 #taper prefactor (for the defect region)
-t = 0.3
+t = 0.5
 #taper prefactor (for the waveguide region)
-t_wvg = 0.3
+t_wvg = 0.5
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -91,7 +91,7 @@ while i < TN:
     i = i+1 
 
 #set the center of the device 
-centerCell = MN_L+TN+1
+centerCell = MN_L+TN
 
 # adding waveguide region to the cavity 
 waveguide_cells_R = []
