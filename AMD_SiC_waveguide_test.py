@@ -110,7 +110,7 @@ engine=engine
 )
 
 # By setting the save path here, the cavity will save itself after each simulation to this file
-cavity.save("cavity.obj")
+cavity.save("cavity_testing.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 50nm)
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
@@ -127,7 +127,7 @@ r1["freq"], r1["vmode"],
 r1["xyprofile"].show()
 r1["yzprofile"].show()
 
-cavity = Cavity1D(load_path="cavity.obj",engine=engine)
+cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
 # Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
 # Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
 # Vmode = r1["vmode"]
@@ -137,7 +137,7 @@ cavity = Cavity1D(load_path="cavity.obj",engine=engine)
 # P = (Q*Qsc) / (Vmode*Vmode)
 # print("Q: %f, P: %f" % ( Q, P))
 
-r1 = cavity.get_results("resonance")[0]
+r1 = cavity.get_results("resonance")[-1]
 print(r1['res']["xyprofile"].max_loc())
 print(r1['res']["yzprofile"].max_loc())
 r1["sess_res"].show()
