@@ -181,7 +181,7 @@ def runSim(params):
     return -1*fitness
 
 
-cellNum_R_min = 4
+cellNum_R_min = 3
 cellNum_R_max = 16 # set to 16 for testing 
 waveguide_TN_min = 3
 waveguide_TN_max = 11 # set to 10 for testing
