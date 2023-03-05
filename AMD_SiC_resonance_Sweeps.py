@@ -153,7 +153,7 @@ def fitness(params):
  
     print(a)
     
-    with open("./sim_data/OptimizeListFull_resonance_sweep_v6.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_resonance_sweep_v7.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,t,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
     
