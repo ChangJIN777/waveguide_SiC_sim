@@ -44,9 +44,9 @@ def runSim(params):
     target_frequency = 327.3e12
     target_wavelength = 9.16e-07
     # the number of unit cells in the weaker mirror region
-    cellNum_R = 3
+    cellNum_R = 4
     # the taper cell number for the waveguide region 
-    waveguide_TN = 4
+    waveguide_TN = 7
     #lattice constant
     a = params[0]
     #hole diameter prefactor 
@@ -101,16 +101,13 @@ def runSim(params):
     mirror_hole_R = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
     mirror_cells_right = [UnitCell(structures=[ cell_box_R, mirror_hole_R ], size=Vec3(a), engine=engine)] * cellNum_R
     cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
-
-    # define the location of the dipole within the device 
-    centerShift = MN_L*a
     
     i = 1
     taper_cells_L = []
     taper_cells_R = []
     wvg_cells_R = []
     
-    while i < TN: 
+    while i <= TN: 
         taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
         taper_cells_L += [UnitCell(structures=[ taper_box_L, taper_hole_L ], size=Vec3(a-(i*a_tr)), engine=engine)]
@@ -120,8 +117,10 @@ def runSim(params):
         taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
 
         i = i+1 
-        centerShift += a-(i*a_tr)
 
+    #define the location of the dipole
+    centerCell = MN_L+TN-1
+    
     # construct the waveguide region 
     for i in range(waveguide_TN):
         wvg_box_R = BoxStructure(Vec3(0), Vec3(a-((i+1)*a_tr_wvg),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
@@ -132,18 +131,20 @@ def runSim(params):
     unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + wvg_cells_R,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
     engine=engine,
-    center_shift=centerShift
+    center_shift=0,
+    center_cell=centerCell
     )
     ##======================================================================================================
     # By setting the save path here, the cavity will save itself after each simulation to this file
-    cavity.save("cavity.obj")
+    cavity.save("cavity_sweep.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 20nm)
     man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q =================================================
-    r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
-
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10), source_pulselength=200e-15)
+    #Note: specify a long pulse to make narrow band and target lossier mode closer to target_frequency
+    
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
         r1["freq"], r1["vmode"],
@@ -154,7 +155,7 @@ def runSim(params):
     # for debugging purposes 
     Qy =  1/(2/r1["qymax"])
     Qz = 1/(1/r1["qzmin"] + 1/r1["qzmax"])
-    
+     
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     Vmode = r1["vmode"]
@@ -167,22 +168,21 @@ def runSim(params):
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f" % ( Q, P))
 
-    r1 = cavity.get_results("resonance")[0]
+    r1 = cavity.get_results("resonance")[-1]
     
-    Vmode_exp = 0.6
     # for debugging purposes  
     print("Qz: %f Qy: %f Qwvg: %f" %(Qz, Qy, Qwvg))
 
-    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/4)*np.exp(-((Vmode-Vmode_exp)**2)/(0.16)))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/4))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v6.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v7.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
-        writer.writerow([prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
+        writer.writerow([a,d,w,t,prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
