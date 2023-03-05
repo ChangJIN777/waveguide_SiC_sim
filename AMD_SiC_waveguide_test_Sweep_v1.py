@@ -88,7 +88,7 @@ def runSim(params):
 
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-    engine = LumericalEngine(mesh_accuracy=4, hide=False, lumerical_path=FDTDloc, save_fsp=False)
+    engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
     # building the cavity structure =======================================================================
     # the sim material is set to be SiC with refractive index = 2.6 
@@ -195,7 +195,7 @@ def runSim(params):
 
 
 p0 = [2.748043533042073e-07, 0.64, 1.75, 0.84, 0.9, 0.84]
-# popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead')
+popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead')
 
-# debugging 
-temp = runSim(p0)
+# # debugging 
+# temp = runSim(p0)
