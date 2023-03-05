@@ -130,9 +130,9 @@ def runSim(params):
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + wvg_cells_R,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-    engine=engine,
+    center_cell=centerCell,
     center_shift=0,
-    center_cell=centerCell
+    engine=engine
     )
     ##======================================================================================================
     # By setting the save path here, the cavity will save itself after each simulation to this file
@@ -173,7 +173,7 @@ def runSim(params):
     # for debugging purposes  
     print("Qz: %f Qy: %f Qwvg: %f" %(Qz, Qy, Qwvg))
 
-    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/4))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
