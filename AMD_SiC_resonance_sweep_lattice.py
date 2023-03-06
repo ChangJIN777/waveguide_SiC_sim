@@ -92,7 +92,7 @@ def fitness(params):
     i = 1
     taper_cells_L = []
     taper_cells_R = []
-    while i < TN: 
+    while i <= TN: 
         taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
         taper_cells_L += [UnitCell(structures=[ taper_box_L, taper_hole_L ], size=Vec3(a-(i*a_tr)), engine=engine)]
@@ -113,7 +113,7 @@ def fitness(params):
     cavity.save("cavity.obj")
 
     #define mesh size (use 10nm for accuracy, currently set to 20nm)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
 
 
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
@@ -141,19 +141,19 @@ def fitness(params):
     r1 = cavity.get_results("resonance")[0]
 
     # define the fitness as P with the resonance frequency Gaussian penalty
-    fitness = P*np.exp(-((detuning_wavelength)**2)/25)*np.exp(-((Vmode-Vmode_exp)**2)/(0.04))
+    fitness = P*np.exp(-((detuning_wavelength)**2)/25)
  
     print(a)
     
-    with open("./sim_data/OptimizeListFull_resonance_sweep_v5.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_resonance_lattice_sweep_v1.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
-        writer.writerow([a,d,w,t,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
+        writer.writerow([a,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
     
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
     
     return -1*fitness
 
-p0 = [2.75e-07]
+p0 = [2.90e-07]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
 
