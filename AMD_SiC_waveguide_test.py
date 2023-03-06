@@ -20,7 +20,7 @@ TN = 8
 #mirror cell number (left region) 
 MN_L = 18-TN
 #mirror cell number (right region)
-MN_R = 4
+MN_R = 18-TN
 #defect cell number
 CN = 0
 #lattice constant
@@ -30,9 +30,9 @@ d = 0.64
 #beam width prefactor
 w = 1.75
 #taper prefactor (for the defect region)
-t = 0.5
+t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.5
+t_wvg = 0.84
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
