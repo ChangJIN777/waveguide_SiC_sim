@@ -14,7 +14,7 @@ import os
 
 # Define geometry paramaters 
 #waveguide taper cell number
-WN = 0
+WN = 8
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
@@ -32,7 +32,7 @@ w = 1.75
 #taper prefactor (for the defect region)
 t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.84
+t_wvg = 1
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
