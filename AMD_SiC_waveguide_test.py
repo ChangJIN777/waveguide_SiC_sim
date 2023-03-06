@@ -14,13 +14,13 @@ import os
 
 # Define geometry paramaters 
 #waveguide taper cell number
-WN = 3
+WN = 7
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
 MN_L = 18-TN
 #mirror cell number (right region)
-MN_R = 6
+MN_R = 3
 #defect cell number
 CN = 0
 #lattice constant
