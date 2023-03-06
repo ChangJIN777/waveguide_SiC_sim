@@ -27,13 +27,13 @@ def runSim(params):
     #defect cell number
     CN = 0
     #lattice constant
-    # a = 2.921072969062500e-07
+    a = 2.90e-07
     #hole diameter prefactor 
-    # d = 0.697201546893750
+    d = 0.64
     #beam width prefactor
-    # w = 1.825228557093750
+    w = 1.75
     #taper prefactor (for the defect region)
-    # t = 0.684551582507813
+    t = 0.84
     #beam height (set by epi-layer thickness)
     h0 = 250e-9
     # cavity beam length
@@ -47,19 +47,22 @@ def runSim(params):
     cellNum_R = 4
     # the taper cell number for the waveguide region 
     waveguide_TN = 7
-    #lattice constant
-    a = params[0]
-    #hole diameter prefactor 
-    d = params[1]
-    #beam width prefactor
-    w = params[2]
-    #taper prefactor (for the defect region)
-    t = params[3]
+    ## uncomment when you acutally want to sweep these parameters #############################################
+    # #lattice constant
+    # a = params[0]
+    # #hole diameter prefactor 
+    # d = params[1]
+    # #beam width prefactor
+    # w = params[2]
+    # #taper prefactor (for the defect region)
+    # t = params[3]
+    ###########################################################################################################
     #the prefactor characterizing the right mirror region 
-    prefactor_mirror_R = params[4]
+    prefactor_mirror_R = params[0]
     # added waveguide region 
-    t_wvg = params[5] # set to 7.9075e-01 previously
-
+    t_wvg = params[1] # set to 7.9075e-01 previously
+    
+    
     # Define geometry dependencies
     #beam width
     w0 = w*a
@@ -177,14 +180,14 @@ def runSim(params):
     # for debugging purposes  
     print("Qz: %f Qy: %f Qwvg: %f" %(Qz, Qy, Qwvg))
 
-    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25)*np.exp(-((Vmode-Vmode_exp)**2)/0.16))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
     # r2.show()
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v7.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v8.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,t,prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 
@@ -194,7 +197,7 @@ def runSim(params):
     return -1*fitness
 
 
-p0 = [2.748043533042073e-07, 0.64, 1.75, 0.84, 0.9, 0.84]
+p0 = [0.9, 0.84]
 popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead')
 
 # # debugging 

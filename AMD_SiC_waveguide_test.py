@@ -30,9 +30,9 @@ d = 0.64
 #beam width prefactor
 w = 1.75
 #taper prefactor (for the defect region)
-t = 0.5
+t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.5
+t_wvg = 0.84
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -113,10 +113,11 @@ engine=engine
 cavity.save("cavity_testing.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 50nm)
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q =================================================
-r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
+r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
+                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
 
 # Print the reults and plot the electric field profiles
 print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -140,7 +141,7 @@ cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
 r1 = cavity.get_results("resonance")[-1]
 print(r1['res']["xyprofile"].max_loc())
 print(r1['res']["yzprofile"].max_loc())
-r1["sess_res"].show()
+# r1["sess_res"].show()
 # # ======================================================================================
 
 # # # evaluate the quasipotential
