@@ -14,7 +14,7 @@ import os
 
 # Define geometry paramaters 
 #waveguide taper cell number
-WN = 8
+WN = 0
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
