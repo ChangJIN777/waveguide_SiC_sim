@@ -24,7 +24,7 @@ MN_R = 6
 #defect cell number
 CN = 0
 #lattice constant
-a = 250e-9
+a = 290e-9
 #hole diameter prefactor 
 d = 0.64
 #beam width prefactor

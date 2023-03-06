@@ -19,7 +19,7 @@ import scipy.constants
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
-MN_L = 24-TN
+MN_L = 18-TN
 #defect cell number
 CN = 0
 #lattice constant
