@@ -44,9 +44,9 @@ def runSim(params):
     target_frequency = 327.3e12
     target_wavelength = 9.16e-07
     # the number of unit cells in the weaker mirror region
-    cellNum_R = 4
+    cellNum_R = 18-TN
     # the taper cell number for the waveguide region 
-    waveguide_TN = 7
+    waveguide_TN = 8
     ## uncomment when you acutally want to sweep these parameters #############################################
     # #lattice constant
     # a = params[0]
