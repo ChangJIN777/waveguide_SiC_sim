@@ -18,7 +18,7 @@ WN = 7
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
-MN_L = 18-TN
+MN_L = 10
 #mirror cell number (right region)
 MN_R = 4
 #defect cell number
@@ -42,43 +42,18 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 
-###################### define the functions we are using to build the cavity geometry ###################
-def cubic_tapering(a,taperPrefac,taperNum):
+#Define cubic tapering 
+def cubic_defect(i, taperNum, taperPrefac):
     """
-    a: the lattice constant in the mirror region
+    i: the index of the taper cell
     taperNum: the number of taper cells
-    taperPrefac: taper prefactor 
+    taperPrefac: taper prefactor
     """
-    a_taper = np.zeros((taperNum,))
-    for i in range(taperNum-1):
-        a_taper[i] = a*(1 - taperPrefac * (2 * ((i) / taperNum) ** 3 - 3 * ((i) / taperNum) ** 2+1))
-    a_taper[taperNum-1] = a
-    return a_taper
+    return 1 - taperPrefac * (2 * (i / taperNum) ** 3 - 3 * (i / taperNum) ** 2 + 1)
 
-def buildTapering_symmetric(a,taperPrefac,taperNum):
-    """
-    function for calculating the lattice constants for the tapering region of the cavity 
-    Note: this is used to build SYMMETRIC taper cell region
-    """
-    a_taper_R = cubic_tapering(a,taperPrefac,taperNum)
-    a_taper_L = a_taper_R[::-1]
-    tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
-    return tapering_region
 
-def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
-    """
-    function for calculating the lattice constants for the tapering region of the cavity 
-    Note: this is used to build ASYMMETRIC taper cell region
-    TN_L: the taper cell number on the left cell region 
-    TN_R: the taper cell number of the right cell region 
-    """
-    a_taper_R = cubic_tapering(a,taperPrefac,taperNum=taperNum_R)
-    a_taper_L = cubic_tapering(a,taperPrefac,taperNum=taperNum_L)
-    a_taper_L = a_taper_L[::-1]
-    tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
-    return tapering_region
+# Define geometry dependencies
 
-#################################### Define geometry dependencies ######################################
 #beam width
 w0 = w*a
 # Radius of the air holes in the cells
@@ -99,21 +74,19 @@ a_tr = (a-amin) / TN
 r_wvg_tr = (r0-rmin_wvg)/WN
 #lattice taper rate (for the waveguide region)
 a_wvg_tr = (a-amin_wvg)/WN
-############################################################################################################
 
-# Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations ###################
+# Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 
 # the sim material is set to be SiC with refractive index = 2.6 
 cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
 mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
-mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a,w0,h0), engine=engine)] * MN_L
-mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a,w0,h0), engine=engine)] * MN_R
-cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin,w0,h0), engine=engine)] * CN
-###########################################################################################################
+mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_L
+mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_R
+cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
 
-# ############### building linearly tapered cell region #####################################################
+# ############################# linear tapering #####################################
 # i = 1
 # taper_cells_L = []
 # taper_cells_R = []
@@ -125,44 +98,35 @@ cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin,w0,h0), engine=
 #     taper_box_R = BoxStructure(Vec3(0), Vec3(amin+(i*a_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
 #     taper_hole_R = CylinderStructure(Vec3(0), h0, rmin+(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
 #     taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
-#     i = i+1 
-# ###################################################################################################################
+# #####################################################################################  
 
-# ############### building cubic tapered cell region #####################################################
-taper_cells = []
-aList_taper = buildTapering_symmetric(a,t,TN)
-for i in range(aList_taper):
-    taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
-    taper_hole = CylinderStructure(Vec3(0), h0, d*i, DielectricMaterial(1, order=1, color="blue"))
-    taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i,w0,h0), engine=engine)]
-############################################################################################################
+##################################### cubic tapering ##################################
+taper_cells_L = []
+taper_cells_R = []
+for i in range(TN):
+    a_temp = cubic_defect(i+1,TN,t)
+    taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
+    taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
+    taper_cells_L += [UnitCell(structures=[ taper_box_L, taper_hole_L ], size=Vec3(a-(i*a_tr)), engine=engine)]
 
-########################################### set the center of the device ###################################
+    taper_box_R = BoxStructure(Vec3(0), Vec3(amin+(i*a_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
+    taper_hole_R = CylinderStructure(Vec3(0), h0, rmin+(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
+    taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
+########################################################################################
+
+#set the center of the device 
 centerCell = MN_L+TN-1
 # centerCell = 0 # testing the code
-###########################################################################################################
 
-# ################### adding one sided linearly tapered waveguide region to the cavity ##################################
-# waveguide_cells_R = []
-# for i in range(WN):
-#     waveguide_box_R = BoxStructure(Vec3(0), Vec3(a-((i+1)*a_wvg_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
-#     waveguide_hole_R = CylinderStructure(Vec3(0), h0, r0-((i+1)*r_wvg_tr), DielectricMaterial(1, order=1, color="blue"))
-#     waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a-((i+1)*a_wvg_tr)), engine=engine)]
-# #############################################################################################################
-
-################### adding one sided cubic tapered waveguide region to the cavity ##################################
+# adding waveguide region to the cavity 
 waveguide_cells_R = []
-a_wv = cubic_tapering(a,t_wvg,WN)
-a_wv = a_wv[::-1]
-for i in range(a_wv):
-    waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
-    waveguide_hole_R = CylinderStructure((Vec3(0), h0, d*i), DielectricMaterial(1, order=1, color="blue"))
-    waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
-#############################################################################################################
-
+for i in range(WN):
+    waveguide_box_R = BoxStructure(Vec3(0), Vec3(a-((i+1)*a_wvg_tr),w0,h0), DielectricMaterial(2.6, order=2, color="red"))
+    waveguide_hole_R = CylinderStructure(Vec3(0), h0, r0-((i+1)*r_wvg_tr), DielectricMaterial(1, order=1, color="blue"))
+    waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a-((i+1)*a_wvg_tr)), engine=engine)]
 
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R ,
+unit_cells=  mirror_cells_left + taper_cells_L + taper_cells_R + mirror_cells_right + waveguide_cells_R ,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(2.6, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
