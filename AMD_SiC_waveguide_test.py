@@ -51,7 +51,7 @@ def cubic_tapering(a,taperPrefac,taperNum):
     """
     a_taper = np.zeros((taperNum,))
     for i in range(taperNum-1):
-        a_taper[i] = a*(1 - taperPrefac * (2 * ((i) / taperNum) ** 3 - 3 * ((i) / taperNum) ** 2+1))
+        a_taper[i] = a*(1 - (1-taperPrefac) * (2 * ((i) / taperNum) ** 3 - 3 * ((i) / taperNum) ** 2+1))
     a_taper[taperNum-1] = a
     return a_taper
 
