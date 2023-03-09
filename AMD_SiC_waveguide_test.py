@@ -18,7 +18,7 @@ WN = 7
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
-MN_L = 18-TN
+MN_L = 10
 #mirror cell number (right region)
 MN_R = 4
 #defect cell number
@@ -156,7 +156,7 @@ a_wv = cubic_tapering(a,t_wvg,WN)
 a_wv = a_wv[::-1]
 for i in a_wv:
     waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
-    waveguide_hole_R = CylinderStructure((Vec3(0), h0, d*i), DielectricMaterial(1, order=1, color="blue"))
+    waveguide_hole_R = CylinderStructure(Vec3(0), h0, d*i, DielectricMaterial(1, order=1, color="blue"))
     waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
 #############################################################################################################
 
