@@ -108,9 +108,9 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 # the sim material is set to be SiC with refractive index = 2.6 
 cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
 mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
-mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a,w0,h0), engine=engine)] * MN_L
-mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a,w0,h0), engine=engine)] * MN_R
-cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin,w0,h0), engine=engine)] * CN
+mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_L
+mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_R
+cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
 ###########################################################################################################
 
 # ############### building linearly tapered cell region #####################################################
@@ -134,7 +134,7 @@ aList_taper = buildTapering_symmetric(a,t,TN)
 for i in aList_taper:
     taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
     taper_hole = CylinderStructure(Vec3(0), h0, d*i, DielectricMaterial(1, order=1, color="blue"))
-    taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i,w0,h0), engine=engine)]
+    taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i), engine=engine)]
 ############################################################################################################
 
 ########################################### set the center of the device ###################################
@@ -157,7 +157,7 @@ a_wv = a_wv[::-1]
 for i in a_wv:
     waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
     waveguide_hole_R = CylinderStructure(Vec3(0), h0, d*i, DielectricMaterial(1, order=1, color="blue"))
-    waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
+    waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i), engine=engine)]
 #############################################################################################################
 
 
