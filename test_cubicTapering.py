@@ -51,7 +51,7 @@ def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
 # print(a_taper) 
 
 # testing the building the tapering region of the cell #######################################
-a = 290 # nm 
+a = 2.748043533042073e-07 # m 
 taperNum_L = 8
 taperNum_R = 3
 taperNum = taperNum_L + taperNum_R

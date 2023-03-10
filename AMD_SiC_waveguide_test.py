@@ -131,6 +131,7 @@ cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine
 # ############### building cubic tapered cell region #####################################################
 taper_cells = []
 aList_taper = buildTapering_symmetric(a,t,TN)
+print(aList_taper) # debugging
 for i in aList_taper:
     taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
     taper_hole = CylinderStructure(Vec3(0), h0, d*i, DielectricMaterial(1, order=1, color="blue"))
@@ -153,6 +154,7 @@ centerCell = MN_L+TN-1
 ################### adding one sided cubic tapered waveguide region to the cavity ##################################
 waveguide_cells_R = []
 a_wv = cubic_tapering(a,t_wvg,WN)
+print(a_wv) # debugging
 a_wv = a_wv[::-1]
 for i in a_wv:
     waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
