@@ -18,7 +18,7 @@ WN = 7
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
-MN_L = 10
+MN_L = 20
 #mirror cell number (right region)
 MN_R = 4
 #defect cell number

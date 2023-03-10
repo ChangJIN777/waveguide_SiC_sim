@@ -33,6 +33,43 @@ def animate(ax,xi,yi, xs, ys):
     plt.xlabel('sim run')
     plt.ylabel('Fitness value')
 
+###################### define the functions we are using to build the cavity geometry ###################
+def cubic_tapering(a,taperPrefac,taperNum):
+    """
+    a: the lattice constant in the mirror region
+    taperNum: the number of taper cells
+    taperPrefac: taper prefactor 
+    """
+    a_taper = np.zeros((taperNum,))
+    for i in range(taperNum-1):
+        a_taper[i] = a*(1 - (1-taperPrefac) * (2 * ((i) / taperNum) ** 3 - 3 * ((i) / taperNum) ** 2+1))
+    a_taper[taperNum-1] = a
+    return a_taper
+
+def buildTapering_symmetric(a,taperPrefac,taperNum):
+    """
+    function for calculating the lattice constants for the tapering region of the cavity 
+    Note: this is used to build SYMMETRIC taper cell region
+    """
+    a_taper_R = cubic_tapering(a,taperPrefac,taperNum)
+    a_taper_L = a_taper_R[::-1]
+    tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
+    return tapering_region
+
+def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
+    """
+    function for calculating the lattice constants for the tapering region of the cavity 
+    Note: this is used to build ASYMMETRIC taper cell region
+    TN_L: the taper cell number on the left cell region 
+    TN_R: the taper cell number of the right cell region 
+    """
+    a_taper_R = cubic_tapering(a,taperPrefac,taperNum=taperNum_R)
+    a_taper_L = cubic_tapering(a,taperPrefac,taperNum=taperNum_L)
+    a_taper_L = a_taper_L[::-1]
+    tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
+    return tapering_region
+
+
 def fitness(params):
 
     start_time = datetime.now()
@@ -42,7 +79,7 @@ def fitness(params):
     #taper cell number
     TN = 8
     #mirror cell number
-    MN = 18-TN
+    MN = 20
     #defect cell number
     CN = 0
     #lattice constant
