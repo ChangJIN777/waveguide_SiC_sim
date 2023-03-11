@@ -43,16 +43,16 @@ l = 15e-6
 target_frequency = 327.3e12
 
 ###################### define the functions we are using to build the cavity geometry ###################
-def cubic_tapering(a,taperPrefac,taperNum):
+def cubic_defect(a,taperPrefac,taperNum):
     """
     a: the lattice constant in the mirror region
     taperNum: the number of taper cells
     taperPrefac: taper prefactor 
     """
     a_taper = np.zeros((taperNum,))
-    for i in range(taperNum-1):
-        a_taper[i] = a*(1 - (1-taperPrefac) * (2 * ((i) / taperNum) ** 3 - 3 * ((i) / taperNum) ** 2+1))
-    a_taper[taperNum-1] = a
+    d = 1-taperPrefac #defined as the depth of the defect (see Jasper Chan's thesis)
+    for i in range(taperNum):
+        a_taper[i] = a*(1-d*(2*((i/taperNum)**3) - 3*((i/taperNum)**2)+ 1))
     return a_taper
 
 def buildTapering_symmetric(a,taperPrefac,taperNum):

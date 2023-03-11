@@ -11,9 +11,9 @@ def cubic_defect(a,taperPrefac,taperNum):
     taperPrefac: taper prefactor 
     """
     a_taper = np.zeros((taperNum,))
-    for i in range(taperNum-1):
-        a_taper[i] = a*(1-(1-taperPrefac) * (2 * ((i) / taperNum) ** 3 - 3 * ((i) / taperNum) ** 2+1))
-    a_taper[taperNum-1] = a
+    d = 1-taperPrefac #defined as the depth of the defect (see Jasper Chan's thesis)
+    for i in range(taperNum):
+        a_taper[i] = a*(1-d*(2*((i/taperNum)**3) - 3*((i/taperNum)**2)+ 1))
     return a_taper
 
 def buildTapering(a,taperPrefac,taperNum):
@@ -39,26 +39,38 @@ def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
-# # testing the building the tapering region of the cell #######################################
+# # testing the quadratic tapering algorithm ####################################################
 # a = 290 # nm 
 # taperNum = 8
 # taperPrefac = 0.5 
-# taperingNum = np.linspace(0,taperNum*2,taperNum*2)
-# a_taper = buildTapering(a,taperPrefac,taperNum)
+# taperingNum = np.linspace(0,taperNum,taperNum)
+# a_taper = cubic_defect(a,taperPrefac,taperNum)
 # plt.plot(taperingNum,a_taper)
 # plt.show()
 # # debugging
 # print(a_taper) 
 
+
 # testing the building the tapering region of the cell #######################################
-a = 2.748043533042073e-07 # m 
-taperNum_L = 8
-taperNum_R = 3
-taperNum = taperNum_L + taperNum_R
-taperPrefac = 0.84
-taperingNum = np.linspace(0,taperNum,taperNum)
-a_taper = buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R)
+a = 290 # nm 
+taperNum = 8
+taperPrefac = 0.5 
+taperingNum = np.linspace(0,taperNum*2,taperNum*2)
+a_taper = buildTapering(a,taperPrefac,taperNum)
 plt.plot(taperingNum,a_taper)
 plt.show()
 # debugging
 print(a_taper) 
+
+# # testing the building the tapering region of the cell #######################################
+# a = 2.748043533042073e-07 # m 
+# taperNum_L = 8
+# taperNum_R = 3
+# taperNum = taperNum_L + taperNum_R
+# taperPrefac = 0.84
+# taperingNum = np.linspace(0,taperNum,taperNum)
+# a_taper = buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R)
+# plt.plot(taperingNum,a_taper)
+# plt.show()
+# # debugging
+# print(a_taper) 
