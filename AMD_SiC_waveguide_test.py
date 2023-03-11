@@ -78,6 +78,7 @@ def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
+
 #################################### Define geometry dependencies ######################################
 #beam width
 w0 = w*a
