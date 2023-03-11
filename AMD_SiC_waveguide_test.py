@@ -43,7 +43,7 @@ l = 15e-6
 target_frequency = 327.3e12
 
 ###################### define the functions we are using to build the cavity geometry ###################
-def cubic_defect(a,taperPrefac,taperNum):
+def cubic_tapering(a,taperPrefac,taperNum):
     """
     a: the lattice constant in the mirror region
     taperNum: the number of taper cells
@@ -158,7 +158,7 @@ print(a_wv) # debugging
 a_wv = a_wv[::-1]
 for i in a_wv:
     waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
-    waveguide_hole_R = CylinderStructure(Vec3(0), h0, d*i, DielectricMaterial(1, order=1, color="blue"))
+    waveguide_hole_R = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
     waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i), engine=engine)]
 #############################################################################################################
 
