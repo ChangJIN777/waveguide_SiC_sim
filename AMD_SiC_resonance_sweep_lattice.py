@@ -204,7 +204,7 @@ def fitness(params):
     r1 = cavity.get_results("resonance")[0]
 
     # define the fitness as P with the resonance frequency Gaussian penalty
-    fitness = detuning_wavelength
+    fitness = (Q*Qsc)*detuning_wavelength
  
     print(a)
     
