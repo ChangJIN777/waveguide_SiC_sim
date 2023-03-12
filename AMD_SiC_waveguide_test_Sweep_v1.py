@@ -223,7 +223,7 @@ def runSim(params):
 
 
 p0 = [0.9, 0.84]
-popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead')
+# popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead')
 
 # # debugging 
-# temp = runSim(p0)
+temp = runSim(p0)
