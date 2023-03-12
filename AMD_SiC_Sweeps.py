@@ -17,39 +17,69 @@ import struct
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation 
 from matplotlib import style
+from datetime import datetime
+
+
+###################### define the functions we are using to build the cavity geometry ###################
+def cubic_tapering(a,taperPrefac,taperNum):
+    """
+    a: the lattice constant in the mirror region
+    taperNum: the number of taper cells
+    taperPrefac: taper prefactor 
+    """
+    a_taper = np.zeros((taperNum,))
+    d = 1-taperPrefac #defined as the depth of the defect (see Jasper Chan's thesis)
+    for i in range(taperNum):
+        a_taper[i] = a*(1-d*(2*((i/taperNum)**3) - 3*((i/taperNum)**2)+ 1))
+    return a_taper
+
+def buildTapering_symmetric(a,taperPrefac,taperNum):
+    """
+    function for calculating the lattice constants for the tapering region of the cavity 
+    Note: this is used to build SYMMETRIC taper cell region
+    """
+    a_taper_R = cubic_tapering(a,taperPrefac,taperNum)
+    a_taper_L = a_taper_R[::-1]
+    tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
+    return tapering_region
+
+def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
+    """
+    function for calculating the lattice constants for the tapering region of the cavity 
+    Note: this is used to build ASYMMETRIC taper cell region
+    TN_L: the taper cell number on the left cell region 
+    TN_R: the taper cell number of the right cell region 
+    """
+    a_taper_R = cubic_tapering(a,taperPrefac,taperNum=taperNum_R)
+    a_taper_L = cubic_tapering(a,taperPrefac,taperNum=taperNum_L)
+    a_taper_L = a_taper_L[::-1]
+    tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
+    return tapering_region
 
 
 def fitness(params):
-
+	print("Starting sim") # for debugging purpose
+	start_time = datetime.now()
 	a = params[0] # the lattice constant 
 	d = params[1] # hole diameter prefactor 
 	w = params[2] # beam width prefactor 
 	t = params[3] # taper prefactor
 	t_wvg = params[4] # the taper prefactor of the waveguide region
 	# added parameter for simulating the waveguide 
- 
 	# the number of unit cells in the weaker mirror region
-	cellNum_R = 4
+	cellNum_R = 3
 	# the taper cell number for the waveguide region 
-	waveguide_TN = 6
+	waveguide_TN = 9
     
     # define geometry parameters
     #taper cell number
 	TN = 8
     #mirror cell number (on the left side)
-	MN = 24-TN
+	MN = 20
     #defect cell number
 	CN = 0
-    #lattice constant
-    #a = 320e-9
-    #hole diameter prefactor
-    #d = 0.64
-    #beam width prefactor
-    #w = 1.75
-    #taper prefactor
-    #t = 0.7
     #beam height (set by epi-layer thickness)
-	h0 = 220e-9
+	h0 = 250e-9
     # cavity beam length
 	l = 15e-6
     # The target resonance frequency, in Hz
@@ -169,7 +199,7 @@ def fitness(params):
 
 	return -1*fitness
 
-p0 = [2.97688965e-07, 6.63014844e-01, 1.73572998e+00, 7.48911133e-01, 7.48911133e-01]
+p0 = [3.348909692268754e-7, 0.64, 1.75, 0.84, 0.84]
 bnds = ((0,None),(0,None),(0,None),(0,1),(0,1))
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead',bounds=bnds)
 
