@@ -14,17 +14,17 @@ import os
 
 # Define geometry paramaters 
 #waveguide taper cell number
-WN = 7
+WN = 9
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 
 MN_L = 20
 #mirror cell number (right region)
-MN_R = 4
+cellNum_R = 3
 #defect cell number
 CN = 0
 #lattice constant
-a = 2.748043533042073e-07 
+a = 3.348909692268754e-07
 #hole diameter prefactor 
 d = 0.64
 #beam width prefactor
@@ -32,7 +32,7 @@ w = 1.75
 #taper prefactor (for the defect region)
 t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.84
+t_wvg = 0.5
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -100,6 +100,10 @@ a_tr = (a-amin) / TN
 r_wvg_tr = (r0-rmin_wvg)/WN
 #lattice taper rate (for the waveguide region)
 a_wvg_tr = (a-amin_wvg)/WN
+#the 
+prefactor_mirror_R = 0.8
+#the refractive index associated with the material 
+n_f = 2.6
 ############################################################################################################
 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations ###################
@@ -107,11 +111,14 @@ FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 
 # the sim material is set to be SiC with refractive index = 2.6 
-cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
+cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
 mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
 mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_L
-mirror_cells_right = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_R
-cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
+# added to modify the quasipotential associated with the right mirror region 
+a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
+cell_box_R = BoxStructure(Vec3(0), Vec3(a_R,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+mirror_hole_R = CylinderStructure(Vec3(0), h0, r0*prefactor_mirror_R, DielectricMaterial(1, order=1, color="blue"))
+mirror_cells_right = [UnitCell(structures=[ cell_box_R, mirror_hole_R ], size=Vec3(a_R), engine=engine)] * cellNum_R
 ###########################################################################################################
 
 # ############### building linearly tapered cell region #####################################################
@@ -182,7 +189,7 @@ man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz
 # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
 #                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
 r1 = cavity.simulate("resonance", target_freq=target_frequency, 
-                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
+                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 
 # Print the reults and plot the electric field profiles
 print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -190,18 +197,18 @@ r1["freq"], r1["vmode"],
 1/(1/r1["qxmin"] + 1/r1["qxmax"]),
 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
 ))
-r1["xyprofile"].show()
-r1["yzprofile"].show()
+# r1["xyprofile"].show()
+# r1["yzprofile"].show()
 
 cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
-# Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
-# Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
-# Vmode = r1["vmode"]
-# F = r1["freq"]
+Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
+Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+Vmode = r1["vmode"]
+F = r1["freq"]
 
-# Q = 1/((1/Qsc) + (1/Qwvg))
-# P = (Q*Qsc) / (Vmode*Vmode)
-# print("Q: %f, P: %f" % ( Q, P))
+Q = 1/((1/Qsc) + (1/Qwvg))
+P = (Q*Qsc) / (Vmode*Vmode)
+print("Q: %f, P: %f" % ( Q, P))
 
 r1 = cavity.get_results("resonance")[-1]
 print(r1['res']["xyprofile"].max_loc())
