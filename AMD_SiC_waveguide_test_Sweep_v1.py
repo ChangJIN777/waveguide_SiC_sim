@@ -119,7 +119,7 @@ def runSim(params):
 
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-    engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+    engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
     ############################# building the mirror structure ###########################################################
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
@@ -164,7 +164,7 @@ def runSim(params):
     )
     ##======================================================================================================
     # By setting the save path here, the cavity will save itself after each simulation to this file
-    cavity.save("cavity_sweep.obj")
+    cavity.save("cavity.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
@@ -197,7 +197,7 @@ def runSim(params):
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f" % ( Q, P))
 
-    r1 = cavity.get_results("resonance")[-1]
+    r1 = cavity.get_results("resonance")[0]
     
     # expected V mode
     Vmode_exp = 0.45
@@ -205,7 +205,7 @@ def runSim(params):
     # for debugging purposes  
     print("Qz: %f Qy: %f Qwvg: %f" %(Qz, Qy, Qwvg))
 
-    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((target_wavelength-resonance_wavelength)**2)/25))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength)**2)/25))
 
     # # evaluate the quasipotential
     # r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
