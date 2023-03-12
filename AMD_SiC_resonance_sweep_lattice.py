@@ -187,6 +187,8 @@ def fitness(params):
 
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    Qy = 1/(2/r1["qymax"])
+    Qz = 1/(1/r1["qzmin"] + 1/r1["qzmax"])
     Vmode = r1["vmode"]
     F = r1["freq"]
 
@@ -197,7 +199,8 @@ def fitness(params):
     Q = 1/((1/Qsc) + (1/Qwvg))
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f" % ( Q, P))
-
+    print("Qy: %f, Qz: %f" % ( Qy, Qz))
+    
     r1 = cavity.get_results("resonance")[0]
 
     # define the fitness as P with the resonance frequency Gaussian penalty
