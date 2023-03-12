@@ -137,7 +137,6 @@ def fitness(params):
     cell_box_R = BoxStructure(Vec3(0), Vec3(a_R,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     mirror_hole_R = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
     mirror_cells_right = [UnitCell(structures=[ cell_box_R, mirror_hole_R ], size=Vec3(a), engine=engine)] * cellNum_R
-    cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
     #########################################################################################################################
     
     ############### building cubic tapered cell region #####################################################
@@ -145,7 +144,7 @@ def fitness(params):
     aList_taper = buildTapering_symmetric(a,t,TN)
     print(aList_taper) # debugging
     for i in aList_taper:
-        taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
+        taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
         taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i), engine=engine)]
     ############################################################################################################
@@ -158,15 +157,17 @@ def fitness(params):
     a_wv = cubic_tapering(a,t_wvg,waveguide_TN)
     a_wv = a_wv[::-1]
     for i in a_wv:
-        waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
+        waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         waveguide_hole_R = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i), engine=engine)]
     #############################################################################################################
 
     cavity = Cavity1D(
-      unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
-      structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-      engine=engine
+        unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
+        structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+        engine=engine,
+        center_cell=centerCell,
+        center_shift=0,
     )
 
     # By setting the save path here, the cavity will save itself after each simulation to this file
