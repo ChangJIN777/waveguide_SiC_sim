@@ -41,9 +41,9 @@ def cubic_tapering(a,taperPrefac,taperNum):
     taperPrefac: taper prefactor 
     """
     a_taper = np.zeros((taperNum,))
-    for i in range(taperNum-1):
-        a_taper[i] = a*(1 - (1-taperPrefac) * (2 * ((i) / taperNum) ** 3 - 3 * ((i) / taperNum) ** 2+1))
-    a_taper[taperNum-1] = a
+    d = 1-taperPrefac #defined as the depth of the defect (see Jasper Chan's thesis)
+    for i in range(taperNum):
+        a_taper[i] = a*(1-d*(2*((i/taperNum)**3) - 3*((i/taperNum)**2)+ 1))
     return a_taper
 
 def buildTapering_symmetric(a,taperPrefac,taperNum):
@@ -71,15 +71,14 @@ def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
 
 
 def fitness(params):
-
+    print("Starting sim") # for debugging purpose
     start_time = datetime.now()
-    a = params[0] # the lattice constant 
-    
+    a = params[0] # sweeping the lattice constant 
     # define geometry parameters
     #taper cell number
     TN = 8
-    #mirror cell number
-    MN = 20
+    #mirror cell number (the left mirror region)
+    MN_L = 20
     #defect cell number
     CN = 0
     #lattice constant
@@ -115,33 +114,57 @@ def fitness(params):
     n_f = 2.6
     #V mode expected 
     Vmode_exp = 0.6
+    #the prefactor characterizing the weaker mirror region 
+    prefactor_mirror_R = 1
+    #the right (weaker) mirror region 
+    cellNum_R = 3
+    #the waveguide region 
+    waveguide_TN = 9
+    # added waveguide region 
+    t_wvg = t 
  
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
     # engine = LumericalEngine(mesh_accuracy=3, hide=True, lumerical_path=FDTDloc, working_path="./fsps", save_fsp=False)
     engine = LumericalEngine(mesh_accuracy=3, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
+    ############################# building the mirror structure ###########################################################
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
-    mirror_cells = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN
+    mirror_cells_left = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN_L
+    # added to modify the quasipotential associated with the right mirror region 
+    a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
+    cell_box_R = BoxStructure(Vec3(0), Vec3(a_R,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+    mirror_hole_R = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
+    mirror_cells_right = [UnitCell(structures=[ cell_box_R, mirror_hole_R ], size=Vec3(a), engine=engine)] * cellNum_R
     cavity_cells = [UnitCell(structures=[ cell_box ], size=Vec3(amin), engine=engine)] * CN
+    #########################################################################################################################
     
-    i = 1
-    taper_cells_L = []
-    taper_cells_R = []
-    while i <= TN: 
-        taper_box_L = BoxStructure(Vec3(0), Vec3(a-(i*a_tr),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
-        taper_hole_L = CylinderStructure(Vec3(0), h0, r0-(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
-        taper_cells_L += [UnitCell(structures=[ taper_box_L, taper_hole_L ], size=Vec3(a-(i*a_tr)), engine=engine)]
+    ############### building cubic tapered cell region #####################################################
+    taper_cells = []
+    aList_taper = buildTapering_symmetric(a,t,TN)
+    print(aList_taper) # debugging
+    for i in aList_taper:
+        taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
+        taper_hole = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
+        taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i), engine=engine)]
+    ############################################################################################################
 
-        taper_box_R = BoxStructure(Vec3(0), Vec3(amin+(i*a_tr),w0,h0), DielectricMaterial(n_f, order=2, color="red"))
-        taper_hole_R = CylinderStructure(Vec3(0), h0, rmin+(i*r_tr), DielectricMaterial(1, order=1, color="blue"))
-        taper_cells_R += [UnitCell(structures=[ taper_box_R, taper_hole_R ], size=Vec3(amin+(i*a_tr)), engine=engine)]
-
-        i = i+1 
+    ########################################### set the center of the device ###################################
+    centerCell = MN_L+TN-1
+    
+    ################### adding one sided cubic tapered waveguide region to the cavity ##################################
+    waveguide_cells_R = []
+    a_wv = cubic_tapering(a,t_wvg,waveguide_TN)
+    a_wv = a_wv[::-1]
+    for i in a_wv:
+        waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(2.6, order=2, color="red"))
+        waveguide_hole_R = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
+        waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i), engine=engine)]
+    #############################################################################################################
 
     cavity = Cavity1D(
-      unit_cells=  mirror_cells + taper_cells_L + taper_cells_R + mirror_cells ,
+      unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
       structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
       engine=engine
     )
@@ -149,9 +172,8 @@ def fitness(params):
     # By setting the save path here, the cavity will save itself after each simulation to this file
     cavity.save("cavity.obj")
 
-    #define mesh size (use 10nm for accuracy, currently set to 20nm)
+    #define mesh size (use 10nm for accuracy, currently set to 15nm)
     man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
-
 
     r1 = cavity.simulate("resonance", target_freq=target_frequency, mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
 
@@ -182,7 +204,7 @@ def fitness(params):
  
     print(a)
     
-    with open("./sim_data/OptimizeListFull_resonance_lattice_sweep_v1.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_resonance_lattice_sweep_v2.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,Q,Qsc,Qwvg,Vmode,detuning_wavelength,fitness])
     
@@ -191,6 +213,6 @@ def fitness(params):
     
     return -1*fitness
 
-p0 = [2.90e-07]
+p0 = [2.748043533042073e-07]
 popt = scipy.optimize.minimize(fitness,p0,method='Nelder-Mead')
 
