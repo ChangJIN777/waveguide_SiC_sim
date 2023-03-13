@@ -188,6 +188,8 @@ def band_structure(a,d,w,h0,n_f,engine):
     print('Duration: {}'.format(end_time - start_time))
     
 def unitCellOptimization_SiC(params):
+    print("Starting sim") # for debugging purpose
+    start_time = datetime.now()
     d = params[0]
     w = params[1]
     h0 = params[2]
@@ -200,13 +202,21 @@ def unitCellOptimization_SiC(params):
     # simulate the band gap of the unit cell 
     diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap(a,d,w,h0,n_f,engine)
     # wavelength_pen = np.exp(-((target_frequency - mg)/target_frequency)**2) # the wavelength detuning penalty
+    detuning = target_frequency - mg
     fitness = -1*bg_mg_rat*delta_k
     if fitness < -.007:
         a = mg / target_frequency * a # first order correction to the lattice constant 
+    
+    print("d: %f, w: %f, h0: %f" % ( d, w, h0))
+    print("Detune: %f" % (detuning))
+    print("Fitness: %f" % (fitness))
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
     with open("./sim_data/unitcell_Optimization.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,h0,mg,bg_mg_rat,fitness])
+    
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
     
     return fitness
