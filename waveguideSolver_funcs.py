@@ -175,3 +175,15 @@ def sim_bandGap(a,d,w,h0,n_f,engine):
     r2.show()
     
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k
+
+def band_structure(a,d,w,h0,n_f,engine):
+    
+    start_time = datetime.now()
+    cell = buildUnitCell(a,d,w,h0,n_f,engine)
+    # r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 12), freqs=(0.25e15, 0.7e15, 100000),
+    #                    dipole_region=Vec3(0.8, 0, 0), window_pos = 0)
+    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 4), freqs=(0.15e15, 0.75e15, 300000))
+    # # # Plot the bandstructure
+    r1.show()
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))

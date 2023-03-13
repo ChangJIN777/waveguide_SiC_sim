@@ -53,4 +53,5 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 
 #simulate the band gap 
 sim_bandGap(a,d,w,h0,n_f,engine)
-
+#simulate the band structure 
+band_structure(a,d,w,h0,n_f,engine)
