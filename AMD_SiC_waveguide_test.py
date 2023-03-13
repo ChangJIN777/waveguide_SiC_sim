@@ -32,7 +32,7 @@ w = 1.75
 #taper prefactor (for the defect region)
 t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.5
+t_wvg = 0.84
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
