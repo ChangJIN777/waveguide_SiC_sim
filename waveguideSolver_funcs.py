@@ -10,6 +10,7 @@ from wvgsolver.engine import LumericalEngine
 import scipy.optimize
 import numpy as np
 import os
+from datetime import datetime
 
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
@@ -113,3 +114,62 @@ def buildTaperRegion(a_L,a_R,amin,d,w,h0,n_f,TN,engine):
         taper_hole = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
         taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i), engine=engine)]
     return taper_cells
+
+def buildUnitCell(a,d,w,h0,n_f,engine):
+    """the function use the given parameters to build a unit cell 
+
+    Args:
+        a (float): the lattice constant 
+        d (float): hole diameter prefactor 
+        w (float): the beam width prefactor
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        engine : the FDTD engine used to simulate the waveguide region
+
+    Returns:
+        cell: the UnitCell object in waveguide solver 
+    """
+    w0 = w*a
+    r0 = a*d/2
+    cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+    hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
+    cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a), engine=engine)
+    return cell
+
+def sim_bandGap(a,d,w,h0,n_f,engine):
+    """the function generates the bandgap associated with the simulated unit cell
+
+    Args:
+        a (float): the lattice constant 
+        d (float): hole diameter prefactor 
+        w (float): the beam width prefactor
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        engine : the FDTD engine used to simulate the waveguide region
+        
+    Returns:
+        _type_: _description_
+    """
+    start_time = datetime.now()
+    cell = buildUnitCell(a,d,w,h0,n_f,engine)
+
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
+
+    diel_freq = r2[0] # the dielectric band frequency 
+    air_freq = r2[1] # the air band frequyency 
+    bg = air_freq - diel_freq # the band gap 
+    mg = (diel_freq + air_freq) / 2 # the mid band gap 
+    bg_mg_rat = bg / mg 
+
+    delta_k = .5-a*mg/2.998e8
+    end_time = datetime.now()
+
+    print('--------')
+    print('Duration: {}'.format(end_time - start_time))
+    print('Lower band edge frequency: %f THz' % (diel_freq / 1e12))
+    print("Bandgap ratio: %f percent" % (bg_mg_rat * 100))
+    print("Midgap frequency: %f THz" % (mg / 1e12))
+    print("Delta k: %f " % delta_k)
+    print('\n')
+
+    return diel_freq, air_freq, mg, bg_mg_rat, delta_k
