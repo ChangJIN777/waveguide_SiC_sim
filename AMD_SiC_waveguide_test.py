@@ -69,11 +69,17 @@ centerCell = MN_L+TN-1
 #adding one sided cubic tapered waveguide region to the cavity
 waveguide_cells_R = buildWaveguideRegion_right(a_R,d,w,t_wvg,h0,WN,n_f,engine)
 
+# cavity = Cavity1D(
+# unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R ,
+# structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+# center_cell=centerCell,
+# center_shift=0,
+# engine=engine
+# )
+# simulating the quasipotential of only the weak mirror + waveguide region 
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R ,
+unit_cells=  mirror_cells_right + waveguide_cells_R ,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-center_cell=centerCell,
-center_shift=0,
 engine=engine
 )
 
