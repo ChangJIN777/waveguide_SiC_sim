@@ -12,37 +12,37 @@ import numpy as np
 import os
 
 #define the functions we are using to build the cavity geometry
-def cubic_tapering(a,taperPrefac,taperNum):
+def cubic_tapering(a,amin,taperNum):
     """
     a: the lattice constant in the mirror region
     taperNum: the number of taper cells
-    taperPrefac: taper prefactor 
+    amin: the minimum lattice constant in the tapering region
     """
     a_taper = np.zeros((taperNum,))
-    d = 1-taperPrefac #defined as the depth of the defect (see Jasper Chan's thesis)
+    d = 1-(amin/a) #defined as the depth of the defect (see Jasper Chan's thesis)
     for i in range(taperNum):
         a_taper[i] = a*(1-d*(2*((i/taperNum)**3) - 3*((i/taperNum)**2)+ 1))
     return a_taper
 
-def buildTapering_symmetric(a,taperPrefac,taperNum):
+def buildTapering_symmetric(a,amin,taperNum):
     """
     function for calculating the lattice constants for the tapering region of the cavity 
     Note: this is used to build SYMMETRIC taper cell region
     """
-    a_taper_R = cubic_tapering(a,taperPrefac,taperNum)
+    a_taper_R = cubic_tapering(a,amin,taperNum)
     a_taper_L = a_taper_R[::-1]
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
-def buildTapering_asymmetric(a_L,a_R,taperPrefac,taperNum):
+def buildTapering_asymmetric(a_L,a_R,amin,taperNum):
     """
     function for calculating the lattice constants for the tapering region of the cavity 
     Note: this is used to build ASYMMETRIC taper cell region
-    TN_L: the taper cell number on the left cell region 
-    TN_R: the taper cell number of the right cell region 
+    amin: the minimum lattice constant in the tapering region
+    taperNum: the number of tapering cells
     """
-    a_taper_R = cubic_tapering(a_R,taperPrefac,taperNum=taperNum)
-    a_taper_L = cubic_tapering(a_L,taperPrefac,taperNum=taperNum)
+    a_taper_R = cubic_tapering(a_R,amin,taperNum=taperNum)
+    a_taper_L = cubic_tapering(a_L,amin,taperNum=taperNum)
     a_taper_L = a_taper_L[::-1]
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
@@ -89,7 +89,7 @@ def buildMirrorRegion(a,d,w,h0,n_f,MN,engine):
     mirror_cells = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN
     return mirror_cells
 
-def buildTaperRegion(a_L,a_R,d,w,t,h0,n_f,TN,engine):
+def buildTaperRegion(a_L,a_R,amin,d,w,h0,n_f,TN,engine):
     """the function used to build mirriro region
 
     Args:
@@ -97,7 +97,7 @@ def buildTaperRegion(a_L,a_R,d,w,t,h0,n_f,TN,engine):
         a_R (float): the lattice constant used to build the mirror region on the right side 
         d (float): hole diameter prefactor 
         w (float): the beam width prefactor
-        t: the tapering prefactor associated with the waveguide region 
+        amin: the minimum lattice constant in the tapering region
         h0 (float): the beam height
         n_f (float): the refractive index associated with the material
         TN (int): the number of tapering cells 
@@ -105,7 +105,7 @@ def buildTaperRegion(a_L,a_R,d,w,t,h0,n_f,TN,engine):
     """
     taper_cells = []
     w0 = w*a_L #the beam width
-    aList_taper = buildTapering_asymmetric(a_L,a_R,t,TN)
+    aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
     for i in aList_taper:
         taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))

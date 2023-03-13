@@ -49,7 +49,9 @@ n_f = 2.6
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 # engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
-
+#the minimum lattice constant in the tapering region
+amin = a*t
+    
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion(a,d,w,h0,n_f,MN_L,engine)
 
@@ -58,7 +60,7 @@ a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirr
 mirror_cells_right = buildMirrorRegion(a_R,d,w,h0,n_f,MN_R,engine)
 
 #building cubic tapered cell region
-taper_cells = buildTaperRegion(a,a_R,d,w,t,h0,n_f,TN,engine)
+taper_cells = buildTaperRegion(a,a_R,amin,d,w,h0,n_f,TN,engine)
 
 #set the center of the device
 centerCell = MN_L+TN-1

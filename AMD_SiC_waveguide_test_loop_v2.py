@@ -59,7 +59,9 @@ def runSim(params):
     r0 = (d*a)/2
     #refractive index of the material we are trying to simulate (SiC = 2.6)
     n_f = 2.6
-
+    #the minimum lattice constant in the tapering region
+    amin = a*t
+    
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
     engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
@@ -70,7 +72,7 @@ def runSim(params):
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
     mirror_cells_right = buildMirrorRegion(a_R,d,w,h0,n_f,MN_R,engine)
     #building cubic tapered cell region
-    taper_cells = buildTaperRegion(a,a_R,d,w,t,h0,n_f,TN,engine)
+    taper_cells = buildTaperRegion(a,a_R,amin,d,w,h0,n_f,TN,engine)
     #set the center of the device
     centerCell = MN_L+TN-1
     #adding one sided cubic tapered waveguide region to the cavity
