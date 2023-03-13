@@ -106,6 +106,7 @@ def buildTaperRegion(a_L,a_R,amin,d,w,h0,n_f,TN,engine):
     taper_cells = []
     w0 = w*a_L #the beam width
     aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
+    print(aList_taper) # debugging
     for i in aList_taper:
         taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
