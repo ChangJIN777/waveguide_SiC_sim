@@ -210,9 +210,9 @@ print(r1['res']["yzprofile"].max_loc())
 # r1["sess_res"].show()
 # # ======================================================================================
 
-# # # evaluate the quasipotential
-# r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
-# r2.show()
+# # evaluate the quasipotential
+r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
+r2.show()
 
 # file = open("OptimizeList.txt","a") 
 # file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
