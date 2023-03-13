@@ -104,7 +104,7 @@ def buildTaperRegion(a_L,a_R,d,w,t,h0,n_f,TN,engine):
         engine: the FDTD engine used to simulate the waveguide region
     """
     taper_cells = []
-    w0 = w*a #the beam width
+    w0 = w*a_L #the beam width
     aList_taper = buildTapering_asymmetric(a_L,a_R,t,TN)
     for i in aList_taper:
         taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
