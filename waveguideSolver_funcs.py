@@ -207,7 +207,7 @@ def unitCellOptimization_SiC(params):
     if fitness < -.007:
         a = mg / target_frequency * a # first order correction to the lattice constant 
     
-    print("d: %f, w: %f, h0: %f" % ( d, w, h0))
+    print("a: %f, d: %f, w: %f, h0: %f" % (a, d, w, h0))
     print("Detune: %f" % (detuning))
     print("Fitness: %f" % (fitness))
     
