@@ -28,13 +28,13 @@ def runSim(params):
     #mirror cell number (left region) 
     MN_L = 20
     #lattice constant
-    a = 3.348909692268754e-07
+    a = 3.359778840684883e-07
     #hole diameter prefactor 
-    d = 0.64
+    d = 0.664071400074050
     #beam width prefactor
-    w = 1.75
+    w = 1.733075832904623
     #taper prefactor (for the defect region)
-    t = 0.84
+    t = 0.840885461385396
     #beam height (set by epi-layer thickness)
     h0 = 250e-9
     # cavity beam length
@@ -49,9 +49,9 @@ def runSim(params):
     # the taper cell number for the waveguide region 
     WN = params[1]
     #the prefactor characterizing the right mirror region 
-    prefactor_mirror_R = 1
+    prefactor_mirror_R = 0.902832313211160
     # added waveguide region 
-    t_wvg = 0.84
+    t_wvg = 0.837666380000534
     # Define geometry dependencies
     #beam width
     w0 = w*a
@@ -127,7 +127,7 @@ def runSim(params):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength)**2)/25))
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v10.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v11.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,t,prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 
