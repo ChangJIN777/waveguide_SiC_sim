@@ -32,7 +32,7 @@ w = 1.75
 #taper prefactor (for the defect region)
 t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.84
+t_wvg = 0.5
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -42,7 +42,7 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.9
+prefactor_mirror_R = 1
 #the refractive index associated with the material 
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
