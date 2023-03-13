@@ -172,4 +172,6 @@ def sim_bandGap(a,d,w,h0,n_f,engine):
     print("Delta k: %f " % delta_k)
     print('\n')
 
+    r2.show()
+    
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k
