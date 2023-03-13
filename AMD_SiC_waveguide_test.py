@@ -35,15 +35,15 @@ def buildTapering_symmetric(a,taperPrefac,taperNum):
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
-def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
+def buildTapering_asymmetric(a_L,a_R,taperPrefac,taperNum):
     """
     function for calculating the lattice constants for the tapering region of the cavity 
     Note: this is used to build ASYMMETRIC taper cell region
     TN_L: the taper cell number on the left cell region 
     TN_R: the taper cell number of the right cell region 
     """
-    a_taper_R = cubic_tapering(a,taperPrefac,taperNum=taperNum_R)
-    a_taper_L = cubic_tapering(a,taperPrefac,taperNum=taperNum_L)
+    a_taper_R = cubic_tapering(a_R,taperPrefac,taperNum=taperNum)
+    a_taper_L = cubic_tapering(a_L,taperPrefac,taperNum=taperNum)
     a_taper_L = a_taper_L[::-1]
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
@@ -91,11 +91,12 @@ def buildMirrorRegion(a,d,w,h0,n_f,MN,engine):
     mirror_cells = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN
     return mirror_cells
 
-def buildTaperRegion(a,d,w,t,h0,n_f,TN,engine):
+def buildTaperRegion(a_L,a_R,d,w,t,h0,n_f,TN,engine):
     """the function used to build mirriro region
 
     Args:
-        a (float): the lattice constant used to build the mirror region 
+        a_L (float): the lattice constant used to build the mirror region on the left side 
+        a_R (float): the lattice constant used to build the mirror region on the right side 
         d (float): hole diameter prefactor 
         w (float): the beam width prefactor
         t: the tapering prefactor associated with the waveguide region 
@@ -106,7 +107,7 @@ def buildTaperRegion(a,d,w,t,h0,n_f,TN,engine):
     """
     taper_cells = []
     w0 = w*a #the beam width
-    aList_taper = buildTapering_symmetric(a,t,TN)
+    aList_taper = buildTapering_asymmetric(a_L,a_R,t,TN)
     for i in aList_taper:
         taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
@@ -131,7 +132,7 @@ w = 1.75
 #taper prefactor (for the defect region)
 t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.5
+t_wvg = 0.84
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -156,13 +157,13 @@ a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirr
 mirror_cells_right = buildMirrorRegion(a_R,d,w,h0,n_f,MN_R,engine)
 
 #building cubic tapered cell region
-taper_cells = buildTaperRegion(a,d,w,t,h0,n_f,TN,engine)
+taper_cells = buildTaperRegion(a,a_R,d,w,t,h0,n_f,TN,engine)
 
 #set the center of the device
 centerCell = MN_L+TN-1
 
 #adding one sided cubic tapered waveguide region to the cavity
-waveguide_cells_R = buildWaveguideRegion_right(a,d,w,t_wvg,h0,WN,n_f,engine)
+waveguide_cells_R = buildWaveguideRegion_right(a_R,d,w,t_wvg,h0,WN,n_f,engine)
 
 cavity = Cavity1D(
 unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R ,
