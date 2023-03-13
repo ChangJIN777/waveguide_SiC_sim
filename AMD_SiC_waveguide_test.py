@@ -11,6 +11,7 @@ from wvgsolver.engine import LumericalEngine
 import scipy.optimize
 import numpy as np
 import os
+from datetime import datetime
 
 from waveguideSolver_funcs import *
 
@@ -114,7 +115,11 @@ man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz
 # # # #####################################################################################
 
 # # evaluate the quasipotential
+print("Starting sim") # for debugging purpose
+start_time = datetime.now()
 r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
 r2.show()
 
 # file = open("OptimizeList.txt","a") 
