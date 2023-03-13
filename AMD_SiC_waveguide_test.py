@@ -69,19 +69,19 @@ centerCell = MN_L+TN-1
 #adding one sided cubic tapered waveguide region to the cavity
 waveguide_cells_R = buildWaveguideRegion_right(a_R,d,w,t_wvg,h0,WN,n_f,engine)
 
-# cavity = Cavity1D(
-# unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R ,
-# structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-# center_cell=centerCell,
-# center_shift=0,
-# engine=engine
-# )
-# simulating the quasipotential of only the weak mirror + waveguide region 
 cavity = Cavity1D(
-unit_cells=  mirror_cells_right + waveguide_cells_R ,
+unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R ,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+center_cell=centerCell,
+center_shift=0,
 engine=engine
 )
+# # simulating the quasipotential of only the weak mirror + waveguide region 
+# cavity = Cavity1D(
+# unit_cells=  mirror_cells_right + waveguide_cells_R ,
+# structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+# engine=engine
+# )
 
 # By setting the save path here, the cavity will save itself after each simulation to this file
 cavity.save("cavity_testing.obj")
@@ -89,44 +89,44 @@ cavity.save("cavity_testing.obj")
 #define mesh size (use 12nm for accuracy, currently set to 50nm)
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
 
-# # simulating the resonance and the Q #########################################################
-# # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-# #                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
-# r1 = cavity.simulate("resonance", target_freq=target_frequency, 
-#                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
+# simulating the resonance and the Q #########################################################
+# r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
+#                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
+r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 
-# # Print the reults and plot the electric field profiles
-# print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
-# r1["freq"], r1["vmode"],
-# 1/(1/r1["qxmin"] + 1/r1["qxmax"]),
-# 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
-# ))
-# # r1["xyprofile"].show()
-# # r1["yzprofile"].show()
+# Print the reults and plot the electric field profiles
+print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
+r1["freq"], r1["vmode"],
+1/(1/r1["qxmin"] + 1/r1["qxmax"]),
+1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+))
+# r1["xyprofile"].show()
+# r1["yzprofile"].show()
 
-# cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
-# Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
-# Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
-# Vmode = r1["vmode"]
-# F = r1["freq"]
+cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
+Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
+Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+Vmode = r1["vmode"]
+F = r1["freq"]
 
-# Q = 1/((1/Qsc) + (1/Qwvg))
-# P = (Q*Qsc) / (Vmode*Vmode)
-# print("Q: %f, P: %f" % ( Q, P))
+Q = 1/((1/Qsc) + (1/Qwvg))
+P = (Q*Qsc) / (Vmode*Vmode)
+print("Q: %f, P: %f" % ( Q, P))
 
-# r1 = cavity.get_results("resonance")[-1]
-# print(r1['res']["xyprofile"].max_loc())
-# print(r1['res']["yzprofile"].max_loc())
-# # r1["sess_res"].show()
-# # # #####################################################################################
+r1 = cavity.get_results("resonance")[-1]
+print(r1['res']["xyprofile"].max_loc())
+print(r1['res']["yzprofile"].max_loc())
+# r1["sess_res"].show()
+# # #####################################################################################
 
-# # evaluate the quasipotential
-print("Starting sim") # for debugging purpose
-start_time = datetime.now()
-r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
-end_time = datetime.now()
-print('Duration: {}'.format(end_time - start_time))
-r2.show()
+# # # evaluate the quasipotential
+# print("Starting sim") # for debugging purpose
+# start_time = datetime.now()
+# r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
+# end_time = datetime.now()
+# print('Duration: {}'.format(end_time - start_time))
+# r2.show()
 
 # file = open("OptimizeList.txt","a") 
 # file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
