@@ -28,7 +28,7 @@ def runSim(params):
     #mirror cell number (left region) 
     MN_L = 20
     #lattice constant
-    a = 3.348909692268754e-07
+    a = params[0]
     #hole diameter prefactor 
     d = 0.64
     #beam width prefactor
@@ -49,9 +49,9 @@ def runSim(params):
     # the taper cell number for the waveguide region 
     WN = 9
     #the prefactor characterizing the right mirror region 
-    prefactor_mirror_R = params[0]
+    prefactor_mirror_R = params[1]
     # added waveguide region 
-    t_wvg = params[1] # set to 7.9075e-01 previously
+    t_wvg = params[2] # set to 7.9075e-01 previously
     # Define geometry dependencies
     #beam width
     w0 = w*a
@@ -141,8 +141,8 @@ def runSim(params):
     return -1*fitness
 
 
-p0 = [0.9, 0.84]
+p0 = [3.348909692268754e-07,0.9, 0.84]
 # popt = scipy.optimize.minimize(runSim,p0,method='Nelder-Mead')
 
-# debugging 
+# for debugging purposes
 temp = runSim(p0)
