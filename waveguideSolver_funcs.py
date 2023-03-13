@@ -11,6 +11,7 @@ import scipy.optimize
 import numpy as np
 import os
 from datetime import datetime
+import csv
 
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
@@ -153,7 +154,7 @@ def sim_bandGap(a,d,w,h0,n_f,engine):
     start_time = datetime.now()
     cell = buildUnitCell(a,d,w,h0,n_f,engine)
 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.4e15, 100000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
@@ -180,8 +181,29 @@ def band_structure(a,d,w,h0,n_f,engine):
     cell = buildUnitCell(a,d,w,h0,n_f,engine)
     # r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 12), freqs=(0.25e15, 0.7e15, 100000),
     #                    dipole_region=Vec3(0.8, 0, 0), window_pos = 0)
-    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.5e15, 150000))
+    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.4e15, 150000))
     # # # Plot the bandstructure
     r1.show()
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
+    
+def unitCellOptimization_SiC(d,w,h0):
+    # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
+    FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+    engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+    a = 2.70e-07 #a lattice constant where it is not going to catch a higher order mode 
+    n_f = 2.6 # for SiC
+    target_frequency = 327.3e12
+    # simulate the band gap of the unit cell 
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap(a,d,w,h0,n_f,engine)
+    # wavelength_pen = np.exp(-((target_frequency - mg)/target_frequency)**2) # the wavelength detuning penalty
+    fitness = -1*bg_mg_rat*delta_k
+    if fitness < -.007:
+        a = mg / target_frequency * a # first order correction to the lattice constant 
+    
+    # writing the data into a csv file instead of a txt file for easier data analysis 
+    with open("./sim_data/unitcell_Optimization.csv","a") as file_csv:
+        writer = csv.writer(file_csv, delimiter="\t")
+        writer.writerow([a,d,w,h0,mg,bg_mg_rat,fitness])
+    
+    return fitness
