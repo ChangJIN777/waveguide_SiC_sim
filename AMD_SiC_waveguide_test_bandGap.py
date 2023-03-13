@@ -58,5 +58,5 @@ n_f = 2.6
 
 #Optimize the unit cell 
 p0=[d,w,h0]
-unitCellOptimization_SiC(p0) #debugging
-# popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead')
+# unitCellOptimization_SiC(p0) #debugging
+popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead')
