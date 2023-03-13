@@ -187,7 +187,10 @@ def band_structure(a,d,w,h0,n_f,engine):
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
     
-def unitCellOptimization_SiC(d,w,h0):
+def unitCellOptimization_SiC(params):
+    d = params[0]
+    w = params[1]
+    h0 = params[2]
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
     engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
