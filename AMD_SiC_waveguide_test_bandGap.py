@@ -48,16 +48,19 @@ prefactor_mirror_R = 0.9
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-# engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
+engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 # engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
-# #simulate the band gap 
-# sim_bandGap(a,d,w,h0,n_f,engine)
-# #simulate the band structure 
-# band_structure(a,d,w,h0,n_f,engine)
+#testing the tapered lattice constants 
+a = t*a
 
-#Optimize the unit cell 
-p0=[a,d,w]
-bnd = ((2.50e-07,3.00e-07),(0,1),(1,None))
-# unitCellOptimization_SiC(p0) #debugging
-popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead',bounds=bnd)
+#simulate the band gap 
+sim_bandGap(a,d,w,h0,n_f,engine)
+#simulate the band structure 
+band_structure(a,d,w,h0,n_f,engine)
+
+# #Optimize the unit cell 
+# p0=[a,d,w]
+# bnd = ((2.50e-07,3.00e-07),(0,1),(1,None))
+# # unitCellOptimization_SiC(p0) #debugging
+# popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead',bounds=bnd)
