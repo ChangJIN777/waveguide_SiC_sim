@@ -76,10 +76,8 @@ def buildWaveguideRegion_right(a,d,w,t_wvg,h0,WN,n_f,engine):
     for i in a_wv:
         waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         waveguide_hole_R = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
-        waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i), engine=engine)]
+        waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
     return waveguide_cells_R
-
-
 
 def buildMirrorRegion(a,d,w,h0,n_f,MN,engine):
     """the function used to build mirriro region
@@ -97,7 +95,7 @@ def buildMirrorRegion(a,d,w,h0,n_f,MN,engine):
     r0 = d*a/2 #Radius of the air holes in the cells
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
-    mirror_cells = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)] * MN
+    mirror_cells = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a,w0,h0), engine=engine)] * MN
     return mirror_cells
 
 def buildTaperRegion(a_L,a_R,amin,d,w,h0,n_f,TN,engine):
@@ -120,7 +118,7 @@ def buildTaperRegion(a_L,a_R,amin,d,w,h0,n_f,TN,engine):
     for i in aList_taper:
         taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         taper_hole = CylinderStructure(Vec3(0), h0, d*i/2, DielectricMaterial(1, order=1, color="blue"))
-        taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i), engine=engine)]
+        taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i,w0,h0), engine=engine)]
     return taper_cells
 
 def buildUnitCell(a,d,w,h0,n_f,engine):
@@ -141,7 +139,7 @@ def buildUnitCell(a,d,w,h0,n_f,engine):
     r0 = a*d/2
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
-    cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a), engine=engine)
+    cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
 def sim_bandGap(a,d,w,h0,n_f,engine):
