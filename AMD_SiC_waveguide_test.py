@@ -43,7 +43,7 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.9
+prefactor_mirror_R = 1
 #the refractive index associated with the material 
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
@@ -87,13 +87,13 @@ engine=engine
 cavity.save("cavity_testing.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 50nm)
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q #########################################################
-r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
-# r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+# r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
 #                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
+r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+                    mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 
 # Print the reults and plot the electric field profiles
 print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
