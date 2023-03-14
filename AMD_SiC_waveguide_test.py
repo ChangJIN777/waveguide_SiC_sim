@@ -25,11 +25,14 @@ MN_L = 20
 #mirror cell number (right region)
 MN_R = 3
 #lattice constant
-a = 2.801277586646125e-7
+# a = 2.801277586646125e-7
+a = 2.80e-7
 #hole diameter prefactor 
-d = 0.642241102375429
+# d = 0.642241102375429
+d = 0.64
 #beam width prefactor
-w = 1.692961161046466
+# w = 1.692961161046466
+w = 1.69
 #taper prefactor (for the defect region)
 t = 0.8
 #taper prefactor (for the waveguide region)
