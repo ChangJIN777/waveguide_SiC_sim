@@ -55,22 +55,22 @@ r_wvg_tr = (r0-rmin_wvg)/WN
 n_f = 2.6
 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
-FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+FDTDloc='C:/Program Files/Lumerical/v221/'
 engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
 # build the tapered waveguide unit cells 
 r_wvg = np.linspace(rmin_wvg,r0,WN)
 
-# simulate the band gap 
-for i in r_wvg:
-    i_nm = i*1e9
-    d = i/a
-    print("radius: %f nm" % (i_nm))
-    sim_bandGap(a,d,w,h0,n_f,engine)
+# # simulate the band gap 
+# for i in r_wvg:
+#     i_nm = i*1e9
+#     d = i/a
+#     print("radius: %f nm" % (i_nm))
+#     sim_bandGap(a,d,w,h0,n_f,engine)
 
-i = -1 #choose which cell to simulate
 #simulate the band structure 
-d_BS = r_wvg[-1]/a
+d_BS = d_wvg_min #choose which cell to simulate
 target_frequency = 327.3e12 #Hz 
 freq_span = 50e12 #Hz
 fmin = target_frequency-freq_span
@@ -79,4 +79,4 @@ f_grating = 5000
 kmin = 0.2
 kmax = 0.5
 knum = 5
-bandStructSim(a,d_BS,w,n_f,fmin,fmax,f_grating,kmin,kmax,knum,engine)
+band_structure(a,d_BS,w,h0,n_f,engine)
