@@ -56,7 +56,7 @@ n_f = 2.6
 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 # FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-FDTDloc='C:/Program Files/Lumerical/v221/'
+FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
 engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
 # build the tapered waveguide unit cells 

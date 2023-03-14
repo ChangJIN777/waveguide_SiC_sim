@@ -17,6 +17,13 @@ import csv
 n_f = 2.6 # for SiC
 target_frequency = 327.3e12
 h0 = 250e-9
+d_0 = 0.64 # the default radius prefactor
+w_0 = 1.69 # the default beam width prefactor 
+# default engine 
+# Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
+# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
+engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
@@ -193,6 +200,17 @@ def band_structure(a,d,w,h0,n_f,engine):
     print('Duration: {}'.format(end_time - start_time))
     
 def unitCellOptimization_SiC(params):
+    """this function is used to optimize the unit cells for the mirror regions of the cavity
+
+    Args:
+        params (list): 
+            params[0]: the lattice constant 
+            params[1]: the radius prefactor 
+            params[2]: the beam width prefactor
+
+    Returns:
+        fitness: the optimization parameter 
+    """
     print("Starting sim ===================") # for debugging purpose
     a = params[0]
     d = params[1]
@@ -245,3 +263,21 @@ def bandStructSim(a,d,w,n_f,fmin,fmax,f_grating,kmin,kmax,knum,engine,h0=250e-9)
     simulate_unit_cell.simulate("bandstructure", ks=(kmin,kmax,knum),freqs=(fmin, fmax, f_grating))
 
     return 
+
+def unitCellOptimization_SiC(params):
+    """this function is used to optimize the unit cells for the waveguide regions of the cavity
+
+    Args:
+        params (list): 
+            params[0]: the tapered lattice constant (this should be the value the waveguide is tapering to)
+
+    Returns:
+        fitness: the optimization parameter (the detuning of the dielectric band and the target frequency)
+    """
+    print("Starting sim ===================") # for debugging purpose
+    a = params[0]
+    # simulate the band gap of the unit cell 
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap(a,d_0,w_0,h0,n_f,engine)
+    detuning = target_frequency - diel_freq
+    
+    return -1*detuning

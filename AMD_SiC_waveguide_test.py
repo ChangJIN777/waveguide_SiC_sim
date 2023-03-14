@@ -23,7 +23,7 @@ TN = 8
 #mirror cell number (left region) 
 MN_L = 20
 #mirror cell number (right region)
-MN_R = 20
+MN_R = 3
 #lattice constant
 # a = 2.801277586646125e-7
 a = 2.80e-7
