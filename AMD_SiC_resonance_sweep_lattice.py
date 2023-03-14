@@ -70,6 +70,8 @@ def buildTapering_asymmetric(a,taperPrefac,taperNum_L,taperNum_R):
     return tapering_region
 
 
+
+
 def fitness(params):
     print("Starting sim") # for debugging purpose
     start_time = datetime.now()
