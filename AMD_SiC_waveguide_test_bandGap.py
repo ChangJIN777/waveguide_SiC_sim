@@ -25,7 +25,7 @@ MN_L = 20
 #mirror cell number (right region)
 MN_R = 3
 #lattice constant
-a = 2.70e-07
+a = 2.90e-07
 #hole diameter prefactor 
 d = 0.64
 #beam width prefactor
@@ -46,17 +46,17 @@ target_frequency = 327.3e12
 prefactor_mirror_R = 0.9
 #the refractive index associated with the material 
 n_f = 2.6
-# # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
-# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-# engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
-# engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+# Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
+FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
+engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
-# #simulate the band gap 
-# sim_bandGap(a,d,w,h0,n_f,engine)
-# #simulate the band structure 
-# band_structure(a,d,w,h0,n_f,engine)
+#simulate the band gap 
+sim_bandGap(a,d,w,h0,n_f,engine)
+#simulate the band structure 
+band_structure(a,d,w,h0,n_f,engine)
 
-#Optimize the unit cell 
-p0=[d,w,h0]
-# unitCellOptimization_SiC(p0) #debugging
-popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead')
+# #Optimize the unit cell 
+# p0=[d,w,h0]
+# # unitCellOptimization_SiC(p0) #debugging
+# popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead')
