@@ -220,3 +220,28 @@ def unitCellOptimization_SiC(params):
         writer.writerow([a,d,w,h0,mg,bg_mg_rat,fitness])
     
     return fitness
+
+# simulating the unit cell band structures
+def bandStructSim(a,d,w,n_f,fmin,fmax,f_grating,kmin,kmax,knum,engine,h0=250e-9):
+    """this function simulate the band structure of a unit cell with parameters given by the inputs
+        a: the lattice constant 
+        d: hole diameter prefactor 
+        w: beam width prefactor
+        h0: beam height 
+        n_f: the refractive index of the dielectric material 
+        engine: the lumerical engine used to simulate the structure
+    """
+    #beam width
+    w0 = w*a
+    # Radius of the air holes in the cells
+    r0 = (d*a)/2
+
+    # building the unit cell 
+    # the sim material is set to be SiC with refractive index = 2.6 
+    cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+    mirror_hole = CylinderStructure(Vec3(0), h0, r0, DielectricMaterial(1, order=1, color="blue"))
+    simulate_unit_cell = UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a), engine=engine)
+    
+    simulate_unit_cell.simulate("bandstructure", ks=(kmin,kmax,knum),freqs=(fmin, fmax, f_grating))
+
+    return 

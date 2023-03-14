@@ -53,5 +53,5 @@ target_frequency = 327.3e12 #Hz
 freq_span = 50e12 #Hz
 fmin = target_frequency-freq_span
 fmax = target_frequency+freq_span
-f_grating = 5
+f_grating = 500
 bandStructSim(a,d,w,n_f,fmin,fmax,f_grating)

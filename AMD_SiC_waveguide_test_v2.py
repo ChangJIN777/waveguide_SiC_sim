@@ -12,7 +12,6 @@ import numpy as np
 import os
 import scipy.constants
 import datetime as datetime
-from sim_bandStruct import bandStructSim
 from waveguideSolver_funcs import *
 
 
@@ -72,4 +71,12 @@ for i in r_wvg:
 i = -1 #choose which cell to simulate
 #simulate the band structure 
 d_BS = r_wvg[-1]/a
-band_structure(a,d_BS,w,h0,n_f,engine)
+target_frequency = 327.3e12 #Hz 
+freq_span = 50e12 #Hz
+fmin = target_frequency-freq_span
+fmax = target_frequency+freq_span
+f_grating = 5000
+kmin = 0.2
+kmax = 0.5
+knum = 5
+bandStructSim(a,d_BS,w,n_f,fmin,fmax,f_grating,kmin,kmax,knum,engine)
