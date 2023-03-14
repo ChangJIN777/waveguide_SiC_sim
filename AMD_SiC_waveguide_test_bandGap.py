@@ -60,4 +60,4 @@ FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 p0=[a,d,w]
 bnd = ((2.50e-07,3.00e-07),(0,1),(1,None))
 # unitCellOptimization_SiC(p0) #debugging
-popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead')
+popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead',bounds=bnd)
