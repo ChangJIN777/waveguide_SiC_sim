@@ -24,6 +24,8 @@ w_0 = 1.69 # the default beam width prefactor
 # FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
 engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+# default location of the data files 
+file_loc = "./sim_data/"
 
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
@@ -279,5 +281,14 @@ def unitCellOptimization_SiC(params):
     # simulate the band gap of the unit cell 
     diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap(a,d_0,w_0,h0,n_f,engine)
     detuning = target_frequency - diel_freq
-    
+    print("Detuning from the dielectric band: %f"%(detuning))
+    file_name = "unitcell_Optimization_waveguide_v1.csv"
+    data = [a,detuning]
+    record_data(data,file_name)
     return -1*detuning
+
+def record_data(data,file_name,file_loc=file_loc):
+    denstination = file_loc + file_name
+    with open(denstination,"a") as file_csv:
+        writer = csv.writer(file_csv, delimiter="\t")
+        writer.writerow(data)
