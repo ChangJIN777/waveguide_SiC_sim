@@ -17,7 +17,7 @@ from waveguideSolver_funcs import *
 
 # Define geometry paramaters 
 #waveguide taper cell number
-WN = 9
+WN = 0
 #taper cell number (left mirror region)
 TN = 8
 #mirror cell number (left region) 

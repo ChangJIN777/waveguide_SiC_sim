@@ -79,6 +79,8 @@ def buildWaveguideRegion_right(a,d,w,t_wvg,h0,WN,n_f,engine):
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i), engine=engine)]
     return waveguide_cells_R
 
+
+
 def buildMirrorRegion(a,d,w,h0,n_f,MN,engine):
     """the function used to build mirriro region
 
@@ -193,7 +195,7 @@ def band_structure(a,d,w,h0,n_f,engine):
     print('Duration: {}'.format(end_time - start_time))
     
 def unitCellOptimization_SiC(params):
-    print("Starting sim") # for debugging purpose
+    print("Starting sim ===================") # for debugging purpose
     a = params[0]
     d = params[1]
     w = params[2]
