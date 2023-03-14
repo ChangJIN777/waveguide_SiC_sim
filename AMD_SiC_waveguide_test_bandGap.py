@@ -33,7 +33,7 @@ w = 1.692961161046466
 #taper prefactor (for the defect region)
 t = 0.84
 #taper prefactor (for the waveguide region)
-t_wvg = 0.75
+t_wvg = 0.9
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -52,7 +52,7 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 # engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 
 #testing the tapered lattice constants 
-a = t*a
+a = t_wvg*a
 
 #simulate the band gap 
 sim_bandGap(a,d,w,h0,n_f,engine)

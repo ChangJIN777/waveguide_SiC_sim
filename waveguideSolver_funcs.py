@@ -159,7 +159,7 @@ def sim_bandGap(a,d,w,h0,n_f,engine):
     start_time = datetime.now()
     cell = buildUnitCell(a,d,w,h0,n_f,engine)
 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.4e15, 100000))
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
