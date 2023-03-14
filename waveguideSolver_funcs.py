@@ -202,7 +202,9 @@ def unitCellOptimization_SiC(params):
     engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
     # simulate the band gap of the unit cell 
     diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap(a,d,w,h0,n_f,engine)
-    wavelength_pen = np.exp(-((target_frequency - mg)/target_frequency)**2) # the wavelength detuning penalty
+    wavelength_tolerance = 5e-9
+    wavelength_detune = (3e8)/(target_frequency)-(3e8)/(mg)
+    wavelength_pen = np.exp(-((wavelength_detune)/wavelength_tolerance)**2) # the wavelength detuning penalty
     detuning = target_frequency - mg
     fitness = -1*bg_mg_rat*wavelength_pen
     
@@ -213,7 +215,7 @@ def unitCellOptimization_SiC(params):
     print("Fitness: %f" % (fitness))
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/unitcell_Optimization.csv","a") as file_csv:
+    with open("./sim_data/unitcell_Optimization_v2.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,h0,mg,bg_mg_rat,fitness])
     
