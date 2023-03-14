@@ -90,10 +90,10 @@ cavity.save("cavity_testing.obj")
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q #########################################################
-# r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-#                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,10))
-r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
+# r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+#                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 
 # Print the reults and plot the electric field profiles
 print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -120,13 +120,13 @@ print(r1['res']["yzprofile"].max_loc())
 r1["sess_res"].show()
 # # #####################################################################################
 
-# # evaluate the quasipotential
-print("Starting sim") # for debugging purpose
-start_time = datetime.now()
-r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
-end_time = datetime.now()
-print('Duration: {}'.format(end_time - start_time))
-r2.show()
+# # # evaluate the quasipotential
+# print("Starting sim") # for debugging purpose
+# start_time = datetime.now()
+# r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
+# end_time = datetime.now()
+# print('Duration: {}'.format(end_time - start_time))
+# r2.show()
 
 # file = open("OptimizeList.txt","a") 
 # file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
