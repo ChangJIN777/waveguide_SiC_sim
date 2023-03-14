@@ -195,19 +195,18 @@ def band_structure(a,d,w,h0,n_f,engine):
     
 def unitCellOptimization_SiC(params):
     print("Starting sim") # for debugging purpose
-    d = params[0]
-    w = params[1]
-    h0 = params[2]
+    a = params[0]
+    d = params[1]
+    w = params[2]
+    h0 = params[3]
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
     engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
     # simulate the band gap of the unit cell 
     diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap(a,d,w,h0,n_f,engine)
-    # wavelength_pen = np.exp(-((target_frequency - mg)/target_frequency)**2) # the wavelength detuning penalty
+    wavelength_pen = np.exp(-((target_frequency - mg)/target_frequency)**2) # the wavelength detuning penalty
     detuning = target_frequency - mg
-    fitness = -1*bg_mg_rat*delta_k
-    if fitness < -.07:
-        a = mg / target_frequency * a # first order correction to the lattice constant 
+    fitness = -1*bg_mg_rat*wavelength_pen
     
     a_nm = a*1e9
     h0_nm = h0*1e9
