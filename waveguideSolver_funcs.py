@@ -14,7 +14,6 @@ from datetime import datetime
 import csv
 
 #define the useful constants 
-a = 2.77e-07 #a lattice constant where it is not going to catch a higher order mode 
 n_f = 2.6 # for SiC
 target_frequency = 327.3e12
 
