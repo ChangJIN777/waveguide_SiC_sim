@@ -25,7 +25,7 @@ MN_L = 20
 #mirror cell number (right region)
 MN_R = 3
 #lattice constant
-a = 3.30e-07
+a = 2.50e-07
 #hole diameter prefactor 
 d = 0.64
 #beam width prefactor
@@ -54,7 +54,7 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 #simulate the band gap 
 sim_bandGap(a,d,w,h0,n_f,engine)
 #simulate the band structure 
-band_structure(a,d,w,h0,n_f,engine)
+# band_structure(a,d,w,h0,n_f,engine)
 
 # #Optimize the unit cell 
 # p0=[d,w,h0]
