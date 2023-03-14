@@ -106,9 +106,9 @@ r1["freq"], r1["vmode"],
 ))
 r1["xyprofile"].show()
 r1["yzprofile"].show()
-# debugging
-Ex, Ey, Ez, x, y, index = r1["xyprofile"].data
-print(index)
+# # debugging
+# Ex, Ey, Ez, x, y, index = r1["xyprofile"].data
+# print(index)
 
 cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
 Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
