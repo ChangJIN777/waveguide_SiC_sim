@@ -1,6 +1,6 @@
 """
-This example creates a waveguide, and performs a series of simulations on it, visualizing or printing
-out the results of each simulation as it completes.
+This version of the waveguide loop software does not add a waveguide region to the cavity. 
+It only vary the number of unit cells in the weaker mirror region to achieve overcoupling.
 """
 
 from wvgsolver import Cavity1D, UnitCell, Vec3, Waveguide
@@ -46,12 +46,8 @@ def runSim(params):
     target_wavelength = 9.16e-07
     # the number of unit cells in the weaker mirror region
     MN_R = params[0]
-    # the taper cell number for the waveguide region 
-    WN = params[1]
     #the prefactor characterizing the right mirror region 
-    prefactor_mirror_R = 0.90
-    # added waveguide region 
-    t_wvg = 0.837666380000534
+    prefactor_mirror_R = 1
     # Define geometry dependencies
     #beam width
     w0 = w*a
@@ -75,11 +71,11 @@ def runSim(params):
     taper_cells = buildTaperRegion(a,a_R,amin,d,w,h0,n_f,TN,engine)
     #set the center of the device
     centerCell = MN_L+TN-1
-    #adding one sided cubic tapered waveguide region to the cavity
-    waveguide_cells_R = buildWaveguideRegion_right(a_R,d,w,t_wvg,h0,WN,n_f,engine)
+    # #adding one sided cubic tapered waveguide region to the cavity
+    # waveguide_cells_R = buildWaveguideRegion_right(a_R,d,w,t_wvg,h0,WN,n_f,engine)
     #build the cavity object 
     cavity = Cavity1D(
-        unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
+        unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
         structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
         engine=engine,
         center_cell=centerCell,
@@ -127,7 +123,7 @@ def runSim(params):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength)**2)/25))
     
     # writing the data into a csv file instead of a txt file for easier data analysis 
-    with open("./sim_data/OptimizeListFull_with_waveguide_test_sweep_v11.csv","a") as file_csv:
+    with open("./sim_data/OptimizeListFull_without_wavguide_loop_test.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow([a,d,w,t,prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 
@@ -138,13 +134,10 @@ def runSim(params):
 
 
 cellNum_R_min = 3
-cellNum_R_max = 10 # set to 16 for testing 
-waveguide_TN_min = 3
-waveguide_TN_max = 10 # set to 10 for testing
+cellNum_R_max = 16 # set to 16 for testing 
 
 for cellNum_R in range(cellNum_R_min,cellNum_R_max):
-    for waveguide_TN in range(waveguide_TN_min,waveguide_TN_max):
-        test_params = [cellNum_R,waveguide_TN]
-        temp = runSim(test_params)
-        print("the calculated fitness: %f" % (temp))
+    test_params = [cellNum_R]
+    temp = runSim(test_params)
+    print("the calculated fitness: %f" % (temp))
 
