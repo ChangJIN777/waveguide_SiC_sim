@@ -1,5 +1,5 @@
 """
-This example creates a sweep the parameters of the unit cells for the waveguide portion of the cavity to find a good initial guess
+This script simulates the band structures of the waveguide unit cells to make sure that it does not pick up higher order modes 
 """
 
 from wvgsolver import Cavity1D, UnitCell, Vec3, Waveguide
@@ -38,7 +38,7 @@ prefactor_mirror_R = 1
 n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
+#hole diameter prefactor (in the waveguide region)
+d_wvg = 0.64
 
-p0 = [amin_wvg]
-bnd = ((0.2*a,a))
-popt = scipy.optimize.minimize(unitCellOptimization_SiC,p0,method='Nelder-Mead')
+band_structure(amin_wvg,d_wvg,w,h0,n_f)

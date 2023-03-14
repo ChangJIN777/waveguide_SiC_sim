@@ -130,7 +130,7 @@ def buildTaperRegion(a_L,a_R,amin,d,w,h0,n_f,TN,engine):
         taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i,w0,h0), engine=engine)]
     return taper_cells
 
-def buildUnitCell(a,d,w,h0,n_f,engine):
+def buildUnitCell(a,d,w,h0,n_f,engine=engine):
     """the function use the given parameters to build a unit cell 
 
     Args:
@@ -151,7 +151,7 @@ def buildUnitCell(a,d,w,h0,n_f,engine):
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
-def sim_bandGap(a,d,w,h0,n_f,engine):
+def sim_bandGap(a,d,w,h0,n_f,engine=engine):
     """the function generates the bandgap associated with the simulated unit cell
 
     Args:
@@ -166,7 +166,7 @@ def sim_bandGap(a,d,w,h0,n_f,engine):
         _type_: _description_
     """
     start_time = datetime.now()
-    cell = buildUnitCell(a,d,w,h0,n_f,engine)
+    cell = buildUnitCell(a,d,w,h0,n_f,engine=engine)
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
 
@@ -189,7 +189,7 @@ def sim_bandGap(a,d,w,h0,n_f,engine):
 
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k
 
-def band_structure(a,d,w,h0,n_f,engine):
+def band_structure(a,d,w,h0,n_f,engine=engine):
     
     start_time = datetime.now()
     cell = buildUnitCell(a,d,w,h0,n_f,engine)
@@ -285,7 +285,7 @@ def unitCellOptimization_SiC(params):
     file_name = "unitcell_Optimization_waveguide_v1.csv"
     data = [a,detuning]
     record_data(data,file_name)
-    return -1*detuning
+    return detuning
 
 def record_data(data,file_name,file_loc=file_loc):
     denstination = file_loc + file_name
