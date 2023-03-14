@@ -25,7 +25,7 @@ MN_L = 20
 #mirror cell number (right region)
 MN_R = 3
 #lattice constant
-a = 2.80e-07
+a = 2.83e-07
 #hole diameter prefactor 
 d = 0.64
 #beam width prefactor
