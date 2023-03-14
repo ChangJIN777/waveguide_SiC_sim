@@ -125,7 +125,7 @@ def runSim(params):
     # writing the data into a csv file instead of a txt file for easier data analysis 
     with open("./sim_data/OptimizeListFull_without_wavguide_loop_test.csv","a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
-        writer.writerow([a,d,w,t,prefactor_mirror_R,t_wvg,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
+        writer.writerow([a,d,w,t,prefactor_mirror_R,Q,Qsc,Qwvg,Vmode,F,detuning_wavelength,fitness])
 
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
