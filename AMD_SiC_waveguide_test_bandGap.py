@@ -54,7 +54,9 @@ amin = a*t
 a_R = a*prefactor_mirror_R
 
 #testing the tapered lattice constants 
-a_tapering = buildTaperRegion(a,a_R,amin,d,w,h0,n_f,TN,engine)
+a_taper_R = cubic_tapering(a,amin,TN)
+a_taper_L = a_taper_R[::-1]
+a_tapering = np.concatenate((a_taper_L, a_taper_R), axis=None)
 
 #simulate the band gap 
 for i in a_tapering:
