@@ -280,7 +280,7 @@ def unitCellOptimization_SiC(params):
     a = params[0]
     # simulate the band gap of the unit cell 
     diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap(a,d_0,w_0,h0,n_f,engine)
-    detuning = target_frequency - diel_freq
+    detuning = np.abs(target_frequency - diel_freq)
     print("Detuning from the dielectric band: %f"%(detuning))
     file_name = "unitcell_Optimization_waveguide_v1.csv"
     data = [a,detuning]
