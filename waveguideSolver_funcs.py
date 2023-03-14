@@ -203,7 +203,7 @@ def unitCellOptimization_SiC(params):
     # wavelength_pen = np.exp(-((target_frequency - mg)/target_frequency)**2) # the wavelength detuning penalty
     detuning = target_frequency - mg
     fitness = -1*bg_mg_rat*delta_k
-    if fitness < -.007:
+    if fitness < -.07:
         a = mg / target_frequency * a # first order correction to the lattice constant 
     
     a_nm = a*1e9
