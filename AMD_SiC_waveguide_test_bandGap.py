@@ -60,7 +60,8 @@ a_tapering = np.concatenate((a_taper_L, a_taper_R), axis=None)
 
 #simulate the band gap 
 for i in a_tapering:
-    print("a: %f" % (i))
+    i_nm = i*1e9
+    print("a: %f nm" % (i_nm))
     sim_bandGap(i,d,w,h0,n_f,engine)
 # #simulate the band structure 
 # band_structure(a,d,w,h0,n_f,engine)
