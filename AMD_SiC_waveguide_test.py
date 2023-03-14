@@ -23,7 +23,7 @@ TN = 8
 #mirror cell number (left region) 
 MN_L = 20
 #mirror cell number (right region)
-MN_R = 3
+MN_R = 20
 #lattice constant
 # a = 2.801277586646125e-7
 a = 2.80e-7
@@ -93,7 +93,7 @@ cavity.save("cavity_testing.obj")
 # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 12e-9, dy=None, dz=None)
 # simulating the resonance and the Q #########################################################
-r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
+r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
                     analyze_time=600e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 # r1 = cavity.simulate("resonance", target_freq=target_frequency, 
 #                     mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
@@ -106,6 +106,9 @@ r1["freq"], r1["vmode"],
 ))
 r1["xyprofile"].show()
 r1["yzprofile"].show()
+# debugging
+Ex, Ey, Ez, x, y, index = r1["xyprofile"].data
+print(index)
 
 cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
 Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
