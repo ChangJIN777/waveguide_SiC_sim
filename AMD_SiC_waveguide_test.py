@@ -90,10 +90,10 @@ cavity.save("cavity_testing.obj")
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q #########################################################
-# r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-#                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
-r1 = cavity.simulate("resonance", target_freq=target_frequency, 
-                    mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
+r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
+                    analyze_time=600e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
+# r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+#                     mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 
 # Print the reults and plot the electric field profiles
 print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
