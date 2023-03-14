@@ -48,16 +48,20 @@ prefactor_mirror_R = 0.9
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
-# engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+# engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
+engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+amin = a*t
+a_R = a*prefactor_mirror_R
 
 #testing the tapered lattice constants 
-a = t_wvg*a
+a_tapering = buildTaperRegion(a,a_R,amin,d,w,h0,n_f,TN,engine)
 
 #simulate the band gap 
-sim_bandGap(a,d,w,h0,n_f,engine)
-#simulate the band structure 
-band_structure(a,d,w,h0,n_f,engine)
+for i in a_tapering:
+    print("a: %f" % (i))
+    sim_bandGap(i,d,w,h0,n_f,engine)
+# #simulate the band structure 
+# band_structure(a,d,w,h0,n_f,engine)
 
 # #Optimize the unit cell 
 # p0=[a,d,w]
