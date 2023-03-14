@@ -16,7 +16,7 @@ import csv
 #define the useful constants 
 n_f = 2.6 # for SiC
 target_frequency = 327.3e12
-
+h0 = 250e-9
 
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
@@ -197,7 +197,6 @@ def unitCellOptimization_SiC(params):
     a = params[0]
     d = params[1]
     w = params[2]
-    h0 = params[3]
     # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
     FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
     engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
