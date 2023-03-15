@@ -318,3 +318,29 @@ def buildWaveguideRegion_right_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=
         waveguide_hole_R = CylinderStructure(Vec3(0), h0, d_wv[i]*a_wv[i]/2, DielectricMaterial(1, order=1, color="blue"))
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
     return waveguide_cells_R
+
+
+def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """Function used to generate a cubic tapered waveguide region to be added to the left side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
+    
+    Args:
+        a: the lattice constant used to build the mirror region 
+        t_wvg: the tapering prefactor associated with the waveguide region 
+        WN: the number of unit cells in the waveguide region 
+        d: hole diameter prefactor 
+        d_min: the hole diameter prefactor we are tapering to 
+        w: the beam width prefactor
+        h0: the beam height
+        n_f: the refractive index associated with the material
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    w0 = w*a
+    waveguide_cells_L = []
+    amin = t_wvg*a
+    a_wv = cubic_tapering(a,amin,WN)
+    d_wv = np.linspace(d_min,d,WN)
+    for i in range(WN):
+        waveguide_box_L = BoxStructure(Vec3(0), Vec3(a_wv[i],w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+        waveguide_hole_L = CylinderStructure(Vec3(0), h0, d_wv[i]*a_wv[i]/2, DielectricMaterial(1, order=1, color="blue"))
+        waveguide_cells_L += [UnitCell(structures=[ waveguide_box_L, waveguide_hole_L ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
+    return waveguide_cells_L

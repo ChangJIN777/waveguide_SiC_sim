@@ -74,6 +74,9 @@ centerCell = MN_L+TN-1
 #adding one sided cubic tapered waveguide region to the cavity
 waveguide_cells_R = buildWaveguideRegion_right_v2(a_R,d,d_min,t_wvg,WN)
 
+#adding the waveguide region to the left side of the cavity 
+waveguide_cells_L = buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN)
+
 # ####################################### cavity without the waveguide region ###############################
 # cavity = Cavity1D(
 # unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
@@ -82,9 +85,17 @@ waveguide_cells_R = buildWaveguideRegion_right_v2(a_R,d,d_min,t_wvg,WN)
 # center_shift=0,
 # engine=engine
 # )
-####################################### cavity with the waveguide region ###############################
+# ####################################### cavity with the waveguide region ###############################
+# cavity = Cavity1D(
+# unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
+# structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+# center_cell=centerCell,
+# center_shift=0,
+# engine=engine
+# )
+####################################### cavity with the waveguide region on both sides ###############################
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
+unit_cells=  waveguide_cells_L + mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
