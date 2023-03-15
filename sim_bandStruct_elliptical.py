@@ -39,5 +39,7 @@ amin = t*a
 h0 = 250e-9
 a_taper = cubic_tapering(a,amin,taperNum=TN) 
 a_taper = a_taper[::-1]
+# simulate the band gap associated with the unit cell 
 # sim_bandGap_elliptical(a,d1,d2)
-bandStructSim(a,d,w,n_f,fmin,fmax,f_grating)
+# simulate the band structure associated with the unit cell
+band_structure_elliptical(a,d1,d2,w,h0,n_f)
