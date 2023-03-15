@@ -467,8 +467,8 @@ def unitCellOptimization_SiC_elliptical(params):
     print("Detuning from the dielectric band: %f"%(detuning))
     # we want large bandgap and small detuning 
     fitness = detuning*bg_mg_rat
-    file_name = "unitcell_Optimization_waveguide_elliptical_v1.csv"
-    data = [a,detuning,fitness]
+    file_name = "unitcell_Optimization_elliptical_v1.csv"
+    data = [a,d1,d2,detuning,fitness]
     record_data(data,file_name)
     return -1*fitness
 
