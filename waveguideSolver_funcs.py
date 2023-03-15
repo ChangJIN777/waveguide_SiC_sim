@@ -21,8 +21,8 @@ d_0 = 0.64 # the default radius prefactor
 w_0 = 1.69 # the default beam width prefactor 
 # default engine 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
-# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
+FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+# FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
 engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 # default location of the data files 
 file_loc = "./sim_data/"
