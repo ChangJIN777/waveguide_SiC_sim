@@ -151,6 +151,45 @@ def buildUnitCell(a,d,w,h0,n_f,engine=engine):
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
+def sim_bandGap_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """the function generates the bandgap associated with the simulated unit cell
+
+    Args:
+        a (float): the lattice constant 
+        d1 (float): hole diameter prefactor 1
+        d2 (float): hole diameter prefactor 2
+        w (float): the beam width prefactor
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        engine : the FDTD engine used to simulate the waveguide region
+        
+    Returns:
+        _type_: _description_
+    """
+    start_time = datetime.now()
+    cell = buildUnitCell_elliptical(a,d1,d2,w,h0,n_f,engine)
+
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
+
+    diel_freq = r2[0] # the dielectric band frequency 
+    air_freq = r2[1] # the air band frequyency 
+    bg = air_freq - diel_freq # the band gap 
+    mg = (diel_freq + air_freq) / 2 # the mid band gap 
+    bg_mg_rat = bg / mg 
+
+    delta_k = .5-a*mg/2.998e8
+    end_time = datetime.now()
+
+    print('--------')
+    print('Duration: {}'.format(end_time - start_time))
+    print('Lower band edge frequency: %f THz' % (diel_freq / 1e12))
+    print("Bandgap ratio: %f percent" % (bg_mg_rat * 100))
+    print("Midgap frequency: %f THz" % (mg / 1e12))
+    print("Delta k: %f " % delta_k)
+    print('\n')
+
+    return diel_freq, air_freq, mg, bg_mg_rat, delta_k
+
 def sim_bandGap(a,d,w,h0,n_f,engine=engine):
     """the function generates the bandgap associated with the simulated unit cell
 
@@ -319,7 +358,6 @@ def buildWaveguideRegion_right_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
     return waveguide_cells_R
 
-
 def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
     """Function used to generate a cubic tapered waveguide region to be added to the left side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
     
@@ -344,3 +382,65 @@ def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=e
         waveguide_hole_L = CylinderStructure(Vec3(0), h0, d_wv[i]*a_wv[i]/2, DielectricMaterial(1, order=1, color="blue"))
         waveguide_cells_L += [UnitCell(structures=[ waveguide_box_L, waveguide_hole_L ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
     return waveguide_cells_L
+
+def buildUnitCell_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """the function use the given parameters to build a unit cell with elliptical holes
+
+    Args:
+        a (float): the lattice constant 
+        d1 (float): hole diameter prefactor 1
+        d2 (float): hole diameter prefactor 2
+        w (float): the beam width prefactor
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        engine : the FDTD engine used to simulate the waveguide region
+
+    Returns:
+        cell: the UnitCell object in waveguide solver 
+    """
+    w0 = w*a
+    r0_1 = a*d1/2
+    r0_2 = a*d2/2
+    cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+    hole = CylinderStructure(Vec3(0), h0, r0_1, DielectricMaterial(1, order=1, color="blue"),radius2=r0_2)
+    cell = [UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)]
+    return cell
+
+def buildMirrorRegion_elliptical(a,d1,d2,MN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """the function used to build mirriro region with elliptical holes
+
+    Args:
+        a (float): the lattice constant used to build the mirror region 
+        d1 (float): hole diameter prefactor 1
+        d2 (float): hole diameter prefactor 2
+        w (float): the beam width prefactor
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        MN (int): the number of mirror unit cells
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    mirror_cell = buildUnitCell_elliptical(a,d1,d2,w,h0,n_f,engine)
+    mirror_cells = mirror_cell * MN
+    return mirror_cells
+
+def buildTaperRegion(a_L,a_R,amin,d1,d2,TN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """the function used to build taper region with elliptical holes
+
+    Args:
+        a_L (float): the lattice constant used to build the mirror region on the left side 
+        a_R (float): the lattice constant used to build the mirror region on the right side 
+        d1 (float): hole diameter prefactor 1
+        d2 (float): hole diameter prefactor 2
+        w (float): the beam width prefactor
+        amin: the minimum lattice constant in the tapering region
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        TN (int): the number of tapering cells 
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    taper_cells = []
+    aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
+    for i in aList_taper:
+        temp_cell = buildUnitCell_elliptical(i,d1,d2,w,h0,n_f,engine)
+        taper_cells += temp_cell
+    return taper_cells

@@ -46,7 +46,7 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.88
+prefactor_mirror_R = 0.98
 #the refractive index associated with the material 
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
@@ -55,10 +55,10 @@ FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 #the minimum lattice constant in the tapering region
 amin = a*t
-#the minimum radius prefactor we are tapering to 
-d_min = 0.3
+# #the minimum radius prefactor we are tapering to 
+# d_min = 0.3
 
-def runSim(prefactor_mirror_R):
+def runSim(dmin):
     start_time = datetime.now()
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion(a,d,w,h0,n_f,MN_L,engine)
@@ -126,10 +126,10 @@ def runSim(prefactor_mirror_R):
     print('Duration: {}'.format(end_time - start_time))
 
 # looping over the taper prefactor (for the waveguide region)
-prefactor_mirror_R_min = 0.875
-prefactor_mirror_R_max = 1
-prefactor_mirror_R_list = np.linspace(prefactor_mirror_R_min,prefactor_mirror_R_max,10)
-for t_mirror_R in prefactor_mirror_R_list:
+d_waveguide_min = 0.1
+d_waveguide_max = 0.64
+d_waveguide_list = np.linspace(d_waveguide_min,d_waveguide_max,10)
+for d_waveguide in d_waveguide_list:
     print("Starting sim =================")
-    runSim(t_mirror_R)
+    runSim(d_waveguide)
 

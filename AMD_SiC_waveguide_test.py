@@ -48,7 +48,7 @@ target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
 prefactor_mirror_R = 0.88
 #the refractive index associated with the material 
-n_f = 2.4 # debugging (changed to the refractive index for the diamond)
+n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
