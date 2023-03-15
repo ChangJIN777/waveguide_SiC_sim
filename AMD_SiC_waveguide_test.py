@@ -55,6 +55,8 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 # engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 #the minimum lattice constant in the tapering region
 amin = a*t
+#the minimum radius prefactor we are tapering to 
+d_min = 0.5
     
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion(a,d,w,h0,n_f,MN_L,engine)
@@ -70,7 +72,7 @@ taper_cells = buildTaperRegion(a,a_R,amin,d,w,h0,n_f,TN,engine)
 centerCell = MN_L+TN-1
 
 #adding one sided cubic tapered waveguide region to the cavity
-waveguide_cells_R = buildWaveguideRegion_right(a_R,d,w,t_wvg,h0,WN,n_f,engine)
+waveguide_cells_R = buildWaveguideRegion_right_v2(a_R,d,d_min,t_wvg,WN)
 
 cavity = Cavity1D(
 unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
