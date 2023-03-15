@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib import style
+from waveguideSolver_funcs import *
 
 # simulating the unit cell band structures
 def bandStructSim(a,d,w,n_f,fmin,fmax,f_grating,h0=250e-9):
@@ -41,17 +42,23 @@ def bandStructSim(a,d,w,n_f,fmin,fmax,f_grating,h0=250e-9):
     return 
 
 #lattice constant
-a = 297.688965e-9
+a = 2.80e-7
 #hole diameter prefactor 
-d = 0.663014844
+d = 0.64
 #beam width prefactor
-w = 1.73572998
+w = 1.69
 #refractive index of the dielectric material 
 n_f = 2.6
+#the number of taper cells
+TN = 8
 #define the frequency range 
 target_frequency = 327.3e12 #Hz 
 freq_span = 50e12 #Hz
 fmin = target_frequency-freq_span
 fmax = target_frequency+freq_span
 f_grating = 500
-bandStructSim(a,d,w,n_f,fmin,fmax,f_grating)
+amin = d*a
+a_taper = cubic_tapering(a,amin,taperNum=TN) 
+a_taper = a_taper[::-1]
+band_structure(a_taper[-2],d,w,h0,n_f,engine=engine)
+# bandStructSim(a,d,w,n_f,fmin,fmax,f_grating)
