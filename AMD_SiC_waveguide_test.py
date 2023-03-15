@@ -46,7 +46,7 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.9
+prefactor_mirror_R = 0.92
 #the refractive index associated with the material 
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
@@ -56,7 +56,7 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 #the minimum lattice constant in the tapering region
 amin = a*t
 #the minimum radius prefactor we are tapering to 
-d_min = 0.2
+d_min = 0.1
     
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion(a,d,w,h0,n_f,MN_L,engine)
