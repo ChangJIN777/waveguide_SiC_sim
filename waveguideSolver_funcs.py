@@ -312,7 +312,9 @@ def buildWaveguideRegion_right_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=
     amin = t_wvg*a
     a_wv = cubic_tapering(a,amin,WN)
     a_wv = a_wv[::-1]
-    d_wv = np.linspace(d_min,d,WN)
+    print(a_wv) # debugging
+    d_wv = np.linspace(d,d_min,WN)
+    print(d_wv) # debugging
     for i in range(WN):
         waveguide_box_R = BoxStructure(Vec3(0), Vec3(a_wv[i],w0,h0), DielectricMaterial(n_f, order=2, color="red"))
         waveguide_hole_R = CylinderStructure(Vec3(0), h0, d_wv[i]*a_wv[i]/2, DielectricMaterial(1, order=1, color="blue"))
