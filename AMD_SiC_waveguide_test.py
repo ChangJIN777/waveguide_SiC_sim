@@ -75,7 +75,7 @@ centerCell = MN_L+TN-1
 waveguide_cells_R = buildWaveguideRegion_right_v2(a_R,d,d_min,t_wvg,WN)
 
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
+unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
@@ -92,13 +92,13 @@ engine=engine
 cavity.save("cavity_testing.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 12nm)
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 20e-9, dy=None, dz=None)
 # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 15e-9, dy=None, dz=None)
 # simulating the resonance and the Q #########################################################
-# r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
-#                     analyze_time=600e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
-r1 = cavity.simulate("resonance", target_freq=target_frequency, 
-                    mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
+r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
+                    analyze_time=600e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
+# r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+#                     mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 
 # Print the reults and plot the electric field profiles
 print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
