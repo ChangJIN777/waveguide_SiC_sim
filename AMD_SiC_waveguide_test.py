@@ -23,7 +23,7 @@ TN = 8
 #mirror cell number (left region) 
 MN_L = 20
 #mirror cell number (right region)
-MN_R = 1
+MN_R = 3
 #lattice constant
 # a = 2.801277586646125e-7
 a = 2.80e-7
@@ -118,10 +118,10 @@ cavity.save("cavity_testing.obj")
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 20e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q #########################################################
-r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                    analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
-# r1 = cavity.simulate("resonance", target_freq=target_frequency, 
-#                     mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
+# r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
+#                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
+r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+                    mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
 
 # Print the reults and plot the electric field profiles
 print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
