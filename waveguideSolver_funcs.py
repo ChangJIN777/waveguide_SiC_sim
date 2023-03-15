@@ -484,6 +484,7 @@ def band_structure_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
         n_f (float, optional): the refractive index. Defaults to n_f.
         engine (Lumerical engine object, optional): _description_. Defaults to engine.
     """
+    print("Starting simulation =============================")
     start_time = datetime.now()
     cell = buildUnitCell_elliptical(a,d1,d2,w,h0,n_f,engine)
     # r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 12), freqs=(0.25e15, 0.7e15, 100000),
