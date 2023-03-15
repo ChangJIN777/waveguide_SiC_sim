@@ -59,7 +59,7 @@ amin = a*t
 d_min = 0.3
 
 def runSim(prefactor_mirror_R):
-    
+    start_time = datetime.now()
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion(a,d,w,h0,n_f,MN_L,engine)
     #build the right mirror cell region 
@@ -122,12 +122,14 @@ def runSim(prefactor_mirror_R):
     data = [prefactor_mirror_R,F,Q,Qsc,Qwvg,Vmode,P]
     file_name = "looping_over_the_right_prefactor_v1.csv"
     record_data(data,file_name,file_loc=file_loc)
-
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
 
 # looping over the taper prefactor (for the waveguide region)
 prefactor_mirror_R_min = 0.875
 prefactor_mirror_R_max = 1
 prefactor_mirror_R_list = np.linspace(prefactor_mirror_R_min,prefactor_mirror_R_max,10)
 for t_mirror_R in prefactor_mirror_R_list:
-    rumSim(t_mirror_R)
+    print("Starting sim =================")
+    runSim(t_mirror_R)
 
