@@ -42,8 +42,8 @@ n_f = 2.6
 amin_wvg = t_wvg*a
 
 p0 = [a,d1,d2]
-# bnd = ((0.875*a,a*1.125),(0.1,0.8),(0.1,0.8))
-# popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
+bnd = ((0.875*a,a*1.125),(0.1,0.8),(0.1,0.8))
+popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
-# testing the algorithm
-unitCellOptimization_SiC_elliptical(p0)
+# # testing the algorithm
+# unitCellOptimization_SiC_elliptical(p0)
