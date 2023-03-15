@@ -18,8 +18,8 @@ from waveguideSolver_funcs import *
 # Define geometry paramaters 
 #waveguide taper cell number
 WN = 6
-#taper cell number (left mirror region)
-TN = 5
+#taper cell number
+TN = 8 
 #mirror cell number (left region) 
 MN_L = 20
 #mirror cell number (right region)
@@ -46,7 +46,7 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 1
+prefactor_mirror_R = 0.9
 #the refractive index associated with the material 
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
@@ -74,14 +74,22 @@ centerCell = MN_L+TN-1
 #adding one sided cubic tapered waveguide region to the cavity
 waveguide_cells_R = buildWaveguideRegion_right_v2(a_R,d,d_min,t_wvg,WN)
 
-
+####################################### cavity without the waveguide region ###############################
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
+unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
 engine=engine
 )
+# ####################################### cavity with the waveguide region ###############################
+# cavity = Cavity1D(
+# unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
+# structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+# center_cell=centerCell,
+# center_shift=0,
+# engine=engine
+# )
 
 # # debugging, just simulating the  mirror_cells_right+ waveguide cells
 # cavity = Cavity1D(
@@ -110,9 +118,6 @@ r1["freq"], r1["vmode"],
 ))
 r1["xyprofile"].show()
 r1["yzprofile"].show()
-# # debugging
-# Ex, Ey, Ez, x, y, index = r1["xyprofile"].data
-# print(index)
 
 cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
 Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
