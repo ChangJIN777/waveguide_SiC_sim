@@ -130,7 +130,7 @@ def buildTaperRegion(a_L,a_R,amin,d,w,h0,n_f,TN,engine):
         taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i,w0,h0), engine=engine)]
     return taper_cells
 
-def buildUnitCell(a,d,w,h0,n_f,engine=engine):
+def buildUnitCell(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
     """the function use the given parameters to build a unit cell 
 
     Args:
@@ -190,7 +190,7 @@ def sim_bandGap_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
 
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k
 
-def sim_bandGap(a,d,w,h0,n_f,engine=engine):
+def sim_bandGap(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
     """the function generates the bandgap associated with the simulated unit cell
 
     Args:
@@ -228,7 +228,7 @@ def sim_bandGap(a,d,w,h0,n_f,engine=engine):
 
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k
 
-def band_structure(a,d,w,h0,n_f,engine=engine):
+def band_structure(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
     
     start_time = datetime.now()
     cell = buildUnitCell(a,d,w,h0,n_f,engine)
@@ -444,3 +444,52 @@ def buildTaperRegion_elliptical(a_L,a_R,amin,d1,d2,TN,w=w_0,h0=h0,n_f=n_f,engine
         temp_cell = buildUnitCell_elliptical(i,d1,d2,w,h0,n_f,engine)
         taper_cells += [temp_cell]
     return taper_cells
+
+def unitCellOptimization_SiC_elliptical(params):
+    """this function is used to optimize the unit cells for the waveguide regions of the cavity
+
+    Args:
+        params (list): 
+            params[0] (float): the tapered lattice constant (this should be the value the waveguide is tapering to)
+            params[1] (float): d1 the radius prefactor 1 
+            params[2] (float): d2 the radius prefactor 2
+
+    Returns:
+        fitness: the optimization parameter (we want large bandgap and small detuning)
+    """
+    print("Starting sim ===================") # for debugging purpose
+    a = params[0]
+    d1 = params[1]
+    d2 = params[2]
+    # simulate the band gap of the unit cell 
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,d1,d2)
+    detuning = np.abs(target_frequency - diel_freq)
+    print("Detuning from the dielectric band: %f"%(detuning))
+    # we want large bandgap and small detuning 
+    fitness = detuning*bg_mg_rat
+    file_name = "unitcell_Optimization_waveguide_elliptical_v1.csv"
+    data = [a,detuning,fitness]
+    record_data(data,file_name)
+    return -1*fitness
+
+def band_structure_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """This function simulate the band structure of the unit cells with elliptical holes 
+
+    Args:
+        a (float): the lattice constant 
+        d1 (float): the radius prefactor 1 
+        d2 (float): the radius prefactor 2
+        w (float, optional): the beam width prefactor. Defaults to w_0.
+        h0 (float, optional): the beam height. Defaults to h0.
+        n_f (float, optional): the refractive index. Defaults to n_f.
+        engine (Lumerical engine object, optional): _description_. Defaults to engine.
+    """
+    start_time = datetime.now()
+    cell = buildUnitCell_elliptical(a,d1,d2,w,h0,n_f,engine)
+    # r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 12), freqs=(0.25e15, 0.7e15, 100000),
+    #                    dipole_region=Vec3(0.8, 0, 0), window_pos = 0)
+    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.5e15, 150000))
+    # # # Plot the bandstructure
+    r1.show()
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
