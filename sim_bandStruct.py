@@ -58,6 +58,7 @@ fmin = target_frequency-freq_span
 fmax = target_frequency+freq_span
 f_grating = 500
 amin = d*a
+h0 = 250e-9
 a_taper = cubic_tapering(a,amin,taperNum=TN) 
 a_taper = a_taper[::-1]
 band_structure(a_taper[-2],d,w,h0,n_f,engine=engine)
