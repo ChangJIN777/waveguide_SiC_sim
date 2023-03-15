@@ -56,7 +56,7 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 #the minimum lattice constant in the tapering region
 amin = a*t
 #the minimum radius prefactor we are tapering to 
-d_min = 0.5
+d_min = 0.2
     
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion(a,d,w,h0,n_f,MN_L,engine)
@@ -83,9 +83,9 @@ waveguide_cells_R = buildWaveguideRegion_right_v2(a_R,d,d_min,t_wvg,WN)
 # engine=engine
 # )
 
-# debugging, just simulating the waveguide cells
+# debugging, just simulating the  mirror_cells_right+ waveguide cells
 cavity = Cavity1D(
-unit_cells=  waveguide_cells_R ,
+unit_cells=  mirror_cells_right + waveguide_cells_R ,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 engine=engine
 )
