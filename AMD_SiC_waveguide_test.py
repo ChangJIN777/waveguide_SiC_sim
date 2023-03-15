@@ -69,7 +69,8 @@ mirror_cells_right = buildMirrorRegion(a_R,d,w,h0,n_f,MN_R,engine)
 taper_cells = buildTaperRegion(a,a_R,amin,d,w,h0,n_f,TN,engine)
 
 #set the center of the device
-centerCell = MN_L+TN-1
+# centerCell = MN_L+TN-1 
+centerCell = WN+MN_L+TN-1 # for cavity with waveguide regions on both sides
 
 #adding one sided cubic tapered waveguide region to the cavity
 waveguide_cells_R = buildWaveguideRegion_right_v2(a_R,d,d_min,t_wvg,WN)
