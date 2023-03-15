@@ -104,44 +104,45 @@ cavity.save("cavity_testing.obj")
 #define mesh size (use 12nm for accuracy, currently set to 12nm)
 man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 15e-9, dy=None, dz=None)
 # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 12e-9, dy=None, dz=None)
-# simulating the resonance and the Q #########################################################
-r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                    analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
-# r1 = cavity.simulate("resonance", target_freq=target_frequency, 
-#                     mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 
-# Print the reults and plot the electric field profiles
-print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
-r1["freq"], r1["vmode"],
-1/(1/r1["qxmin"] + 1/r1["qxmax"]),
-1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
-))
-r1["xyprofile"].show()
-r1["yzprofile"].show()
+# # simulating the resonance and the Q #########################################################
+# r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
+#                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
+# # r1 = cavity.simulate("resonance", target_freq=target_frequency, 
+# #                     mesh_regions = [man_mesh], sim_size=Vec3(4,8,10))
 
-cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
-Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
-Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
-Vmode = r1["vmode"]
-F = r1["freq"]
+# # Print the reults and plot the electric field profiles
+# print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
+# r1["freq"], r1["vmode"],
+# 1/(1/r1["qxmin"] + 1/r1["qxmax"]),
+# 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+# ))
+# r1["xyprofile"].show()
+# r1["yzprofile"].show()
 
-Q = 1/((1/Qsc) + (1/Qwvg))
-P = (Q*Qsc) / (Vmode*Vmode)
-print("Q: %f, P: %f" % ( Q, P))
+# cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
+# Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
+# Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+# Vmode = r1["vmode"]
+# F = r1["freq"]
 
-r1 = cavity.get_results("resonance")[-1]
-print(r1['res']["xyprofile"].max_loc())
-print(r1['res']["yzprofile"].max_loc())
-r1["sess_res"].show()
-# # #####################################################################################
+# Q = 1/((1/Qsc) + (1/Qwvg))
+# P = (Q*Qsc) / (Vmode*Vmode)
+# print("Q: %f, P: %f" % ( Q, P))
 
-# # # evaluate the quasipotential
-# print("Starting sim") # for debugging purpose
-# start_time = datetime.now()
-# r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
-# end_time = datetime.now()
-# print('Duration: {}'.format(end_time - start_time))
-# r2.show()
+# r1 = cavity.get_results("resonance")[-1]
+# print(r1['res']["xyprofile"].max_loc())
+# print(r1['res']["yzprofile"].max_loc())
+# r1["sess_res"].show()
+# # # #####################################################################################
+
+# # evaluate the quasipotential
+print("Starting sim") # for debugging purpose
+start_time = datetime.now()
+r2 = cavity.simulate("quasipotential", target_freq=target_frequency)
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+r2.show()
 
 # file = open("OptimizeList.txt","a") 
 # file.write("\n" + str(a) + " " + str(Q) + " " + str(Vmode)+ " " + str(F) + "\n") 
