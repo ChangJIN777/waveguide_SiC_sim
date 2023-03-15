@@ -61,5 +61,5 @@ amin = d*a
 h0 = 250e-9
 a_taper = cubic_tapering(a,amin,taperNum=TN) 
 a_taper = a_taper[::-1]
-band_structure(a_taper[-2],d,w,h0,n_f,engine=engine)
+band_structure(a_taper[-1],d,w,h0,n_f,engine=engine)
 # bandStructSim(a,d,w,n_f,fmin,fmax,f_grating)
