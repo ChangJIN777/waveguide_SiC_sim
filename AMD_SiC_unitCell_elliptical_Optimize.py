@@ -42,10 +42,20 @@ n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
 
-# optimizing for the mirror unit cells (SWEEPING CODE) ###################
-p0 = [a,d1,d2]
-bnd = ((2.0e-07,3.0e-07),(0.1,0.8),(0.67,w))
-popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
+# do a low resolution sweep over the desired parameter range 
+a_list = np.linspace(2.0e-07,3.0e-07,5)
+d1_list = np.linspace(0.1,0.8,5)
+d2_list = np.linspace(0.67,w,5)
+for a in a_list:
+    for d1 in d1_list:
+        for d2 in d2_list:
+            p0 = [a,d1,d2]
+            unitCellOptimization_SiC_elliptical(p0)
+
+# # optimizing for the mirror unit cells (SWEEPING CODE) ###################
+# p0 = [a,d1,d2]
+# bnd = ((2.0e-07,3.0e-07),(0.1,0.8),(0.67,w))
+# popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
 # # optimizing for the waveguide unit cells
 # p0 = [amin_wvg]
