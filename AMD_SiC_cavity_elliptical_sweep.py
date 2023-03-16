@@ -62,8 +62,6 @@ def run_Sim(param):
     print("Start sim ==============================")
     start_time = datetime.now()
     a = param[0]
-    d1 = param[1]
-    d2 = param[2]
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,d1,d2,MN_L,w,h0,n_f,engine)
 
@@ -121,6 +119,10 @@ def run_Sim(param):
     
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
+    #prevent the mode volume from going to unrealistic values 
+    if Vmode < 0.48:
+        Vmode = 1e6
+    
     # record the data 
     data = [a,d1,d2,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
     file_name = "OptimizeListFull_elliptical_cavity_sweep_v1.csv"
@@ -131,7 +133,7 @@ def run_Sim(param):
     
     return -1*fitness
 
-p0 = [2.912e-07, 0.67, 0.77]
+p0 = [2.912e-07]
 popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
