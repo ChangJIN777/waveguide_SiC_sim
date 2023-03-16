@@ -111,6 +111,10 @@ def run_Sim(param):
     detuning_wavelength_nm = detuning_wavelength*1e9
     delta_wavelength = 5e-9 # 5nm tolerance 
     
+    #prevent the mode volume from going to unrealistic values 
+    if Vmode < 0.48:
+        Vmode = 1e6
+    
     Q = 1/((1/Qsc) + (1/Qwvg))
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
@@ -119,9 +123,7 @@ def run_Sim(param):
     
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
-    #prevent the mode volume from going to unrealistic values 
-    if Vmode < 0.48:
-        Vmode = 1e6
+  
     
     # record the data 
     data = [a,d1,d2,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
@@ -129,7 +131,7 @@ def run_Sim(param):
     record_data(data,file_name)
     
     end_time = datetime.now()
-    print('Duration: %f'%(fitness))
+    print('fitness: %f'%(fitness))
     print('Duration: {}'.format(end_time - start_time))
     
     return -1*fitness
