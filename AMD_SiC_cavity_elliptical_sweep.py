@@ -110,11 +110,12 @@ def run_Sim(param):
     resonance_f = float(F) # the resonance frequency 
     resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
     detuning_wavelength = target_wavelength-resonance_wavelength
+    detuning_wavelength_nm = detuning_wavelength*1e9
     delta_wavelength = 5e-9 # 5nm tolerance 
     
     Q = 1/((1/Qsc) + (1/Qwvg))
     P = (Q*Qsc) / (Vmode*Vmode)
-    print("Q: %f, P: %f, detuning: %f" % ( Q, P, detuning_wavelength))
+    print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
 
     r1 = cavity.get_results("resonance")[-1]
     
@@ -131,7 +132,7 @@ def run_Sim(param):
     return -1*fitness
 
 p0 = [2.912e-07, 0.67, 0.77]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
-run_Sim(p0)
+# run_Sim(p0)
