@@ -12,12 +12,9 @@ d1 = 0.666
 d2 = 0.773
 
 # Define a function to update the plot
-def update_plot(xk,optimizationResult):
+def update_plot(xk):
     print("Debugging the live update plot ===================")
-    result = res.fun
-    print(result) 
-    print("number of iterations:")
-    print(len(res.x_iters))
+    print(f"Iteration {len(res.x_iters)}: x={xk}, f(x)={res.fun}")
     # x_vals.append(xk)
     # fitness_vals.append(objective(xk))
     # plt.clf()
