@@ -463,10 +463,11 @@ def unitCellOptimization_SiC_elliptical(params):
     d2 = params[2]
     # simulate the band gap of the unit cell 
     diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,d1,d2)
-    detuning = np.abs(target_frequency - diel_freq)
+    detuning = np.abs((3e8)/target_frequency - (3e8)/diel_freq)
     print("Detuning from the dielectric band: %f"%(detuning))
     # we want large bandgap and small detuning 
-    fitness = detuning*bg_mg_rat
+    delta_wv = 5e(-9)
+    fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
     file_name = "unitcell_Optimization_elliptical_v1.csv"
     data = [a,d1,d2,detuning,fitness]
     record_data(data,file_name)
@@ -494,3 +495,103 @@ def band_structure_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
     r1.show()
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
+    
+def buildTaperRegion_elliptical(a_L,a_R,amin,d1,d2,TN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """the function used to build mirriro region
+
+    Args:
+        a_L (float): the lattice constant used to build the mirror region on the left side 
+        a_R (float): the lattice constant used to build the mirror region on the right side 
+        d1 (float): hole diameter prefactor 1
+        d2 (float): hole diameter prefactor 2
+        w (float): the beam width prefactor
+        amin: the minimum lattice constant in the tapering region
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        TN (int): the number of tapering cells 
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    taper_cells = []
+    w0 = w*a_L #the beam width
+    aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
+    for i in aList_taper:
+        taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+        taper_hole = CylinderStructure(Vec3(0), h0, d1*i/2, DielectricMaterial(1, order=1, color="blue"),radius2=d2*i/2)
+        taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i,w0,h0), engine=engine)]
+    return taper_cells
+
+def buildMirrorRegion_elliptical(a,d1,d2,MN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """the function used to build mirriro region
+
+    Args:
+        a (float): the lattice constant used to build the mirror region 
+        d1 (float): hole diameter prefactor 1
+        d2 (float): hole diameter prefactor 2
+        w (float): the beam width prefactor
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        MN (int): the number of mirror unit cells
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    w0 = w*a #beam width
+    r1 = d1*a/2 #Radius of the air holes in the cells
+    r2 = d2*a/2 #Radius of the air holes in the cells
+    cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+    mirror_hole = CylinderStructure(Vec3(0), h0, r1, DielectricMaterial(1, order=1, color="blue"),radius2=r2)
+    mirror_cells = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a,w0,h0), engine=engine)] * MN
+    return mirror_cells
+
+def buildWaveguideRegion_elliptical_right(a,d1,d2,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity
+    
+    Args:
+        a: the lattice constant used to build the mirror region 
+        t_wvg: the tapering prefactor associated with the waveguide region 
+        WN: the number of unit cells in the waveguide region 
+        n_f: the refractive index associated with the material
+        d1: hole diameter prefactor 1
+        d2: hole diameter prefactor 2
+        w: the beam width prefactor
+        h0: the beam height
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    w0 = w*a
+    waveguide_cells_R = []
+    amin = t_wvg*a
+    a_wv = cubic_tapering(a,amin,WN)
+    a_wv = a_wv[::-1]
+    print(a_wv) # debugging
+    for i in a_wv:
+        waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+        waveguide_hole_R = CylinderStructure(Vec3(0), h0, d1*i/2, DielectricMaterial(1, order=1, color="blue"),radius2=d2*i/2)
+        waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
+    return waveguide_cells_R
+
+def buildWaveguideRegion_elliptical_right_v2(a,d1,d1_min,d2,d2_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+    """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
+    
+    Args:
+        a: the lattice constant used to build the mirror region 
+        t_wvg: the tapering prefactor associated with the waveguide region 
+        WN: the number of unit cells in the waveguide region 
+        d1: hole diameter prefactor 1
+        d1_min: the hole diameter prefactor 1 we are tapering to 
+        d2: hole diameter prefactor 2
+        d2_min: the hole diameter prefactor 2 we are tapering to 
+        w: the beam width prefactor
+        h0: the beam height
+        n_f: the refractive index associated with the material
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    w0 = w*a
+    waveguide_cells_R = []
+    amin = t_wvg*a
+    a_wv = cubic_tapering(a,amin,WN)
+    a_wv = a_wv[::-1]
+    d1_wv = np.linspace(d1,d1_min,WN)
+    d2_wv = np.linspace(d2,d2_min,WN)
+    for i in range(WN):
+        waveguide_box_R = BoxStructure(Vec3(0), Vec3(a_wv[i],w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+        waveguide_hole_R = CylinderStructure(Vec3(0), h0, d1_wv[i]*a_wv[i]/2, DielectricMaterial(1, order=1, color="blue"),radius2=d2_wv[i]*a_wv[i]/2)
+        waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
+    return waveguide_cells_R
