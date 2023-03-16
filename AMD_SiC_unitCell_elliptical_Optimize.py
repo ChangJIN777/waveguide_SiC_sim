@@ -20,8 +20,8 @@ a = 2.737678125000000e-07
 #hole diameter prefactor 1
 d1 = 0.67
 #hole diameter prefactor 2
-d2 = 0.77
-# d2 = 1.2
+# d2 = 0.77
+d2 = 1.2
 #beam width prefactor
 w = 1.69
 #taper prefactor (for the defect region)
@@ -47,10 +47,10 @@ p0 = [a,d1,d2]
 bnd = ((2.0e-07,3.0e-07),(0.1,0.8),(0.67,w))
 popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
-# optimizing for the waveguide unit cells
-p0 = [amin_wvg]
-bnd = ((0.5*a,a))
-popt = scipy.optimize.minimize(unitCellOptimization_SiC_waveguide_elliptical,p0,method='Nelder-Mead')
+# # optimizing for the waveguide unit cells
+# p0 = [amin_wvg]
+# bnd = ((0.5*a,a))
+# popt = scipy.optimize.minimize(unitCellOptimization_SiC_waveguide_elliptical,p0,method='Nelder-Mead')
 
 
 # testing the algorithm
