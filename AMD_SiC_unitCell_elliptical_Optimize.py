@@ -20,8 +20,8 @@ a = 2.737678125000000e-07
 #hole diameter prefactor 1
 d1 = 0.67
 #hole diameter prefactor 2
-# d2 = 0.77
-d2 = 1.2
+d2 = 0.77
+# d2 = 1.2
 #beam width prefactor
 w = 1.69
 #taper prefactor (for the defect region)
