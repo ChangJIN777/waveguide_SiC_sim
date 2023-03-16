@@ -44,8 +44,8 @@ amin_wvg = t_wvg*a
 
 # optimizing for the mirror unit cells
 p0 = [a,d1,d2]
-bnd = ((None,None),(0.1,0.8),(0.67,w))
-popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
+bnd = ((2.0e-07,3.0e-07),(0.1,0.8),(0.67,w))
+# popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
 # # optimizing for the waveguide unit cells
 # p0 = [amin_wvg]
@@ -53,5 +53,5 @@ popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Ne
 # popt = scipy.optimize.minimize(unitCellOptimization_SiC_waveguide_elliptical,p0,method='Nelder-Mead')
 
 
-# # testing the algorithm
-# unitCellOptimization_SiC_elliptical(p0)
+# testing the algorithm
+unitCellOptimization_SiC_elliptical(p0)
