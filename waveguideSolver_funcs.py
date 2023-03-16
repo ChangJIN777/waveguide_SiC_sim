@@ -469,7 +469,7 @@ def unitCellOptimization_SiC_elliptical(params):
     delta_wv = 5e-9
     fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
     file_name = "unitcell_Optimization_elliptical_v1.csv"
-    data = [a,d1,d2,detuning,fitness]
+    data = [a,d1,d2,detuning,bg_mg_rat,fitness]
     record_data(data,file_name)
     return -1*fitness
 
