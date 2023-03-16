@@ -16,7 +16,7 @@ from waveguideSolver_funcs import *
 
 #lattice constant
 # a = 2.801277586646125e-7
-a = 2.912e-07
+a = 2.737678125000000e-07
 #hole diameter prefactor 1
 d1 = 0.67
 #hole diameter prefactor 2
@@ -42,14 +42,14 @@ n_f = 2.6
 amin_wvg = t_wvg*a
 
 # optimizing for the mirror unit cells
-# p0 = [a,d1,d2]
-# bnd = ((0.875*a,a*1.125),(0.1,0.8),(0.1,0.8))
-# popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
+p0 = [a,d1,d2]
+bnd = ((0.875*a,a*1.125),(0.1,0.8),(0.67,w))
+popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
-# optimizing for the waveguide unit cells
-p0 = [amin_wvg]
-bnd = ((0.5*a,a))
-popt = scipy.optimize.minimize(unitCellOptimization_SiC_waveguide_elliptical,p0,method='Nelder-Mead')
+# # optimizing for the waveguide unit cells
+# p0 = [amin_wvg]
+# bnd = ((0.5*a,a))
+# popt = scipy.optimize.minimize(unitCellOptimization_SiC_waveguide_elliptical,p0,method='Nelder-Mead')
 
 
 # # testing the algorithm
