@@ -13,6 +13,7 @@ d2 = 0.773
 
 # Define a function to update the plot
 def update_plot(xk,optimizationResult):
+    print("Debugging the live update plot ===================")
     result = getattr(optimizationResult,'x')
     print(result) 
     # x_vals.append(xk)
