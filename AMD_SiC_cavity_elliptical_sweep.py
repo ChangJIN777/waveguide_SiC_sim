@@ -134,7 +134,7 @@ def run_Sim(param):
     return -1*fitness
 
 p0 = [2.912e-07]
-popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
-# run_Sim(p0)
+run_Sim(p0)
