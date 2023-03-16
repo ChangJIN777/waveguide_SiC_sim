@@ -26,6 +26,10 @@ FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 # default location of the data files 
 file_loc = "./sim_data/"
+#hole diameter prefactor 1
+d1 = 0.67
+#hole diameter prefactor 2
+d2 = 0.77
 
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
@@ -464,7 +468,7 @@ def unitCellOptimization_SiC_elliptical(params):
     # simulate the band gap of the unit cell 
     diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,d1,d2)
     detuning = np.abs((3e8)/target_frequency - (3e8)/mg)
-    print("Detuning from the dielectric band: %f"%(detuning))
+    print("Detuning from the mid band: %f"%(detuning))
     # we want large bandgap and small detuning 
     delta_wv = 5e-9
     fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
@@ -472,6 +476,27 @@ def unitCellOptimization_SiC_elliptical(params):
     data = [a,d1,d2,detuning,bg_mg_rat,fitness]
     record_data(data,file_name)
     return -1*fitness
+
+def unitCellOptimization_SiC_waveguide_elliptical(params):
+    """this function is used to optimize the unit cells for the waveguide regions of the cavity
+
+    Args:
+        params (list): 
+            params[0] (float): the tapered lattice constant (this should be the value the waveguide is tapering to)
+
+    Returns:
+        fitness: the optimization parameter (we want large bandgap and small detuning)
+    """
+    print("Starting sim ===================") # for debugging purpose
+    a = params[0]
+    # simulate the band gap of the unit cell 
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,d1,d2)
+    detuning = np.abs(target_frequency-diel_freq)
+    print("Detuning from the dielectric band: %f"%(detuning))
+    file_name = "unitcell_Optimization_elliptical_waveguide_v1.csv"
+    data = [a,detuning]
+    record_data(data,file_name)
+    return detuning
 
 def band_structure_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
     """This function simulate the band structure of the unit cells with elliptical holes 
