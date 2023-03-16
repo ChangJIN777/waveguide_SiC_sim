@@ -65,7 +65,7 @@ a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirr
 mirror_cells_right = buildMirrorRegion_elliptical(a_R,d1,d2,MN_R,w,h0,n_f,engine)
 
 #building cubic tapered cell region
-taper_cells = buildTaperRegion_elliptical(a,a_R,amin,d1,d2,TN,w,h0,n_f,TN,engine)
+taper_cells = buildTaperRegion_elliptical(a,a_R,amin,d1,d2,TN,w,h0,n_f,engine)
 
 ####################################### cavity without the waveguide region ###############################
 cavity = Cavity1D(
