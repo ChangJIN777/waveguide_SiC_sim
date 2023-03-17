@@ -403,6 +403,10 @@ def buildUnitCell_elliptical(a,hx,hy,w,h0=h0,n_f=n_f,engine=engine):
         cell: the UnitCell object in waveguide solver 
     """
     w0 = w*a
+    # for debugging purpose 
+    hx_nm = hx*1e9
+    hy_nm = hy*1e9
+    print("hx: %f hy %f " %(hx_nm,hy_nm))
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     hole = CylinderStructure(Vec3(0), h0, hx, DielectricMaterial(1, order=1, color="blue"),radius2=hy)
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
