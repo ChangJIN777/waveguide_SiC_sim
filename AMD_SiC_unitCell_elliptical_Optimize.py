@@ -43,9 +43,9 @@ n_f = 2.6
 amin_wvg = t_wvg*a
 
 # do a low resolution sweep over the desired parameter range 
-a_list = np.linspace(2.0e-07,3.0e-07,5)
-d1_list = np.linspace(0.1,0.8,5)
-d2_list = np.linspace(0.67,w,5)
+a_list = np.linspace(2.8e-07,3.1e-07,5)
+d1_list = np.linspace(0.6,0.9,5)
+d2_list = np.linspace(1,w,5)
 for a in a_list:
     for d1 in d1_list:
         for d2 in d2_list:
