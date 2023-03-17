@@ -34,7 +34,7 @@ d = 0.64
 # w = 1.692961161046466
 w = 1.69
 #taper prefactor (for the defect region)
-t = 0.8
+t = 0.6
 #taper prefactor (for the waveguide region)
 t_wvg = 0.875
 #beam height (set by epi-layer thickness)
