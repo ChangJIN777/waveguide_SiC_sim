@@ -155,13 +155,13 @@ def buildUnitCell(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
-def sim_bandGap_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def sim_bandGap_elliptical(a,hx,hy,w=w_0,h0=h0,n_f=n_f,engine=engine):
     """the function generates the bandgap associated with the simulated unit cell
 
     Args:
         a (float): the lattice constant 
-        d1 (float): hole diameter prefactor 1
-        d2 (float): hole diameter prefactor 2
+        hx (float): hole diameter in the x direction
+        hy (float): hole diameter in the y direction
         w (float): the beam width prefactor
         h0 (float): the beam height
         n_f (float): the refractive index associated with the material
@@ -171,7 +171,7 @@ def sim_bandGap_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
         _type_: _description_
     """
     start_time = datetime.now()
-    cell = buildUnitCell_elliptical(a,d1,d2,w,h0,n_f,engine)
+    cell = buildUnitCell_elliptical(a,hx,hy,w,h0,n_f,engine)
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
 
@@ -402,11 +402,12 @@ def buildUnitCell_elliptical(a,hx,hy,w,h0=h0,n_f=n_f,engine=engine):
     Returns:
         cell: the UnitCell object in waveguide solver 
     """
-    w0 = w*a
     # for debugging purpose 
     hx_nm = hx*1e9
     hy_nm = hy*1e9
     print("hx: %f hy %f " %(hx_nm,hy_nm))
+    
+    w0 = w*a
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     hole = CylinderStructure(Vec3(0), h0, hx, DielectricMaterial(1, order=1, color="blue"),radius2=hy)
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
@@ -523,30 +524,6 @@ def band_structure_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
     r1.show()
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
-    
-def buildTaperRegion_elliptical(a_L,a_R,amin,d1,d2,TN,w=w_0,h0=h0,n_f=n_f,engine=engine):
-    """the function used to build mirriro region
-
-    Args:
-        a_L (float): the lattice constant used to build the mirror region on the left side 
-        a_R (float): the lattice constant used to build the mirror region on the right side 
-        d1 (float): hole diameter prefactor 1
-        d2 (float): hole diameter prefactor 2
-        w (float): the beam width prefactor
-        amin: the minimum lattice constant in the tapering region
-        h0 (float): the beam height
-        n_f (float): the refractive index associated with the material
-        TN (int): the number of tapering cells 
-        engine: the FDTD engine used to simulate the waveguide region
-    """
-    taper_cells = []
-    w0 = w*a_L #the beam width
-    aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
-    for i in aList_taper:
-        taper_box = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
-        taper_hole = CylinderStructure(Vec3(0), h0, d1*i/2, DielectricMaterial(1, order=1, color="blue"),radius2=d2*i/2)
-        taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i,w0,h0), engine=engine)]
-    return taper_cells
 
 def buildMirrorRegion_elliptical(a,d1,d2,MN,w=w_0,h0=h0,n_f=n_f,engine=engine):
     """the function used to build mirriro region
