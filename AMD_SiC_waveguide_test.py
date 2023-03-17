@@ -46,7 +46,7 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.88
+prefactor_mirror_R = 1
 #the refractive index associated with the material 
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
@@ -78,22 +78,22 @@ waveguide_cells_R = buildWaveguideRegion_right_v2(a_R,d,d_min,t_wvg,WN)
 # #adding the waveguide region to the left side of the cavity 
 # waveguide_cells_L = buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN)
 
-# ####################################### cavity without the waveguide region ###############################
-# cavity = Cavity1D(
-# unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
-# structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-# center_cell=centerCell,
-# center_shift=0,
-# engine=engine
-# )
-####################################### cavity with the waveguide region ###############################
+####################################### cavity without the waveguide region ###############################
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
+unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
 engine=engine
 )
+# ####################################### cavity with the waveguide region ###############################
+# cavity = Cavity1D(
+# unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
+# structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+# center_cell=centerCell,
+# center_shift=0,
+# engine=engine
+# )
 # ####################################### cavity with the waveguide region on both sides ###############################
 # cavity = Cavity1D(
 # unit_cells=  waveguide_cells_L + mirror_cells_left + taper_cells + mirror_cells_right+ waveguide_cells_R,
