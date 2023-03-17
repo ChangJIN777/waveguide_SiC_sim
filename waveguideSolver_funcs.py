@@ -537,7 +537,7 @@ def band_structure_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
     cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine)
     # r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 12), freqs=(0.25e15, 0.7e15, 100000),
     #                    dipole_region=Vec3(0.8, 0, 0), window_pos = 0)
-    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.5e15, 150000))
+    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.6e15, 100000))
     # # # Plot the bandstructure
     r1.show()
     end_time = datetime.now()
