@@ -13,6 +13,8 @@ import os
 from datetime import datetime
 import csv
 
+#lattice constant
+a = 2.80e-07
 #define the useful constants 
 n_f = 2.6 # for SiC
 target_frequency = 327.3e12
@@ -27,9 +29,9 @@ engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, sav
 # default location of the data files 
 file_loc = "./sim_data/"
 #hole diameter prefactor 1
-d1 = 0.67
+hx = 0.4*a/2
 #hole diameter prefactor 2
-d2 = 0.77
+hy = 0.5*a/2
 
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
@@ -155,14 +157,14 @@ def buildUnitCell(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
-def sim_bandGap_elliptical(a,hx,hy,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def sim_bandGap_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
     """the function generates the bandgap associated with the simulated unit cell
 
     Args:
         a (float): the lattice constant 
         hx (float): hole diameter in the x direction
         hy (float): hole diameter in the y direction
-        w (float): the beam width prefactor
+        w0 (float): the beam width
         h0 (float): the beam height
         n_f (float): the refractive index associated with the material
         engine : the FDTD engine used to simulate the waveguide region
@@ -171,7 +173,7 @@ def sim_bandGap_elliptical(a,hx,hy,w=w_0,h0=h0,n_f=n_f,engine=engine):
         _type_: _description_
     """
     start_time = datetime.now()
-    cell = buildUnitCell_elliptical(a,hx,hy,w,h0,n_f,engine)
+    cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine)
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
 
@@ -481,14 +483,18 @@ def unitCellOptimization_SiC_waveguide_elliptical(params):
     Args:
         params (list): 
             params[0] (float): the tapered lattice constant (this should be the value the waveguide is tapering to)
+            params[1] (float): the radius in the x direction
+            params[2] (float): the radius in the y direction
 
     Returns:
         fitness: the optimization parameter (we want large bandgap and small detuning)
     """
     print("Starting sim ===================") # for debugging purpose
     a = params[0]
+    hx = params[1]
+    hy = params[2]
     # simulate the band gap of the unit cell 
-    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,d1,d2)
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,hx,hy)
     detuning = np.abs(target_frequency-diel_freq)
     print("Detuning from the dielectric band: %f"%(detuning))
     file_name = "unitcell_Optimization_elliptical_waveguide_v1.csv"
@@ -496,21 +502,21 @@ def unitCellOptimization_SiC_waveguide_elliptical(params):
     record_data(data,file_name)
     return detuning
 
-def band_structure_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def band_structure_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
     """This function simulate the band structure of the unit cells with elliptical holes 
 
     Args:
         a (float): the lattice constant 
-        d1 (float): the radius prefactor 1 
-        d2 (float): the radius prefactor 2
-        w (float, optional): the beam width prefactor. Defaults to w_0.
+        hx (float): the radius in the x direction 
+        hy (float): the radius in the y direction
+        w0 (float): the beam width 
         h0 (float, optional): the beam height. Defaults to h0.
         n_f (float, optional): the refractive index. Defaults to n_f.
         engine (Lumerical engine object, optional): _description_. Defaults to engine.
     """
     print("Starting simulation =============================")
     start_time = datetime.now()
-    cell = buildUnitCell_elliptical(a,d1,d2,w,h0,n_f,engine)
+    cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine)
     # r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 12), freqs=(0.25e15, 0.7e15, 100000),
     #                    dipole_region=Vec3(0.8, 0, 0), window_pos = 0)
     r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.5e15, 150000))
@@ -519,7 +525,7 @@ def band_structure_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
 
-def buildWaveguideRegion_elliptical_right(a,d1,d2,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def buildWaveguideRegion_elliptical_right(a,hx,hy,t_wvg,WN,w0,h0=h0,n_f=n_f,engine=engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity
     
     Args:
@@ -527,13 +533,12 @@ def buildWaveguideRegion_elliptical_right(a,d1,d2,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,e
         t_wvg: the tapering prefactor associated with the waveguide region 
         WN: the number of unit cells in the waveguide region 
         n_f: the refractive index associated with the material
-        d1: hole diameter prefactor 1
-        d2: hole diameter prefactor 2
-        w: the beam width prefactor
+        hx: hole diameter in the x direction
+        hy: hole diameter in the y direction
+        w0: the beam width 
         h0: the beam height
         engine: the FDTD engine used to simulate the waveguide region
     """
-    w0 = w*a
     waveguide_cells_R = []
     amin = t_wvg*a
     a_wv = cubic_tapering(a,amin,WN)
@@ -541,7 +546,7 @@ def buildWaveguideRegion_elliptical_right(a,d1,d2,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,e
     print(a_wv) # debugging
     for i in a_wv:
         waveguide_box_R = BoxStructure(Vec3(0), Vec3(i,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
-        waveguide_hole_R = CylinderStructure(Vec3(0), h0, d1*i/2, DielectricMaterial(1, order=1, color="blue"),radius2=d2*i/2)
+        waveguide_hole_R = CylinderStructure(Vec3(0), h0, hx, DielectricMaterial(1, order=1, color="blue"),radius2=hy)
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
     return waveguide_cells_R
 
