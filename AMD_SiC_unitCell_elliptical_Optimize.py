@@ -23,7 +23,7 @@ d1 = 0.67
 # d2 = 0.77
 d2 = 1.2
 #beam width prefactor
-w = 1.69
+w = 1.75
 #taper prefactor (for the defect region)
 t = 0.8
 #taper prefactor (for the waveguide region)
@@ -43,13 +43,16 @@ n_f = 2.6
 amin_wvg = t_wvg*a
 
 # do a low resolution sweep over the desired parameter range (LOOPING CODE) ############
-a_list = np.linspace(2.5e-07,2.8e-07,5)
-d1_list = np.linspace(0.6,0.9,5)
-d2_list = np.linspace(1,w,5)
+a_list = np.linspace(2.5e-07,3.0e-07,10)
+dx_list = np.linspace(0.2,0.6,10)
+dy_list = np.linspace(0.5,w,10)
 for a in a_list:
-    for d1 in d1_list:
-        for d2 in d2_list:
-            p0 = [a,d1,d2]
+    for dx in dx_list:
+        hx = dx*a/2
+        for dy in dx_list:
+            hx = dy*a/2
+            w0 = w*a
+            p0 = [a,hx,hy,w0]
             unitCellOptimization_SiC_elliptical(p0)
 
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################

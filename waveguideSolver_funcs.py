@@ -17,10 +17,12 @@ import csv
 a = 2.80e-07
 #define the useful constants 
 n_f = 2.6 # for SiC
+# the target frequency 
 target_frequency = 327.3e12
+# the beam height 
 h0 = 250e-9
 d_0 = 0.64 # the default radius prefactor
-w_0 = 1.69 # the default beam width prefactor 
+w_0 = 1.75 # the default beam width prefactor 
 # default engine 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
@@ -32,6 +34,21 @@ file_loc = "./sim_data/"
 hx = 0.4*a/2
 #hole diameter prefactor 2
 hy = 0.5*a/2
+#taper prefactor (for the defect region)
+t = 0.6
+#taper prefactor (for the waveguide region)
+t_wvg = 0.75
+#beam height (set by epi-layer thickness)
+h0 = 250e-9
+# cavity beam length
+l = 10e-6
+# The target resonance frequency, in Hz
+# 916nm = 327.3e12
+target_frequency = 327.3e12
+#the prefactor associated with the weaker mirror region
+prefactor_mirror_R = 1
+#the refractive index associated with the material 
+n_f = 2.6
 
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
@@ -462,18 +479,19 @@ def unitCellOptimization_SiC_elliptical(params):
     """
     print("Starting sim ===================") # for debugging purpose
     a = params[0]
-    d1 = params[1]
-    d2 = params[2]
+    hx = params[1]
+    hy = params[2]
+    w0 = params[3]
     # simulate the band gap of the unit cell 
-    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,d1,d2)
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,hx,hy,w0)
     detuning = np.abs((3e8)/target_frequency - (3e8)/mg)
     detuning_nm = detuning*1e9
     print("Detuning from the mid band: %f nm"%(detuning_nm))
     # we want large bandgap and small detuning 
     delta_wv = 5e-9
     fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
-    file_name = "unitcell_Optimization_elliptical_v4.csv"
-    data = [a,d1,d2,detuning,bg_mg_rat,fitness]
+    file_name = "unitcell_Optimization_elliptical_v5.csv"
+    data = [a,hx,hy,detuning,bg_mg_rat,fitness]
     record_data(data,file_name)
     return -1*fitness
 
