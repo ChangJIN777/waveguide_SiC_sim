@@ -62,6 +62,9 @@ def run_Sim(param):
     print("Start sim ==============================")
     start_time = datetime.now()
     a = param[0]
+    d1 = param[1]
+    d2 = param[2]
+    t = param[3]
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,d1,d2,MN_L,w,h0,n_f,engine)
 
@@ -116,6 +119,13 @@ def run_Sim(param):
         Vmode = 1e6
     
     Q = 1/((1/Qsc) + (1/Qwvg))
+
+    if Q > 500000:
+        Q = 500000
+    
+    if Qwvg > 500000:
+        Qwvg = 500000
+    
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
 
@@ -123,11 +133,9 @@ def run_Sim(param):
     
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
-  
-    
     # record the data 
     data = [a,d1,d2,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v1.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -136,7 +144,8 @@ def run_Sim(param):
     
     return -1*fitness
 
-p0 = [2.912e-07]
+p0 = [2.912e-07,d1,d2,0.6]
+bnd = [(None,None),(None,0.95),(None,w),(None,0.7)]
 popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
