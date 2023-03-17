@@ -519,27 +519,6 @@ def band_structure_elliptical(a,d1,d2,w=w_0,h0=h0,n_f=n_f,engine=engine):
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
 
-def buildMirrorRegion_elliptical(a,d1,d2,MN,w=w_0,h0=h0,n_f=n_f,engine=engine):
-    """the function used to build mirriro region
-
-    Args:
-        a (float): the lattice constant used to build the mirror region 
-        d1 (float): hole diameter prefactor 1
-        d2 (float): hole diameter prefactor 2
-        w (float): the beam width prefactor
-        h0 (float): the beam height
-        n_f (float): the refractive index associated with the material
-        MN (int): the number of mirror unit cells
-        engine: the FDTD engine used to simulate the waveguide region
-    """
-    w0 = w*a #beam width
-    r1 = d1*a/2 #Radius of the air holes in the cells
-    r2 = d2*a/2 #Radius of the air holes in the cells
-    cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
-    mirror_hole = CylinderStructure(Vec3(0), h0, r1, DielectricMaterial(1, order=1, color="blue"),radius2=r2)
-    mirror_cells = [UnitCell(structures=[ cell_box, mirror_hole ], size=Vec3(a,w0,h0), engine=engine)] * MN
-    return mirror_cells
-
 def buildWaveguideRegion_elliptical_right(a,d1,d2,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity
     
