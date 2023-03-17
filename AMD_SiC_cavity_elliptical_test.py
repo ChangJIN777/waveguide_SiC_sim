@@ -18,7 +18,7 @@ from waveguideSolver_funcs import *
 # a = 2.801277586646125e-7
 a = 3.00e-07
 #hole diameter prefactor 1
-d1 = 0.45
+d1 = 0.7
 #hole diameter prefactor 2
 # d2 = 0.773
 d2 = 1.435
