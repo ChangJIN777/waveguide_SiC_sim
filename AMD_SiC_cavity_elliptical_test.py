@@ -18,11 +18,12 @@ from waveguideSolver_funcs import *
 # a = 2.801277586646125e-7
 a = 2.80e-07
 #hole diameter in the x direction 
-hx = 0.4*a
+hx = 0.4*a/2
 #hole diameter in the y direction 
-hy = 0.5*a
+hy = 0.5*a/2
 #beam width prefactor
 w = 1.75
+w0 = w*a
 #taper prefactor (for the defect region)
 t = 0.6
 #taper prefactor (for the waveguide region)
@@ -58,14 +59,14 @@ TN = 8
 centerCell = MN_L+TN-1 
 
 #build the left mirror cell region 
-mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w,h0,n_f,engine)
+mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
 #build the right mirror cell region 
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w,h0,n_f,engine)
+mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 
 #building cubic tapered cell region
-taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w,h0,n_f,engine)
+taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
 
 ####################################### cavity without the waveguide region ###############################
 cavity = Cavity1D(

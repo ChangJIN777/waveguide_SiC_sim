@@ -387,7 +387,7 @@ def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=e
         waveguide_cells_L += [UnitCell(structures=[ waveguide_box_L, waveguide_hole_L ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
     return waveguide_cells_L
 
-def buildUnitCell_elliptical(a,hx,hy,w,h0=h0,n_f=n_f,engine=engine):
+def buildUnitCell_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
     """the function use the given parameters to build a unit cell with elliptical holes
 
     Args:
@@ -402,18 +402,12 @@ def buildUnitCell_elliptical(a,hx,hy,w,h0=h0,n_f=n_f,engine=engine):
     Returns:
         cell: the UnitCell object in waveguide solver 
     """
-    # for debugging purpose 
-    hx_nm = hx*1e9
-    hy_nm = hy*1e9
-    print("hx: %f hy %f " %(hx_nm,hy_nm))
-    
-    w0 = w*a
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     hole = CylinderStructure(Vec3(0), h0, hx, DielectricMaterial(1, order=1, color="blue"),radius2=hy)
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
-def buildMirrorRegion_elliptical(a,hx,hy,MN,w,h0=h0,n_f=n_f,engine=engine):
+def buildMirrorRegion_elliptical(a,hx,hy,MN,w0,h0=h0,n_f=n_f,engine=engine):
     """the function used to build mirriro region with elliptical holes
 
     Args:
@@ -426,11 +420,11 @@ def buildMirrorRegion_elliptical(a,hx,hy,MN,w,h0=h0,n_f=n_f,engine=engine):
         MN (int): the number of mirror unit cells
         engine: the FDTD engine used to simulate the waveguide region
     """
-    mirror_cell = buildUnitCell_elliptical(a,hx,hy,w,h0,n_f,engine)
+    mirror_cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine)
     mirror_cells = [mirror_cell] * MN
     return mirror_cells
 
-def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0=h0,n_f=n_f,engine=engine):
     """the function used to build taper region with elliptical holes
 
     Args:
@@ -448,7 +442,7 @@ def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w=w_0,h0=h0,n_f=n_f,engine
     taper_cells = []
     aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
     for i in aList_taper:
-        temp_cell = buildUnitCell_elliptical(i,hx,hy,w,h0,n_f,engine)
+        temp_cell = buildUnitCell_elliptical(i,hx,hy,w0,h0,n_f,engine)
         taper_cells += [temp_cell]
     return taper_cells
 
