@@ -25,7 +25,7 @@ d2 = 1.435
 #beam width prefactor
 w = 1.69
 #taper prefactor (for the defect region)
-t = 0.7
+t = 0.6
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
 #beam height (set by epi-layer thickness)
@@ -52,7 +52,7 @@ d_min = 0.3
 #the left mirror cell number 
 MN_L = 20 
 #the right mirror cell number 
-MN_R = 20
+MN_R = 3
 #the number of taper unit cells 
 TN = 8
 #set the center of the device
