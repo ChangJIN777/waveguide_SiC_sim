@@ -394,7 +394,7 @@ def buildUnitCell_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
         a (float): the lattice constant 
         hx (float): hole diameter in the x direction
         hy (float): hole diameter in the y direction
-        w (float): the beam width prefactor
+        w0 (float): the beam width 
         h0 (float): the beam height
         n_f (float): the refractive index associated with the material
         engine : the FDTD engine used to simulate the waveguide region
@@ -414,7 +414,7 @@ def buildMirrorRegion_elliptical(a,hx,hy,MN,w0,h0=h0,n_f=n_f,engine=engine):
         a (float): the lattice constant used to build the mirror region 
         hx (float): hole diameter in the x direction
         hy (float): hole diameter in the y direction
-        w (float): the beam width prefactor
+        w0 (float): the beam width 
         h0 (float): the beam height
         n_f (float): the refractive index associated with the material
         MN (int): the number of mirror unit cells
@@ -432,7 +432,7 @@ def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0=h0,n_f=n_f,engine=en
         a_R (float): the lattice constant used to build the mirror region on the right side 
         hx (float): hole diameter in the x direction
         hy (float): hole diameter in the y direction
-        w (float): the beam width prefactor
+        w0 (float): the beam width 
         amin: the minimum lattice constant in the tapering region
         h0 (float): the beam height
         n_f (float): the refractive index associated with the material
