@@ -16,14 +16,13 @@ from waveguideSolver_funcs import *
 
 #lattice constant
 # a = 2.801277586646125e-7
-a = 3.00e-07
-#hole diameter prefactor 1
-d1 = 0.8
-#hole diameter prefactor 2
-# d2 = 0.773
-d2 = 1.435
+a = 2.80e-07
+#hole diameter in the x direction 
+hx = 0.4*a
+#hole diameter in the y direction 
+hy = 0.5*a
 #beam width prefactor
-w = 1.69
+w = 1.75
 #taper prefactor (for the defect region)
 t = 0.6
 #taper prefactor (for the waveguide region)
@@ -31,7 +30,7 @@ t_wvg = 0.75
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
-l = 15e-6
+l = 10e-6
 # The target resonance frequency, in Hz
 # 916nm = 327.3e12
 target_frequency = 327.3e12
@@ -50,23 +49,23 @@ amin = a*t
 #the minimum radius prefactor we are tapering to 
 d_min = 0.3
 #the left mirror cell number 
-MN_L = 20 
+MN_L = 10
 #the right mirror cell number 
-MN_R = 3
+MN_R = 10
 #the number of taper unit cells 
 TN = 8
 #set the center of the device
 centerCell = MN_L+TN-1 
 
 #build the left mirror cell region 
-mirror_cells_left = buildMirrorRegion_elliptical(a,d1,d2,MN_L,w,h0,n_f,engine)
+mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w,h0,n_f,engine)
 
 #build the right mirror cell region 
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-mirror_cells_right = buildMirrorRegion_elliptical(a_R,d1,d2,MN_R,w,h0,n_f,engine)
+mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w,h0,n_f,engine)
 
 #building cubic tapered cell region
-taper_cells = buildTaperRegion_elliptical(a,a_R,amin,d1,d2,TN,w,h0,n_f,engine)
+taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w,h0,n_f,engine)
 
 ####################################### cavity without the waveguide region ###############################
 cavity = Cavity1D(

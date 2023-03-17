@@ -41,12 +41,12 @@ t_wvg = 0.875
 h0 = 250e-9
 # cavity beam length
 l = 15e-6
+#the prefactor associated with the weaker mirror region
+prefactor_mirror_R = 1
 # The target resonance frequency, in Hz
 # 1280nm = 234.212857812500e12
 # 916nm = 327.3e12
 target_frequency = 327.3e12
-#the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 1
 #the refractive index associated with the material 
 n_f = 2.6
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
