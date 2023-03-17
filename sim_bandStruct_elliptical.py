@@ -21,10 +21,13 @@ a = 2.80e-7
 t = 0.8
 #hole diameter prefactor 1
 d1 = 0.64
+hx = d1*a/2
 #hole diameter prefactor 2
 d2 = 0.8
+hy = d2*a/2
 #beam width prefactor
-w = 1.69
+w = 1.75 
+w0 = 1.75*a
 #refractive index of the dielectric material 
 n_f = 2.6
 #the number of taper cells
@@ -42,4 +45,4 @@ a_taper = a_taper[::-1]
 # simulate the band gap associated with the unit cell 
 # sim_bandGap_elliptical(a,d1,d2)
 # simulate the band structure associated with the unit cell
-band_structure_elliptical(a,d1,d2,w,h0,n_f)
+band_structure_elliptical(a,hx,hy,w0)
