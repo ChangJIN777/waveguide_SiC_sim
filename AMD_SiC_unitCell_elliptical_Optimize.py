@@ -45,8 +45,8 @@ amin_wvg = t_wvg*a
 # do a low resolution sweep over the desired parameter range (LOOPING CODE) ############
 # a_list = np.linspace(2.7e-07,2.9e-07,10)
 a_list = np.linspace(2.50e-7,3.00e-7,10)
-dx_list = np.linspace(0.1,0.9,10)
-dy_list = np.linspace(0.1,1.75,10)
+dx_list = np.linspace(0.5,0.9,5)
+dy_list = np.linspace(0.5,1.75,5)
 for a in a_list:
     for dx in dx_list:
         hx = dx*a/2
