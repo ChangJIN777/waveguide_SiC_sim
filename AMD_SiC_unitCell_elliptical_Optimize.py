@@ -51,7 +51,7 @@ for a in a_list:
     for dx in dx_list:
         hx = dx*a/2
         for dy in dy_list:
-            hx = dy*a/2
+            hy = dy*a/2
             w0 = w*a
             p0 = [a,hx,hy,w0]
             hx_nm = hx*1e9
