@@ -20,11 +20,9 @@ a = 2.686e-7
 #the tapering prefactor 
 t = 0.8
 #hole diameter prefactor 1
-d1 = 0.64
-hx = 8.295e-8
+hx = 7.117e-8
 #hole diameter prefactor 2
-d2 = 0.8
-hy = 7.117e-8
+hy = 8.295e-8
 #beam width prefactor
 w = 1.75 
 w0 = 1.75*a

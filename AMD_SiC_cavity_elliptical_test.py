@@ -18,9 +18,9 @@ from waveguideSolver_funcs import *
 a = 2.686e-7
 #the tapering prefactor 
 t = 0.8
-#hole diameter prefactor 1
+#hole diameter in the x direction
 hx = 8.295e-8
-#hole diameter prefactor 2
+#hole diameter in the y direction
 hy = 7.117e-8
 #beam width prefactor
 w = 1.75 
