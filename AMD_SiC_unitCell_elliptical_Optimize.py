@@ -60,7 +60,7 @@ amin_wvg = t_wvg*a
 #             unitCellOptimization_SiC_elliptical(p0)
             
 # sweeping through lattice constants to find the resonance 
-a_list = np.linspace(2.0e-07,2.6e-07,30)
+a_list = np.linspace(2.3e-07,2.6e-07,30)
 for a in a_list:
     hx = 3.7306e-8
     hy = 8.7295e-8
