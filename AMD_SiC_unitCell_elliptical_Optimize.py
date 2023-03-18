@@ -60,7 +60,7 @@ for a in a_list:
             unitCellOptimization_SiC_elliptical(p0)
             
 # sweeping through lattice constants to find the resonance 
-a_list = np.linspace(2.5e-07,3.0e-07,30)
+a_list = np.linspace(2.0e-07,2.6e-07,30)
 for a in a_list:
     for dx in dx_list:
         hx = 3.7306e-8
