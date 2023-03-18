@@ -46,7 +46,7 @@ amin_wvg = t_wvg*a
 # a_list = np.linspace(2.7e-07,2.9e-07,10)
 a_list = [2.686e-7]
 dx_list = np.linspace(0.1,0.9,10)
-dy_list = np.linspace(0.1,1,75,10)
+dy_list = np.linspace(0.1,1.75,10)
 for a in a_list:
     for dx in dx_list:
         hx = dx*a/2
