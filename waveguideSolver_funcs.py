@@ -206,6 +206,7 @@ def sim_bandGap_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
     print('--------')
     print('Duration: {}'.format(end_time - start_time))
     print('Lower band edge frequency: %f THz' % (diel_freq / 1e12))
+    print('Higher band edge frequency: %f THz' % (air_freq / 1e12))
     print("Bandgap ratio: %f percent" % (bg_mg_rat * 100))
     print("Midgap frequency: %f THz" % (mg / 1e12))
     print("Delta k: %f " % delta_k)
@@ -490,7 +491,7 @@ def unitCellOptimization_SiC_elliptical(params):
     # we want large bandgap and small detuning 
     delta_wv = 5e-9
     fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
-    file_name = "unitcell_Optimization_elliptical_v5.csv"
+    file_name = "unitcell_Optimization_elliptical_v6.csv"
     data = [a,hx,hy,detuning,bg_mg_rat,fitness]
     record_data(data,file_name)
     return -1*fitness
