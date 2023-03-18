@@ -16,15 +16,15 @@ from matplotlib import style
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.80e-7
+a = 2.686e-7
 #the tapering prefactor 
 t = 0.8
 #hole diameter prefactor 1
 d1 = 0.64
-hx = d1*a/2
+hx = 8.295e-8
 #hole diameter prefactor 2
 d2 = 0.8
-hy = d2*a/2
+hy = 7.117e-8
 #beam width prefactor
 w = 1.75 
 w0 = 1.75*a
