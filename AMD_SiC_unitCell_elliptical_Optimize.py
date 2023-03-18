@@ -58,6 +58,19 @@ for a in a_list:
             hy_nm = hy*1e9
             print("hx: %f nm hy: %f nm" %(hx_nm, hy_nm))
             unitCellOptimization_SiC_elliptical(p0)
+            
+# sweeping through lattice constants to find the resonance 
+a_list = np.linspace(2.5e-07,3.0e-07,30)
+for a in a_list:
+    for dx in dx_list:
+        hx = 3.7306e-8
+        for dy in dy_list:
+            hy = 8.7295e-8
+            w0 = w*a
+            p0 = [a,hx,hy,w0]
+            a_nm = a*1e9
+            print("a: %f nm" %(a_nm))
+            unitCellOptimization_SiC_elliptical(p0)
 
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
 # a_0 = 2.70e-7
