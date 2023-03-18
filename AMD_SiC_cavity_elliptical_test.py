@@ -15,15 +15,16 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-# a = 2.801277586646125e-7
-a = 2.80e-07
-#hole diameter in the x direction 
-hx = 0.4*a/2
-#hole diameter in the y direction 
-hy = 0.5*a/2
+a = 2.686e-7
+#the tapering prefactor 
+t = 0.8
+#hole diameter prefactor 1
+hx = 8.295e-8
+#hole diameter prefactor 2
+hy = 7.117e-8
 #beam width prefactor
-w = 1.75
-w0 = w*a
+w = 1.75 
+w0 = 1.75*a
 #taper prefactor (for the defect region)
 t = 0.7
 #taper prefactor (for the waveguide region)
