@@ -46,7 +46,7 @@ amin_wvg = t_wvg*a
 # a_list = np.linspace(2.7e-07,2.9e-07,10)
 a_list = [2.686e-7]
 dx_list = np.linspace(0.1,0.9,10)
-dy_list = np.linspace(0.1,w,10)
+dy_list = np.linspace(0.1,1,75,10)
 for a in a_list:
     for dx in dx_list:
         hx = dx*a/2
@@ -54,6 +54,9 @@ for a in a_list:
             hx = dy*a/2
             w0 = w*a
             p0 = [a,hx,hy,w0]
+            hx_nm = hx*1e9
+            hy_nm = hy*1e9
+            print("hx: %f nm hy: %f nm" %(hx_nm, hy_nm))
             unitCellOptimization_SiC_elliptical(p0)
 
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
