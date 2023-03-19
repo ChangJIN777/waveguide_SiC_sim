@@ -25,7 +25,7 @@ hy = 1.5937e-7
 w = 1.75
 w0 = w*a
 #taper prefactor (for the defect region)
-t = 0.7
+t = 0.816
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
 #beam height (set by epi-layer thickness)
@@ -65,15 +65,16 @@ def run_Sim(param):
     a = param[0]
     hx = param[1]
     hy = param[2]
+    t = param[3]
     #build the left mirror cell region 
-    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w,h0,n_f,engine)
+    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w,h0,n_f,engine)
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 
     #building cubic tapered cell region
-    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w,h0,n_f,engine)
+    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
 
     ####################################### cavity without the waveguide region ###############################
     cavity = Cavity1D(
@@ -134,8 +135,8 @@ def run_Sim(param):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,d1,d2,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v2.csv"
+    data = [a,hx,hy,t,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v4.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -144,9 +145,9 @@ def run_Sim(param):
     
     return -1*fitness
 
-# p0 = [2.912e-07,0.8,1.6,0.6]
-# bnd = [(None,None),(None,0.95),(None,w),(None,0.7)]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+p0 = [a,hx,hy,t]
+bnd = [(None,None),(None,a),(None,w0),(None,1)]
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
