@@ -45,3 +45,4 @@ a_taper = a_taper[::-1]
 
 # # simulate the band structure associated with the unit cell (mirror region)
 # band_structure_elliptical(a,hx,hy,w0)
+sim_bandGap_elliptical(a,hx,hy,w0)
