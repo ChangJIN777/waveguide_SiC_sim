@@ -152,8 +152,8 @@ popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 # debugging 
 # run_Sim(p0)
 
-# sweeping the taper prefactor 
-t_list = np.linspace(0.5,1,20)
-for t in t_list:
-    param = [t]
-    sweep_tapering_elliptical_cavity(param)
+# # sweeping the taper prefactor 
+# t_list = np.linspace(0.5,1,20)
+# for t in t_list:
+#     param = [t]
+#     sweep_tapering_elliptical_cavity(param)
