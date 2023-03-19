@@ -18,7 +18,7 @@ from waveguideSolver_funcs import *
 #lattice constant
 a = 2.8333e-7
 #the tapering prefactor 
-t = 0.7
+t = 0.8
 #hole diameter prefactor 1
 hx = 7.0833e-8
 #hole diameter prefactor 2
@@ -42,5 +42,6 @@ a_taper = cubic_tapering(a,amin,taperNum=TN)
 a_taper = a_taper[::-1]
 # simulate the band gap associated with the unit cell 
 # sim_bandGap_elliptical(a,d1,d2)
-# simulate the band structure associated with the unit cell
-band_structure_elliptical(a,hx,hy,w0)
+
+# # simulate the band structure associated with the unit cell (mirror region)
+# band_structure_elliptical(a,hx,hy,w0)
