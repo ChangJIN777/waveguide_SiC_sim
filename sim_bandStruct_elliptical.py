@@ -18,7 +18,7 @@ from waveguideSolver_funcs import *
 #lattice constant
 a = 2.8333e-7
 #the tapering prefactor 
-t = 0.8
+t = 0.7
 #hole diameter prefactor 1
 hx = 7.0833e-8
 #hole diameter prefactor 2
