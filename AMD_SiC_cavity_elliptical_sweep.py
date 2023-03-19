@@ -16,13 +16,14 @@ from waveguideSolver_funcs import *
 
 #lattice constant
 # a = 2.801277586646125e-7
-a = 2.80e-07
+a = 2.8333e-7
 #hole diameter in the x direction 
-hx = 0.4*a/2
+hx = 7.0833e-8
 #hole diameter in the y direction 
-hy = 0.5*a/2
+hy = 1.5937e-7
 #beam width prefactor
 w = 1.75
+w0 = w*a
 #taper prefactor (for the defect region)
 t = 0.7
 #taper prefactor (for the waveguide region)
@@ -143,9 +144,15 @@ def run_Sim(param):
     
     return -1*fitness
 
-p0 = [2.912e-07,0.8,1.6,0.6]
-bnd = [(None,None),(None,0.95),(None,w),(None,0.7)]
-popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# p0 = [2.912e-07,0.8,1.6,0.6]
+# bnd = [(None,None),(None,0.95),(None,w),(None,0.7)]
+# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
+
+# sweeping the taper prefactor 
+t_list = np.linspace(0.5,1,20)
+for t in t_list:
+    param = [t]
+    sweep_tapering_elliptical_cavity(param)
