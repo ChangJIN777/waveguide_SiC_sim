@@ -15,8 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-# a = 2.801277586646125e-7
-a = 2.737678125000000e-07
+a = 2.8333e-7
+#the tapering prefactor 
+t = 0.7
+#hole diameter prefactor 1
+hx = 7.0833e-8
+#hole diameter prefactor 2
+hy = 1.5937e-7
 #hole diameter prefactor 1
 d1 = 0.67
 #hole diameter prefactor 2
@@ -42,23 +47,23 @@ n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
 
-# do a low resolution sweep over the desired parameter range (LOOPING CODE) ############
-# a_list = np.linspace(2.7e-07,2.9e-07,10)
-a_list = np.linspace(2.50e-7,3.00e-7,10)
-dx_list = np.linspace(0.5,0.9,5)
-dy_list = np.linspace(0.5,1.75,5)
-for a in a_list:
-    for dx in dx_list:
-        hx = dx*a/2
-        for dy in dy_list:
-            hy = dy*a/2
-            w0 = w*a
-            p0 = [a,hx,hy,w0]
-            hx_nm = hx*1e9
-            hy_nm = hy*1e9
-            a_nm = a*1e9
-            print("a: %f nm hx: %f nm hy: %f nm" %(a_nm, hx_nm, hy_nm))
-            unitCellOptimization_SiC_elliptical(p0)
+# # do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
+# # a_list = np.linspace(2.7e-07,2.9e-07,10)
+# a_list = np.linspace(2.50e-7,3.00e-7,10)
+# dx_list = np.linspace(0.5,0.9,5)
+# dy_list = np.linspace(0.5,1.75,5)
+# for a in a_list:
+#     for dx in dx_list:
+#         hx = dx*a/2
+#         for dy in dy_list:
+#             hy = dy*a/2
+#             w0 = w*a
+#             p0 = [a,hx,hy,w0]
+#             hx_nm = hx*1e9
+#             hy_nm = hy*1e9
+#             a_nm = a*1e9
+#             print("a: %f nm hx: %f nm hy: %f nm" %(a_nm, hx_nm, hy_nm))
+#             unitCellOptimization_SiC_elliptical(p0)
             
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
 # a_0 = 2.70e-7
@@ -74,6 +79,15 @@ for a in a_list:
 # bnd = ((0.5*a,a))
 # popt = scipy.optimize.minimize(unitCellOptimization_SiC_waveguide_elliptical,p0,method='Nelder-Mead')
 
+# do a low resolution sweep over the desired parameter range (LOOPING CODE/defect region) ############
+# a_list = np.linspace(2.7e-07,2.9e-07,10)
+t_list = np.linspace(0.5,1,10)
+for t in t_list:
+    w0 = w*a
+    a_def = a*t
+    p0 = [a_def,hx,hy,w0]
+    print("tapering prefactor: %f" %(t))
+    unitCellOptimization_SiC_elliptical(p0)
 
 # testing the algorithm
 # unitCellOptimization_SiC_elliptical(p0)
