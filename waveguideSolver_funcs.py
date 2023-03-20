@@ -707,6 +707,8 @@ def sweep_beam_width_elliptical_cavity(param):
     start_time = datetime.now()
     w = param[0]
     w0=w*a
+    w0_nm = w0*1e9
+    print("the beam width: %f nm" %(w0_nm))
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
     #build the right mirror cell region 
