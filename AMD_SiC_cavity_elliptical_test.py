@@ -51,7 +51,7 @@ d_min = 0.3
 #the left mirror cell number 
 MN_L = 10
 #the right mirror cell number 
-MN_R = 3
+MN_R = 10
 #the number of taper unit cells 
 TN = 8
 #set the center of the device
@@ -87,13 +87,13 @@ cavity.save("cavity.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 12nm)
 # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 20e-9, dy=None, dz=None)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 12e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q #########################################################
 # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
 #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
 r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
+                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
 # try simulating without a target frequency 
 # r1 = cavity.simulate("resonance", source_pulselength=200e-15, 
 #                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
