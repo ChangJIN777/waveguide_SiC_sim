@@ -16,11 +16,11 @@ from waveguideSolver_funcs import *
 
 #lattice constant
 # a = 2.801277586646125e-7
-a = 2.8333e-7
+a = 2.857332184893757e-7
 #hole diameter in the x direction 
-hx = 7.0833e-8
+hx = 7.031039274276191e-8
 #hole diameter in the y direction 
-hy = 1.5937e-7
+hy = 1.679705299133866e-7
 #beam width prefactor
 w = 1.75
 w0 = w*a
@@ -160,7 +160,7 @@ def run_Sim(param):
 #     sweep_tapering_elliptical_cavity(param)
 
 # sweeping the beam width prefactor 
-w_list = np.linspace(1.5,1.8,20)
+w_list = np.linspace(1.3,1.8,20)
 for t in w_list:
     param = [w]
     sweep_beam_width_elliptical_cavity(param)
