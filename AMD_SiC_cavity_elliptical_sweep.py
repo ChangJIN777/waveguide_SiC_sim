@@ -53,7 +53,7 @@ d_min = 0.3
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 3
+MN_R = 10
 #the number of taper unit cells 
 TN = 6
 #set the center of the device
@@ -66,6 +66,7 @@ def run_Sim(param):
     hx = param[1]
     hy = param[2]
     t = param[3]
+    w0 = param[4]
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
@@ -136,7 +137,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v4.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v5.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -145,10 +146,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-# # optimization algorithm
-# p0 = [a,hx,hy,t]
-# bnd = [(None,None),(None,a),(None,w0),(None,1)]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# optimization algorithm
+p0 = [a,hx,hy,t,w0]
+bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None)]
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -159,8 +160,8 @@ def run_Sim(param):
 #     param = [t]
 #     sweep_tapering_elliptical_cavity(param)
 
-# sweeping the beam width prefactor 
-w_list = np.linspace(1.3,1.8,20)
-for w in w_list:
-    param = [w]
-    sweep_beam_width_elliptical_cavity(param)
+# # sweeping the beam width prefactor 
+# w_list = np.linspace(1.3,1.8,20)
+# for w in w_list:
+#     param = [w]
+#     sweep_beam_width_elliptical_cavity(param)
