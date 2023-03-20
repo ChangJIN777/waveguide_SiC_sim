@@ -92,8 +92,8 @@ man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 12e-9, dy=None, d
 # simulating the resonance and the Q #########################################################
 # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
 #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
-r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
+r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
+                    analyze_time=600e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
 # try simulating without a target frequency 
 # r1 = cavity.simulate("resonance", source_pulselength=200e-15, 
 #                     analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
@@ -113,6 +113,15 @@ Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
 Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
 Vmode = r1["vmode"]
 F = r1["freq"]
+
+# for debugging the Q 
+Qx1 = r1["qxmin"]
+Qx2 = r1["qxmax"]
+Qy = 1 / (2 / r1["qymax"])
+Qz = 1 / (1 / r1["qzmin"] + 1 / r1["qzmax"])
+print("Qx1: %f, Qx2: %f, Qy: %f, Qz: %f" % (
+    Qx1, Qx2, Qy, Qz
+))
 
 Q = 1/((1/Qsc) + (1/Qwvg))
 P = (Q*Qsc) / (Vmode*Vmode)
