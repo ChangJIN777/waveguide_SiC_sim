@@ -780,7 +780,7 @@ def sweep_beam_width_elliptical_cavity(param):
     
     # record the data 
     data = [a,w0,hx,hy,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_beamWidth.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_beamWidth_v2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
