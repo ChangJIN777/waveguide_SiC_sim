@@ -161,6 +161,6 @@ def run_Sim(param):
 
 # sweeping the beam width prefactor 
 w_list = np.linspace(1.3,1.8,20)
-for t in w_list:
+for w in w_list:
     param = [w]
     sweep_beam_width_elliptical_cavity(param)
