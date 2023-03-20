@@ -53,9 +53,9 @@ d_min = 0.3
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 10
+MN_R = 3
 #the number of taper unit cells 
-TN = 8
+TN = 6
 #set the center of the device
 centerCell = MN_L+TN-1 
 
@@ -160,7 +160,7 @@ def run_Sim(param):
 #     sweep_tapering_elliptical_cavity(param)
 
 # sweeping the beam width prefactor 
-t_list = np.linspace(1.5,1.8,20)
-for t in t_list:
-    param = [t]
+w_list = np.linspace(1.5,1.8,20)
+for t in w_list:
+    param = [w]
     sweep_beam_width_elliptical_cavity(param)

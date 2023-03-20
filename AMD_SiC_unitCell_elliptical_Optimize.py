@@ -36,7 +36,7 @@ t_wvg = 0.875
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
-l = 15e-6
+l = 10e-6
 # The target resonance frequency, in Hz
 # 916nm = 327.3e12
 target_frequency = 327.3e12
