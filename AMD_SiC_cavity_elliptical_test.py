@@ -67,20 +67,20 @@ mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engin
 #building cubic tapered cell region
 taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
 
-####################################### cavity without the waveguide region (symmetric) ###############################
-cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
-structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-engine=engine
-)
-# ####################################### cavity without the waveguide region ###############################
+# ####################################### cavity without the waveguide region (symmetric) ###############################
 # cavity = Cavity1D(
 # unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
 # structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-# center_cell=centerCell,
-# center_shift=0,
 # engine=engine
 # )
+####################################### cavity without the waveguide region (asymmetric) ###############################
+cavity = Cavity1D(
+unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
+structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+center_cell=centerCell,
+center_shift=0,
+engine=engine
+)
 
 # By setting the save path here, the cavity will save itself after each simulation to this file
 cavity.save("cavity.obj")
@@ -108,7 +108,7 @@ print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
 r1["xyprofile"].show()
 r1["yzprofile"].show()
 
-cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
+cavity = Cavity1D(load_path="cavity.obj",engine=engine)
 Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
 Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
 Vmode = r1["vmode"]
