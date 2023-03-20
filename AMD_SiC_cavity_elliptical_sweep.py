@@ -145,9 +145,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-p0 = [a,hx,hy,t]
-bnd = [(None,None),(None,a),(None,w0),(None,1)]
-popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# # optimization algorithm
+# p0 = [a,hx,hy,t]
+# bnd = [(None,None),(None,a),(None,w0),(None,1)]
+# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -157,3 +158,9 @@ popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 # for t in t_list:
 #     param = [t]
 #     sweep_tapering_elliptical_cavity(param)
+
+# sweeping the beam width prefactor 
+t_list = np.linspace(1.5,1.8,20)
+for t in t_list:
+    param = [t]
+    sweep_tapering_elliptical_cavity(param)
