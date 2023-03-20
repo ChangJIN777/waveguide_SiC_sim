@@ -54,7 +54,7 @@ MN_L = 10
 #the right mirror cell number 
 MN_R = 3
 #the number of taper unit cells 
-TN = 4
+TN = 6
 #set the center of the device
 centerCell = MN_L+TN-1 
 
