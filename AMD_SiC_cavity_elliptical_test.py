@@ -22,7 +22,7 @@ hx = 7.031039274276191e-8
 hy = 1.679705299133866e-7
 #beam width prefactor
 w = 1.75 
-w0 = 1.75*a
+w0 = w*a
 #taper prefactor (for the defect region)
 t = 0.823960141783961
 #beam height (set by epi-layer thickness)
@@ -51,7 +51,7 @@ d_min = 0.3
 #the left mirror cell number 
 MN_L = 10
 #the right mirror cell number 
-MN_R = 10
+MN_R = 3
 #the number of taper unit cells 
 TN = 8
 #set the center of the device
