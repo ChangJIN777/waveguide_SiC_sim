@@ -163,4 +163,4 @@ def run_Sim(param):
 t_list = np.linspace(1.5,1.8,20)
 for t in t_list:
     param = [t]
-    sweep_tapering_elliptical_cavity(param)
+    sweep_beam_width_elliptical_cavity(param)
