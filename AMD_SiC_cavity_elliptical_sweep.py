@@ -136,8 +136,8 @@ def run_Sim(param):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,hx,hy,t,w0,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v5.csv"
+    data = [a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v6.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -146,10 +146,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-# optimization algorithm
-p0 = [a,hx,hy,t,w0]
-bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None)]
-popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# # optimization algorithm
+# p0 = [a,hx,hy,t,w0]
+# bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None)]
+# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -165,3 +165,8 @@ popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 # for w in w_list:
 #     param = [w]
 #     sweep_beam_width_elliptical_cavity(param)
+
+# optimization algorithm (only the beam width)
+p0 = [w0]
+bnd = [(None,None)]
+popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
