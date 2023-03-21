@@ -23,7 +23,7 @@ hy = 1.730259002115936e-07
 #beam width prefactor
 # w = 1.75 
 w = 1.75
-w0 = 4.917619076106624e-7
+w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
 t = 0.869462767219858
 #beam height (set by epi-layer thickness)
