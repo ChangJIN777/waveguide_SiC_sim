@@ -136,7 +136,7 @@ def run_Sim(param):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,hx,hy,t,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
+    data = [a,hx,hy,t,w0,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
     file_name = "OptimizeListFull_elliptical_cavity_sweep_v5.csv"
     record_data(data,file_name)
     
