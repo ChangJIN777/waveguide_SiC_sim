@@ -890,7 +890,8 @@ def sweep_cellNum_ellipticalCavity(param):
     start_time = datetime.now()
     MN_L = param[0]
     TN = param[1]
-    print("MN_L: %n TN: %n" (MN_L, TN))
+    print("MN_L:", MN_L)
+    print("TN:", TN)
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
