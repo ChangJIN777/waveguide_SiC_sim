@@ -15,15 +15,16 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.775047787137548e-07
+a = 2.8333e-7
 #hole diameter in the x direction
-hx = 7.076170823568784e-08
+hx = 7.0833e-8
 #hole diameter in the y direction
-hy = 1.730259002115936e-07
+hy = 1.5937e-7
 #beam width prefactor
 # w = 1.75 
 w = 1.75
-w0 = 4.699560661981287e-7
+w0 = 1.75*a
+# w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
 t = 0.869462767219858
 #beam height (set by epi-layer thickness)
@@ -89,7 +90,7 @@ cavity.save("cavity.obj")
 #define mesh size (use 12nm for accuracy, currently set to 12nm)
 # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
 # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 20e-9, dy=None, dz=None)
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,2e-6,2e-6)), 12e-9, dy=None, dz=None)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 12e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q #########################################################
 # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
