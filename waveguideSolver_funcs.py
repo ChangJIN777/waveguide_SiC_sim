@@ -890,6 +890,7 @@ def sweep_cellNum_ellipticalCavity(param):
     start_time = datetime.now()
     MN_L = param[0]
     TN = param[1]
+    print("MN_L: %n TN: %n" (MN_L, TN))
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
@@ -969,7 +970,7 @@ def sweep_cellNum_ellipticalCavity(param):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength,fitness]
+    data = [TN,MN_L,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength,fitness]
     file_name = "OptimizeListFull_elliptical_cavity_sweep_cellNum.csv"
     record_data(data,file_name)
     
