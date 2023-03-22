@@ -178,5 +178,5 @@ TN_list = [3,4,5,6,7,8]
 MN_L_list = [1,2,3,4,5,8,10]
 for TN in TN_list:
     for MN_L in MN_L_list:
-        param = [TN,MN_L]
+        param = [MN_L,TN]
         sweep_cellNum_ellipticalCavity(param)
