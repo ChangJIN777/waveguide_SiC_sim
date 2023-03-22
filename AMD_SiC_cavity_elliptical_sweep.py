@@ -53,9 +53,9 @@ d_min = 0.3
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 3
+MN_R = 10
 #the number of taper unit cells 
-TN = 4
+TN = 6
 #set the center of the device
 centerCell = MN_L+TN-1 
 
@@ -67,14 +67,12 @@ def run_Sim(param):
     hy = param[2]
     t = param[3]
     w0 = param[4]
-    prefactor_mirror_R = param[5]
-    a_R = prefactor_mirror_R*a
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+    mirror_cells_right = buildMirrorRegion_elliptical(a,hx,hy,MN_R,w0,h0,n_f,engine)
 
     #building cubic tapered cell region
     taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
@@ -92,13 +90,13 @@ def run_Sim(param):
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 20e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 20e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
     #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
     r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
-                        analyze_time=600e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
+                        analyze_time=600e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
 
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -139,7 +137,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v7.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v8.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -148,10 +146,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-# # optimization algorithm
-# p0 = [a,hx,hy,t,w0,prefactor_mirror_R]
-# bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None),(0,1)]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# optimization algorithm
+p0 = [a,hx,hy,t,w0]
+bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None)]
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -173,10 +171,10 @@ def run_Sim(param):
 # bnd = [(None,None)]
 # popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
 
-# sweeping the cell numbers 
-TN_list = [3,4,5,6,7,8]
-MN_L_list = [1,2,3,4,5,8,10]
-for TN in TN_list:
-    for MN_L in MN_L_list:
-        param = [MN_L,TN]
-        sweep_cellNum_ellipticalCavity(param)
+# # sweeping the cell numbers 
+# TN_list = [3,4,5,6,7,8]
+# MN_L_list = [1,2,3,4,5,8,10]
+# for TN in TN_list:
+#     for MN_L in MN_L_list:
+#         param = [MN_L,TN]
+#         sweep_cellNum_ellipticalCavity(param)
