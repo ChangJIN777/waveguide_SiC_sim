@@ -27,7 +27,7 @@ w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
 t = 0.869462767219858
 #beam height (set by epi-layer thickness)
-h0 = 200e-9
+h0 = 250e-9
 # cavity beam length
 l = 10e-6
 # The target resonance frequency, in Hz
