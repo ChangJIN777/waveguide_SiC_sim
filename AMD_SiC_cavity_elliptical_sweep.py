@@ -148,10 +148,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-# optimization algorithm
-p0 = [a,hx,hy,t,w0,prefactor_mirror_R]
-bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None),(0,1)]
-popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# # optimization algorithm
+# p0 = [a,hx,hy,t,w0,prefactor_mirror_R]
+# bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None),(0,1)]
+# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -172,3 +172,11 @@ popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 # p0 = [w0]
 # bnd = [(None,None)]
 # popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
+
+# sweeping the cell numbers 
+TN_list = [3,4,5,6,7,8]
+MN_L_list = [1,2,3,4,5,8,10]
+for TN in TN_list:
+    for MN_L in MN_L_list:
+        param = [TN,MN_L]
+        sweep_cellNum_ellipticalCavity(param)
