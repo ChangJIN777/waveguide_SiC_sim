@@ -14,11 +14,11 @@ from datetime import datetime
 import csv
 
 #lattice constant
-a = 2.775047787137548e-07
+a = 2.8333e-7
 #hole diameter in the x direction 
-hx = 7.076170823568784e-08
+hx = 7.0833e-8
 #hole diameter in the y direction 
-hy = 1.730259002115936e-07
+hy = 1.5937e-7
 #define the useful constants 
 n_f = 2.6 # for SiC
 # the target frequency 
@@ -27,7 +27,7 @@ target_frequency = 327.3e12
 h0 = 250e-9
 d_0 = 0.64 # the default radius prefactor
 w_0 = 1.75 # the default beam width prefactor 
-w0=4.699560661981287e-7 #beam width prefactor
+w0= w_0*a #beam width prefactor
 # default engine 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
@@ -36,7 +36,7 @@ engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, sav
 # default location of the data files 
 file_loc = "./sim_data/"
 #taper prefactor (for the defect region)
-t = 0.869462767219858
+t = 0.8
 amin = a*t
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
@@ -888,7 +888,7 @@ def sweep_cellNum_ellipticalCavity(param):
     """
     print("Start sim ==============================")
     start_time = datetime.now()
-    MN_L = param[0]
+    MN_R = param[0]
     TN = param[1]
     print("MN_L:", MN_L)
     print("TN:", TN)
@@ -916,13 +916,13 @@ def sweep_cellNum_ellipticalCavity(param):
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 20e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 20e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
     #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
     r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
-                        analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(8,8,8))
+                        analyze_time=600e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
 
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -960,9 +960,6 @@ def sweep_cellNum_ellipticalCavity(param):
     if Q > 500000:
         Q = 500000
     
-    if Qwvg > 500000:
-        Qwvg = 500000
-    
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
 
@@ -971,8 +968,8 @@ def sweep_cellNum_ellipticalCavity(param):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [TN,MN_L,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_cellNum.csv"
+    data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength,fitness]
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_cellNum_v2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()

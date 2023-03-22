@@ -16,16 +16,16 @@ from waveguideSolver_funcs import *
 
 #lattice constant
 # a = 2.801277586646125e-7
-a = 2.775047787137548e-07
+a = 2.8333e-7
 #hole diameter in the x direction 
-hx = 7.076170823568784e-08
+hx = 7.0833e-8
 #hole diameter in the y direction 
-hy = 1.730259002115936e-07
+hy = 1.5937e-7
 #beam width prefactor
 w = 1.75
-w0 = 4.699560661981287e-7
+w0 = w*a
 #taper prefactor (for the defect region)
-t = 0.869462767219858
+t = 0.8
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
 #beam height (set by epi-layer thickness)
