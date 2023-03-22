@@ -94,7 +94,7 @@ man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,2e-6,2e-6)), 12e-9, dy=None, dz=No
 # simulating the resonance and the Q #########################################################
 # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
 #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
-r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=100e-15, 
+r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
                     analyze_time=600e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
 # try simulating without a target frequency 
 # r1 = cavity.simulate("resonance", source_pulselength=200e-15, 
