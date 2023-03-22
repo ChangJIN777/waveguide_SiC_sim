@@ -16,16 +16,16 @@ from waveguideSolver_funcs import *
 
 #lattice constant
 # a = 2.801277586646125e-7
-a = 2.857332184893757e-7
+a = 2.775047787137548e-07
 #hole diameter in the x direction 
-hx = 7.031039274276191e-8
+hx = 7.076170823568784e-08
 #hole diameter in the y direction 
-hy = 1.679705299133866e-7
+hy = 1.730259002115936e-07
 #beam width prefactor
 w = 1.75
-w0 = w*a
+w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
-t = 0.816
+t = 0.869462767219858
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
 #beam height (set by epi-layer thickness)
@@ -53,9 +53,9 @@ d_min = 0.3
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 10
+MN_R = 3
 #the number of taper unit cells 
-TN = 6
+TN = 4
 #set the center of the device
 centerCell = MN_L+TN-1 
 
@@ -136,8 +136,8 @@ def run_Sim(param):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v6.csv"
+    data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v7.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -146,10 +146,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-# # optimization algorithm
-# p0 = [a,hx,hy,t,w0]
-# bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None)]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# optimization algorithm
+p0 = [a,hx,hy,t,w0,prefactor_mirror_R]
+bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None),(0,1)]
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -166,7 +166,7 @@ def run_Sim(param):
 #     param = [w]
 #     sweep_beam_width_elliptical_cavity(param)
 
-# optimization algorithm (only the beam width)
-p0 = [w0]
-bnd = [(None,None)]
-popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
+# # optimization algorithm (only the beam width)
+# p0 = [w0]
+# bnd = [(None,None)]
+# popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')

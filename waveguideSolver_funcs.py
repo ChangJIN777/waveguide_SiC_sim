@@ -54,9 +54,9 @@ n_f = 2.6
 #the unit cell number in the left mirror region 
 MN_L = 10 
 #the unit cell number in the right mirror region 
-MN_R = 10 
+MN_R = 3
 #the unit cell number in the tapering region 
-TN = 8 
+TN = 4
 #target wavelength 
 target_wavelength = 916e-9 
 #set the center of the device
