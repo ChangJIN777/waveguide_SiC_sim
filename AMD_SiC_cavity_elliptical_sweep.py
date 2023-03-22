@@ -67,6 +67,8 @@ def run_Sim(param):
     hy = param[2]
     t = param[3]
     w0 = param[4]
+    prefactor_mirror_R = param[5]
+    a_R = prefactor_mirror_R*a
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
