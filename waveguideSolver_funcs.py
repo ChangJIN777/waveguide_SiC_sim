@@ -14,11 +14,11 @@ from datetime import datetime
 import csv
 
 #lattice constant
-a = 2.8333e-7
+a = 2.708900299422566e-7
 #hole diameter in the x direction 
-hx = 7.0833e-8
+hx = 6.936330787756172e-8
 #hole diameter in the y direction 
-hy = 1.5937e-7
+hy = 1.639998046215848e-7
 #define the useful constants 
 n_f = 2.6 # for SiC
 # the target frequency 
@@ -27,7 +27,7 @@ target_frequency = 327.3e12
 h0 = 250e-9
 d_0 = 0.64 # the default radius prefactor
 w_0 = 1.75 # the default beam width prefactor 
-w0= w_0*a #beam width prefactor
+w0= 5.102578564047907e-7 #beam width prefactor
 # default engine 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
@@ -36,7 +36,7 @@ engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, sav
 # default location of the data files 
 file_loc = "./sim_data/"
 #taper prefactor (for the defect region)
-t = 0.8
+t = 0.8227
 amin = a*t
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
@@ -916,7 +916,7 @@ def sweep_cellNum_ellipticalCavity(param):
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 20e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 12e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
@@ -969,7 +969,7 @@ def sweep_cellNum_ellipticalCavity(param):
     
     # record the data 
     data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_cellNum_v2.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_cellNum_v3.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
