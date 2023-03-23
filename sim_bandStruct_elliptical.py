@@ -48,7 +48,7 @@ a_taper = a_taper[::-1]
 # sim_bandGap_elliptical(a,hx,hy,w0)
 
 # # simulate the band structure associated with the unit cell (defect region)
-t_list = np.linspace(0,1,20)
+t_list = np.linspace(0.5,1,20)
 for t in t_list:
     a_def = a*t
     # band_structure_elliptical(a_def,hx,hy,w0)
