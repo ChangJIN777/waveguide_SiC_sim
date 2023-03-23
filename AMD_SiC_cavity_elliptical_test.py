@@ -23,7 +23,7 @@ hy = 1.5937e-7
 #beam width prefactor
 # w = 1.75 
 w = 1.75
-w0 = 1.75*a
+w0 = 2*1.75*a
 # w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
 t = 0.8
