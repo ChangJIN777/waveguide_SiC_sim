@@ -16,16 +16,16 @@ from matplotlib import style
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.708900299422566e-7
+a = 2.857332184893757e-7
 #the tapering prefactor 
 t = 0.6
 #hole diameter prefactor 1
-hx = 6.936330787756172e-8
+hx = 7.031039274276191e-8
 #hole diameter prefactor 2
-hy = 1.639998046215848e-7
+hy = 1.679705299133866e-7
 #beam width prefactor
 w = 1.75 
-w0 = 5.102578564047907e-7
+w0 = 1.75*w
 #refractive index of the dielectric material 
 n_f = 2.6
 #the number of taper cells
