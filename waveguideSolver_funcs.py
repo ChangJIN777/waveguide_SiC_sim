@@ -61,6 +61,7 @@ TN = 4
 target_wavelength = 916e-9 
 #set the center of the device
 centerCell = MN_L+TN-1 
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
 
 
 #define the functions we are using to build the cavity geometry
@@ -625,7 +626,7 @@ def sweep_tapering_elliptical_cavity(param):
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-    mirror_cells_right = buildMirrorRegion_elliptical(a,hx,hy,MN_R,w0,h0,n_f,engine)
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 
     #building cubic tapered cell region
     amin = a*t
@@ -646,7 +647,6 @@ def sweep_tapering_elliptical_cavity(param):
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 20e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
@@ -692,7 +692,7 @@ def sweep_tapering_elliptical_cavity(param):
     
     # record the data 
     data = [a,t,hx,hy,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v3.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v4.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()

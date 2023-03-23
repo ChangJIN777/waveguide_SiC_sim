@@ -154,11 +154,11 @@ def run_Sim(param):
 # debugging 
 # run_Sim(p0)
 
-# # sweeping the taper prefactor 
-# t_list = np.linspace(0.5,1,20)
-# for t in t_list:
-#     param = [t]
-#     sweep_tapering_elliptical_cavity(param)
+# sweeping the taper prefactor 
+t_list = np.linspace(0.4,1,20)
+for t in t_list:
+    param = [t]
+    sweep_tapering_elliptical_cavity(param)
 
 # # sweeping the beam width prefactor 
 # w_list = np.linspace(1.3,1.8,20)
