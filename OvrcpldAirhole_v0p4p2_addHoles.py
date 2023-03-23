@@ -36,7 +36,7 @@ beam_length = 15e-6
 target_frequency = 406.774e12
 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
-engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDLoc, working_path="./fsps")
+engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDLoc, working_path="./fsps")
 # engine = LumericalEngine(mesh_accuracy=6, hide=False, working_path="./fsps")
 
 unit_cells = []
