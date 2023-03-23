@@ -16,16 +16,16 @@ from matplotlib import style
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.8333e-7
+a = 2.708900299422566e-7
 #the tapering prefactor 
 t = 0.6
 #hole diameter prefactor 1
-hx = 7.0833e-8
+hx = 6.936330787756172e-8
 #hole diameter prefactor 2
-hy = 1.5937e-7
+hy = 1.639998046215848e-7
 #beam width prefactor
 w = 1.75 
-w0 = 1.75*a
+w0 = 5.102578564047907e-7
 #refractive index of the dielectric material 
 n_f = 2.6
 #the number of taper cells
@@ -48,6 +48,9 @@ a_taper = a_taper[::-1]
 # sim_bandGap_elliptical(a,hx,hy,w0)
 
 # # simulate the band structure associated with the unit cell (defect region)
-a_def = a*t
-band_structure_elliptical(a_def,hx,hy,w0)
-# sim_bandGap_elliptical(a_def,hx,hy,w0)
+t_list = np.linspace(0,1,20)
+for t in t_list:
+    a_def = a*t
+    # band_structure_elliptical(a_def,hx,hy,w0)
+    print("t = %f" % (t))
+    sim_bandGap_elliptical(a_def,hx,hy,w0)

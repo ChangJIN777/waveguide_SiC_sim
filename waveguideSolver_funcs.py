@@ -202,6 +202,8 @@ def sim_bandGap_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
     Returns:
         _type_: _description_
     """
+    print("Starting sim ===================================")
+    
     start_time = datetime.now()
     cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine)
 
