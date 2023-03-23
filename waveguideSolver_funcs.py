@@ -498,15 +498,16 @@ def unitCellOptimization_SiC_elliptical(params):
     hx = params[1]
     hy = params[2]
     w0 = params[3]
+    h0 = params[4]
     # simulate the band gap of the unit cell 
-    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,hx,hy,w0)
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k = sim_bandGap_elliptical(a,hx,hy,w0,h0)
     detuning = np.abs((3e8)/target_frequency - (3e8)/mg)
     detuning_nm = detuning*1e9
     print("Detuning from the mid band: %f nm"%(detuning_nm))
     # we want large bandgap and small detuning 
     delta_wv = 5e-9
     fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
-    file_name = "unitcell_Optimization_elliptical_v9.csv"
+    file_name = "unitcell_Optimization_elliptical_v10.csv"
     data = [a,hx,hy,detuning,bg_mg_rat,fitness]
     record_data(data,file_name)
     return -1*fitness

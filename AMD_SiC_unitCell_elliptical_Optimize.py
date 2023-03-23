@@ -15,13 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.8333e-7
+a = 2.857332184893757e-7
 #the tapering prefactor 
 t = 0.6
 #hole diameter prefactor 1
-hx = 7.0833e-8
+hx = 7.031039274276191e-8
 #hole diameter prefactor 2
-hy = 1.5937e-7
+hy = 1.679705299133866e-7
 #hole diameter prefactor 1
 d1 = 0.67
 #hole diameter prefactor 2
@@ -65,29 +65,29 @@ amin_wvg = t_wvg*a
 #             print("a: %f nm hx: %f nm hy: %f nm" %(a_nm, hx_nm, hy_nm))
 #             unitCellOptimization_SiC_elliptical(p0)
             
-# # optimizing for the mirror unit cells (SWEEPING CODE) ###################
-# a_0 = 2.70e-7
-# hx_0 = 8.10e-08
-# hy_0 = 7.00e-8
-# w0 = w*a_0
-# p0 = [a_0,hx_0,hy_0,w0]
-# bnd = ((2.5e-07,3.0e-07),(None,a_0),(None,a_0),(None,None))
-# popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
+# optimizing for the mirror unit cells (SWEEPING CODE) ###################
+a_0 = a
+hx_0 = hx*0.75
+hy_0 = hy*0.75
+w0 = w*a_0
+p0 = [a_0,hx_0,hy_0,w0,h0]
+bnd = ((2.5e-07,3.0e-07),(None,a_0),(None,a_0),(None,None),(None,None))
+popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
 # # optimizing for the waveguide unit cells
 # p0 = [amin_wvg]
 # bnd = ((0.5*a,a))
 # popt = scipy.optimize.minimize(unitCellOptimization_SiC_waveguide_elliptical,p0,method='Nelder-Mead')
 
-# do a low resolution sweep over the desired parameter range (LOOPING CODE/defect region) ############
-# a_list = np.linspace(2.7e-07,2.9e-07,10)
-t_list = np.linspace(0.5,1,10)
-for t in t_list:
-    w0 = w*a
-    a_def = a*t
-    p0 = [a_def,hx,hy,w0]
-    print("tapering prefactor: %f" %(t))
-    unitCellOptimization_SiC_elliptical(p0)
+# # do a low resolution sweep over the desired parameter range (LOOPING CODE/defect region) ############
+# # a_list = np.linspace(2.7e-07,2.9e-07,10)
+# t_list = np.linspace(0.5,1,10)
+# for t in t_list:
+#     w0 = w*a
+#     a_def = a*t
+#     p0 = [a_def,hx,hy,w0]
+#     print("tapering prefactor: %f" %(t))
+#     unitCellOptimization_SiC_elliptical(p0)
 
 # testing the algorithm
 # unitCellOptimization_SiC_elliptical(p0)
