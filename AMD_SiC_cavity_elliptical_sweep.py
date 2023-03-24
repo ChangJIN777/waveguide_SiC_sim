@@ -160,7 +160,7 @@ def run_Sim(param):
 #     sweep_tapering_elliptical_cavity(param)
 
 # sweeping the beam width  
-w_list = np.linspace(4.00e-7,1.00e-6,20)
+w_list = np.linspace(4.00e-7,8.00e-7,20)
 for w in w_list:
     param = [w]
     w_nm = w*1e9
