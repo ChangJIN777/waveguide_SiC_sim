@@ -15,15 +15,15 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.857332184893757e-7
+a = 2.8333e-7
 #hole diameter in the x direction
-hx = 5.27e-8
+hx = 7.0833e-8
 #hole diameter in the y direction
-hy = 1.26e-7
+hy = 1.5937e-7
 #beam width prefactor
 # w = 1.75 
 w = 1.75
-w0 = 5.25e-7
+w0 = 5.263157894736842e-7
 # w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
 t = 0.8
@@ -35,7 +35,7 @@ l = 10e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.9
+prefactor_mirror_R = 1
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
 #the refractive index associated with the material 
