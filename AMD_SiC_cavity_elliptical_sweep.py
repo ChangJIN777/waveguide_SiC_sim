@@ -160,12 +160,19 @@ def run_Sim(param):
 #     sweep_tapering_elliptical_cavity(param)
 
 # sweeping the beam width  
-w_list = np.linspace(4.00e-7,8.00e-7,20)
-for w in w_list:
-    param = [w]
-    w_nm = w*1e9
-    print("the beam width: %f nm" %(w_nm))
-    sweep_beamWidth_ellipticalCavity_v2(param)
+# w_list = np.linspace(4.00e-7,8.00e-7,20)
+# for w in w_list:
+#     param = [w]
+#     w_nm = w*1e9
+#     print("the beam width: %f nm" %(w_nm))
+#     sweep_beamWidth_ellipticalCavity_v2(param)
+
+# optimize the beam width  
+p0 = [w0]
+bnd = [(None,1e-6)]
+popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
+sweep_beamWidth_ellipticalCavity_v2(param)
+
 
 # # optimization algorithm (only the beam width)
 # p0 = [w0]
