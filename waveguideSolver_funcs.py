@@ -14,11 +14,11 @@ from datetime import datetime
 import csv
 
 #lattice constant
-a = 2.708900299422566e-7
+a = 2.8333e-7
 #hole diameter in the x direction 
-hx = 6.936330787756172e-8
+hx = 7.0833e-8
 #hole diameter in the y direction 
-hy = 1.639998046215848e-7
+hy = 1.5937e-7
 #define the useful constants 
 n_f = 2.6 # for SiC
 # the target frequency 
@@ -36,7 +36,7 @@ engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, sav
 # default location of the data files 
 file_loc = "./sim_data/"
 #taper prefactor (for the defect region)
-t = 0.8227
+t = 0.8
 amin = a*t
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
@@ -822,13 +822,13 @@ def sweep_beamWidth_ellipticalCavity_v2(param):
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 20e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
     #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
     r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                        analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
+                        analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
 
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -869,7 +869,7 @@ def sweep_beamWidth_ellipticalCavity_v2(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_beamWidth.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_beamWidth_v2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()

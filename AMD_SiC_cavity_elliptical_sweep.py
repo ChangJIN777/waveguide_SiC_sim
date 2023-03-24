@@ -15,12 +15,11 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-# a = 2.801277586646125e-7
-a = 2.857332184893757e-7
+a = 2.8333e-7
 #hole diameter in the x direction 
-hx = 5.27e-8
+hx = 7.0833e-8
 #hole diameter in the y direction 
-hy = 1.26e-7
+hy = 1.5937e-7
 #beam width prefactor
 w = 1.75
 w0 = 5.25e-7
@@ -154,11 +153,11 @@ def run_Sim(param):
 # debugging 
 # run_Sim(p0)
 
-# sweeping the taper prefactor 
-t_list = np.linspace(0.4,1,20)
-for t in t_list:
-    param = [t]
-    sweep_tapering_elliptical_cavity(param)
+# # sweeping the taper prefactor 
+# t_list = np.linspace(0.4,1,20)
+# for t in t_list:
+#     param = [t]
+#     sweep_tapering_elliptical_cavity(param)
 
 # sweeping the beam width  
 w_list = np.linspace(4.00e-7,1.00e-8,20)
