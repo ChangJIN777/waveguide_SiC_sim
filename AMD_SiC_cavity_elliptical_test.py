@@ -17,13 +17,13 @@ from waveguideSolver_funcs import *
 #lattice constant
 a = 2.8333e-7
 #hole diameter in the x direction
-hx = 7.0833e-8
+hx = 1.1874e-07
 #hole diameter in the y direction
-hy = 1.5937e-7
+hy = 1.6770e-07
 #beam width prefactor
 # w = 1.75 
 w = 1.75
-w0 = 4.82e-7
+w0 = 5.0209e-07
 # w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
 t = 0.822
@@ -55,7 +55,7 @@ MN_L = 10
 #the right mirror cell number 
 MN_R = 3
 #the number of taper unit cells 
-TN = 6
+TN = 4
 #set the center of the device
 centerCell = MN_L+TN-1 
 
