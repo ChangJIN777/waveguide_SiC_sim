@@ -209,7 +209,7 @@ def sim_bandGap_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 10000))
 
-    diel_freq = r2[0] # the dielectric band frequency 
+    diel_freq =unitCellOptimization_SiC_elliptical r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
     bg = air_freq - diel_freq # the band gap 
     mg = (diel_freq + air_freq) / 2 # the mid band gap 
@@ -507,7 +507,7 @@ def unitCellOptimization_SiC_elliptical(params):
     # we want large bandgap and small detuning 
     delta_wv = 1e-9
     fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
-    file_name = "unitcell_Optimization_elliptical_v11.csv"
+    file_name = "unitcell_Optimization_elliptical_v12.csv"
     data = [a,hx,hy,w0,h0,detuning,bg_mg_rat,fitness]
     record_data(data,file_name)
     return -1*fitness

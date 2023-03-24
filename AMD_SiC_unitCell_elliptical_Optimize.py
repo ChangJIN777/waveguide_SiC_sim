@@ -15,13 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.857332184893757e-7
+a = 2.8333e-7
 #the tapering prefactor 
 t = 0.6
 #hole diameter prefactor 1
-hx = 7.031039274276191e-8
+hx = 7.0833e-8
 #hole diameter prefactor 2
-hy = 1.679705299133866e-7
+hy = 1.5937e-7
 #hole diameter prefactor 1
 d1 = 0.67
 #hole diameter prefactor 2
@@ -80,14 +80,26 @@ popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Ne
 # popt = scipy.optimize.minimize(unitCellOptimization_SiC_waveguide_elliptical,p0,method='Nelder-Mead')
 
 # # do a low resolution sweep over the desired parameter range (LOOPING CODE/defect region) ############
-# # a_list = np.linspace(2.7e-07,2.9e-07,10)
-# t_list = np.linspace(0.5,1,10)
-# for t in t_list:
-#     w0 = w*a
-#     a_def = a*t
-#     p0 = [a_def,hx,hy,w0]
-#     print("tapering prefactor: %f" %(t))
-#     unitCellOptimization_SiC_elliptical(p0)
+# a_list = np.linspace(2.7e-07,2.9e-07,5)
+# hx_list = np.linspace(5e-8,1e-7,5)
+# hy_list = np.linspace(1e-7,2e-7,5)
+# w0_list = np.linspace(4e-7,8e-7,5)
+# for a in a_list:
+#     for hx in hx_list:
+#         for hy in hy_list:
+#             for w0 in w0_list:
+#                 w0 = w*a
+#                 a_def = a*t
+#                 p0 = [a_def,hx,hy,w0]
+#                 print("tapering prefactor: %f" %(t))
+#                 unitCellOptimization_SiC_elliptical(p0)
 
 # testing the algorithm
 # unitCellOptimization_SiC_elliptical(p0)
+
+# Sweep the beam width 
+w0_list = np.linspace(4e-7,8e-7,10)
+for w0 in w0_list:
+    p0 = [a,hx,hy,w0,h0]
+    print("beam width: %f" %(w0))
+    unitCellOptimization_SiC_elliptical(p0)

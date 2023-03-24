@@ -16,14 +16,14 @@ from waveguideSolver_funcs import *
 
 #lattice constant
 # a = 2.801277586646125e-7
-a = 2.8333e-7
+a = 2.857332184893757e-7
 #hole diameter in the x direction 
-hx = 0.75*7.0833e-8
+hx = 5.27e-8
 #hole diameter in the y direction 
-hy = 0.75*1.5937e-7
+hy = 1.26e-7
 #beam width prefactor
 w = 1.75
-w0 = w*a
+w0 = 5.25e-7
 #taper prefactor (for the defect region)
 t = 0.8
 #taper prefactor (for the waveguide region)
@@ -37,7 +37,7 @@ l = 10e-6
 target_frequency = 327.3e12
 target_wavelength = 9.16e-07
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 1
+prefactor_mirror_R = 0.9
 #the refractive index associated with the material 
 n_f = 2.6
 #the minimum lattice constant in the waveguide region 
@@ -160,11 +160,11 @@ for t in t_list:
     param = [t]
     sweep_tapering_elliptical_cavity(param)
 
-# # sweeping the beam width prefactor 
-# w_list = np.linspace(1.3,1.8,20)
-# for w in w_list:
-#     param = [w]
-#     sweep_beamWidth_ellipticalCavity_v2(param)
+# sweeping the beam width  
+w_list = np.linspace(4.00e-7,1.00e-8,20)
+for w in w_list:
+    param = [w]
+    sweep_beamWidth_ellipticalCavity_v2(param)
 
 # # optimization algorithm (only the beam width)
 # p0 = [w0]
