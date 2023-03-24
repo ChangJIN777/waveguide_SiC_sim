@@ -36,7 +36,7 @@ engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, sav
 # default location of the data files 
 file_loc = "./sim_data/"
 #taper prefactor (for the defect region)
-t = 0.8
+t = 0.822
 amin = a*t
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75

@@ -26,7 +26,7 @@ w = 1.75
 w0 = 5.263157894736842e-7
 # w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
-t = 0.8
+t = 0.822
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -35,7 +35,7 @@ l = 10e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 1
+prefactor_mirror_R = 0.92
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
 #the refractive index associated with the material 
