@@ -827,8 +827,8 @@ def sweep_beamWidth_ellipticalCavity_v2(param):
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
     #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
-    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                        analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
+                        analyze_time=600e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
 
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
