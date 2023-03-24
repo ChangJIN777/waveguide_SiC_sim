@@ -209,7 +209,7 @@ def sim_bandGap_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 10000))
 
-    diel_freq =unitCellOptimization_SiC_elliptical r2[0] # the dielectric band frequency 
+    diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
     bg = air_freq - diel_freq # the band gap 
     mg = (diel_freq + air_freq) / 2 # the mid band gap 
