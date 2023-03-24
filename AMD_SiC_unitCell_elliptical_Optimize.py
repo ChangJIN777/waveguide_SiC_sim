@@ -71,7 +71,7 @@ hx_0 = hx*0.75
 hy_0 = hy*0.75
 w0 = w*a_0
 p0 = [a_0,hx_0,hy_0,w0,h0]
-bnd = ((2.5e-07,3.0e-07),(None,a_0),(None,a_0),(None,None),(None,None))
+bnd = ((2.5e-07,3.0e-07),(None,None),(None,None),(None,None),(None,None))
 popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
 # # optimizing for the waveguide unit cells

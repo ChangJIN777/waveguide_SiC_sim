@@ -507,7 +507,7 @@ def unitCellOptimization_SiC_elliptical(params):
     # we want large bandgap and small detuning 
     delta_wv = 1e-9
     fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
-    file_name = "unitcell_Optimization_elliptical_v10.csv"
+    file_name = "unitcell_Optimization_elliptical_v11.csv"
     data = [a,hx,hy,detuning,bg_mg_rat,fitness]
     record_data(data,file_name)
     return -1*fitness
