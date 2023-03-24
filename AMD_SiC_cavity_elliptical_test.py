@@ -18,8 +18,10 @@ from waveguideSolver_funcs import *
 a = 2.8333e-7
 #hole diameter in the x direction
 hx = 1.1874e-07
+hx = hx/2
 #hole diameter in the y direction
 hy = 1.6770e-07
+hy = hy/2
 #beam width prefactor
 # w = 1.75 
 w = 1.75
