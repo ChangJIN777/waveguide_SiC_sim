@@ -163,6 +163,8 @@ def run_Sim(param):
 w_list = np.linspace(4.00e-7,1.00e-8,20)
 for w in w_list:
     param = [w]
+    w_nm = w*1e9
+    print("the beam width: %f nm" %(w_nm))
     sweep_beamWidth_ellipticalCavity_v2(param)
 
 # # optimization algorithm (only the beam width)
