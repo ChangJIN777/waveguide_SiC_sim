@@ -32,7 +32,7 @@ w0= 5.102578564047907e-7 #beam width prefactor
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
 # FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
-engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 # default location of the data files 
 file_loc = "./sim_data/"
 #taper prefactor (for the defect region)
@@ -48,7 +48,7 @@ l = 10e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 1
+prefactor_mirror_R = 0.92
 #the refractive index associated with the material 
 n_f = 2.6
 #the unit cell number in the left mirror region 
@@ -56,7 +56,7 @@ MN_L = 10
 #the unit cell number in the right mirror region 
 MN_R = 3
 #the unit cell number in the tapering region 
-TN = 4
+TN = 6
 #target wavelength 
 target_wavelength = 916e-9 
 #set the center of the device
@@ -820,15 +820,11 @@ def sweep_beamWidth_ellipticalCavity_v2(param):
     # By setting the save path here, the cavity will save itself after each simulation to this file
     cavity.save("cavity_elliptical.obj")
 
-    #define mesh size (use 12nm for accuracy, currently set to 12nm)
-    # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
-
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
     #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
-    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=60e-15, 
-                        analyze_time=600e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
+                        analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
 
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -869,7 +865,7 @@ def sweep_beamWidth_ellipticalCavity_v2(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_beamWidth_v2.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_beamWidth_v3.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()

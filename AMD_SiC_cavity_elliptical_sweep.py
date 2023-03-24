@@ -22,7 +22,7 @@ hx = 7.0833e-8
 hy = 1.5937e-7
 #beam width prefactor
 w = 1.75
-w0 = 5.25e-7
+w0 = 4.82e-7
 #taper prefactor (for the defect region)
 t = 0.822
 #taper prefactor (for the waveguide region)
@@ -36,7 +36,7 @@ l = 10e-6
 target_frequency = 327.3e12
 target_wavelength = 9.16e-07
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.9
+prefactor_mirror_R = 0.92
 #the refractive index associated with the material 
 n_f = 2.6
 #the minimum lattice constant in the waveguide region 
@@ -52,7 +52,7 @@ d_min = 0.3
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 10
+MN_R = 3
 #the number of taper unit cells 
 TN = 6
 #set the center of the device
