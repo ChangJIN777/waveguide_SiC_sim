@@ -77,6 +77,24 @@ def cubic_tapering(a,amin,taperNum):
         a_taper[i] = a*(1-d*(2*((i/taperNum)**3) - 3*((i/taperNum)**2)+ 1))
     return a_taper
 
+#define the functions we are using to build the cavity geometry
+def linear_tapering(a,amin,taperNum):
+    """the function to return an array of linearly tapered parameters
+
+    Args:
+        a: the lattice constant in the mirror region
+        taperNum: the number of taper cells
+        amin: the minimum lattice constant in the tapering region
+
+    Returns:
+        a_taper: _description_
+    """
+    a_taper = np.zeros((taperNum,))
+    d = 1-(amin/a) #defined as the depth of the defect (see Jasper Chan's thesis)
+    for i in range(taperNum):
+        a_taper[i] = a*(1-d*(i/taperNum))
+    return a_taper
+
 def buildTapering_symmetric(a,amin,taperNum):
     """
     function for calculating the lattice constants for the tapering region of the cavity 
@@ -100,20 +118,19 @@ def buildTapering_asymmetric(a_L,a_R,amin,taperNum):
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
-def buildWaveguideRegion_right(a,d,w,t_wvg,h0,WN,n_f,engine):
+def buildWaveguideRegion_right(a,hx,hy,w0,t_wvg,WN,h0=h0,n_f=n_f,engine=engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity
     
     Args:
         a: the lattice constant used to build the mirror region 
+        hx: the radius in the x direction 
+        hy: the radius in the y direction 
         t_wvg: the tapering prefactor associated with the waveguide region 
         WN: the number of unit cells in the waveguide region 
         n_f: the refractive index associated with the material
-        d: hole diameter prefactor 
-        w: the beam width prefactor
         h0: the beam height
         engine: the FDTD engine used to simulate the waveguide region
     """
-    w0 = w*a
     waveguide_cells_R = []
     amin = t_wvg*a
     a_wv = cubic_tapering(a,amin,WN)

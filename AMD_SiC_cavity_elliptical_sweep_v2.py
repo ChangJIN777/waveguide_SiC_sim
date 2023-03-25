@@ -18,8 +18,10 @@ from waveguideSolver_funcs import *
 a = 2.8333e-7
 #hole diameter in the x direction 
 hx = 1.1874e-07
+hx = hx/2
 #hole diameter in the y direction 
 hy = 1.6770e-07
+hy = hy/2
 #beam width prefactor
 w = 1.75
 w0 = 5.0209e-07
@@ -64,8 +66,7 @@ def run_Sim(param):
     a = param[0]
     hx = param[1]
     hy = param[2]
-    t = param[3]
-    w0 = param[4]
+    w0 = param[3]
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
@@ -115,6 +116,12 @@ def run_Sim(param):
     detuning_wavelength_nm = detuning_wavelength*1e9
     delta_wavelength = 5e-9 # 5nm tolerance 
     
+    # for optimizing for overcoupled cavity 
+    if Qsc > Qwvg:
+        gx = Qsc/Qwvg
+    else:
+        gx = 1e-6 
+    
     #prevent the mode volume from going to unrealistic values 
     if Vmode < 0.48:
         Vmode = 1e6
@@ -126,17 +133,19 @@ def run_Sim(param):
     
     if Qwvg > 500000:
         Qwvg = 500000
+        
     
-    P = (Q*Qsc) / (Vmode*Vmode)
+    
+    P = (Q*Qsc)/ (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
 
     r1 = cavity.get_results("resonance")[-1]
     
-    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
+    fitness = np.sqrt((gx)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v9.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v10.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -145,10 +154,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-# # optimization algorithm
-# p0 = [a,hx,hy,t,w0]
-# bnd = [(None,None),(None,a),(None,w0),(None,1),(None,None)]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# optimization algorithm
+p0 = [a,hx,hy,w0]
+bnd = [(None,None),(None,a),(None,w0),(None,None)]
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -168,10 +177,10 @@ def run_Sim(param):
 #     sweep_beamWidth_ellipticalCavity_v2(param)
 
 # optimize the beam width  
-p0 = [w0]
-bnd = [(None,1e-6)]
-popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
-sweep_beamWidth_ellipticalCavity_v2(param)
+# p0 = [w0]
+# bnd = [(None,1e-6)]
+# popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
+# sweep_beamWidth_ellipticalCavity_v2(param)
 
 
 # # optimization algorithm (only the beam width)
