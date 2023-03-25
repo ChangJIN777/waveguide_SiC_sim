@@ -59,7 +59,7 @@ cavity = Cavity1D(
 # By setting the save path here, the cavity will save itself after each simulation to this file
 cavity.save("v0p4p2p2_3-3_120221.obj")
 
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(12e-6,0.7e-6,0.4e-6)), 12e-9, dy=None, dz=None)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 12e-9, dy=None, dz=None)
 
 # specify a long pulse to make narrow band and target lossier mode closer to target_frequency
 r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 

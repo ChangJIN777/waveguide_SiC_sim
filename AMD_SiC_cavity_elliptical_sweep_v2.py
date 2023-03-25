@@ -28,7 +28,7 @@ w0 = 5.0209e-07
 #taper prefactor (for the defect region)
 t = 0.822
 #taper prefactor (for the waveguide region)
-t_wvg = 0.75
+t_wvg = 0.82
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -50,15 +50,17 @@ engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, sav
 #the minimum lattice constant in the tapering region
 amin = a*t
 #the minimum radius prefactor we are tapering to 
-d_min = 0.3
+d_min = 0.4386
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
 MN_R = 3
 #the number of taper unit cells 
-TN = 4
+TN = 5
 #set the center of the device
 centerCell = MN_L+TN-1 
+#the number of cells in the waveguide region
+WN = 5
 
 def run_Sim(param):
     print("Start sim ==============================")
@@ -67,6 +69,9 @@ def run_Sim(param):
     hx = param[1]
     hy = param[2]
     w0 = param[3]
+    # the minimum hole size we are tapering to in the linear region
+    hxmin_wvg = d_min*hx
+    hymin_wvg = d_min*hy
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
@@ -77,9 +82,12 @@ def run_Sim(param):
     #building cubic tapered cell region
     taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
 
+    #add waveguide region 
+    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
+    
     ####################################### cavity without the waveguide region ###############################
     cavity = Cavity1D(
-    unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
+    unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
     center_cell=centerCell,
     center_shift=0,
@@ -90,7 +98,7 @@ def run_Sim(param):
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
@@ -145,7 +153,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v10.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v12.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
