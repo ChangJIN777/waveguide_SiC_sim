@@ -17,11 +17,9 @@ from waveguideSolver_funcs import *
 #lattice constant
 a = 2.8333e-7
 #hole diameter in the x direction 
-hx = 1.1874e-07
-hx = hx/2
+hx = 7.0833e-8
 #hole diameter in the y direction 
-hy = 1.6770e-07
-hy = hy/2
+hy = 1.5937e-7
 #beam width prefactor
 w = 1.75
 w0 = 5.0209e-07
