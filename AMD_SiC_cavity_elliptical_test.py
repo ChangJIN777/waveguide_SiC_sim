@@ -39,7 +39,7 @@ target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
 prefactor_mirror_R = 0.92
 #taper prefactor (for the waveguide region)
-t_wvg = 0.75
+t_wvg = 0.85
 #the refractive index associated with the material 
 n_f = 2.6
 #the minimum lattice constant in the waveguide region 
@@ -60,6 +60,8 @@ MN_R = 3
 TN = 4
 #set the center of the device
 centerCell = MN_L+TN-1 
+#the number of waveguide cells 
+WN = 5
 
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -71,6 +73,11 @@ mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engin
 #building cubic tapered cell region
 taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
 
+#add waveguide region 
+hx_min = 0.4386*hx
+hy_min = 0.4386*hy
+waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+
 # ####################################### cavity without the waveguide region (symmetric) ###############################
 # cavity = Cavity1D(
 # unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
@@ -79,7 +86,7 @@ taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
 # )
 ####################################### cavity without the waveguide region (asymmetric) ###############################
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
+unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,

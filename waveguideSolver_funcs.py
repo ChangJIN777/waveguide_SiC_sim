@@ -602,33 +602,31 @@ def buildWaveguideRegion_elliptical_right(a,hx,hy,t_wvg,WN,w0,h0=h0,n_f=n_f,engi
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
     return waveguide_cells_R
 
-def buildWaveguideRegion_elliptical_right_v2(a,d1,d1_min,d2,d2_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
     
     Args:
         a: the lattice constant used to build the mirror region 
         t_wvg: the tapering prefactor associated with the waveguide region 
         WN: the number of unit cells in the waveguide region 
-        d1: hole diameter prefactor 1
-        d1_min: the hole diameter prefactor 1 we are tapering to 
-        d2: hole diameter prefactor 2
-        d2_min: the hole diameter prefactor 2 we are tapering to 
+        hx: hole diameter prefactor 1
+        hx_min: the hole diameter prefactor 1 we are tapering to 
+        hy: hole diameter prefactor 2
+        hy_min: the hole diameter prefactor 2 we are tapering to 
         w: the beam width prefactor
         h0: the beam height
         n_f: the refractive index associated with the material
         engine: the FDTD engine used to simulate the waveguide region
     """
-    w0 = w*a
     waveguide_cells_R = []
     amin = t_wvg*a
     a_wv = cubic_tapering(a,amin,WN)
     a_wv = a_wv[::-1]
-    d1_wv = np.linspace(d1,d1_min,WN)
-    d2_wv = np.linspace(d2,d2_min,WN)
+    hx_wv = np.linspace(hx,hx_min,WN)
+    hy_wv = np.linspace(hy,hy_min,WN)
     for i in range(WN):
-        waveguide_box_R = BoxStructure(Vec3(0), Vec3(a_wv[i],w0,h0), DielectricMaterial(n_f, order=2, color="red"))
-        waveguide_hole_R = CylinderStructure(Vec3(0), h0, d1_wv[i]*a_wv[i]/2, DielectricMaterial(1, order=1, color="blue"),radius2=d2_wv[i]*a_wv[i]/2)
-        waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
+        wvg_unitcell = buildUnitCell_elliptical(a,hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
+        waveguide_cells_R += [wvg_unitcell]
     return waveguide_cells_R
 
 def sweep_tapering_elliptical_cavity(param):
