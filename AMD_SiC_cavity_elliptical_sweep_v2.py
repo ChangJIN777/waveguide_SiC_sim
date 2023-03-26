@@ -151,7 +151,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v12.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v13.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
