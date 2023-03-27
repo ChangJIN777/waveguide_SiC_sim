@@ -625,7 +625,7 @@ def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w
     hx_wv = np.linspace(hx,hx_min,WN)
     hy_wv = np.linspace(hy,hy_min,WN)
     for i in range(WN):
-        wvg_unitcell = buildUnitCell_elliptical(a_wv,hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
+        wvg_unitcell = buildUnitCell_elliptical(a_wv[i],hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
         waveguide_cells_R += [wvg_unitcell]
     return waveguide_cells_R
 
@@ -651,7 +651,7 @@ def buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w0
     hx_wv = np.linspace(hx_min,hx,WN)
     hy_wv = np.linspace(hy_min,hy,WN)
     for i in range(WN):
-        wvg_unitcell = buildUnitCell_elliptical(a_wv,hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
+        wvg_unitcell = buildUnitCell_elliptical(a_wv[i],hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
         waveguide_cells_L += [wvg_unitcell]
     return waveguide_cells_L
 
