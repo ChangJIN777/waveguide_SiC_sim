@@ -625,9 +625,35 @@ def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w
     hx_wv = np.linspace(hx,hx_min,WN)
     hy_wv = np.linspace(hy,hy_min,WN)
     for i in range(WN):
-        wvg_unitcell = buildUnitCell_elliptical(a,hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
+        wvg_unitcell = buildUnitCell_elliptical(a_wv,hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
         waveguide_cells_R += [wvg_unitcell]
     return waveguide_cells_R
+
+def buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+    """Function used to generate a cubic tapered waveguide region to be added to the left side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
+    
+    Args:
+        a: the lattice constant used to build the mirror region 
+        t_wvg: the tapering prefactor associated with the waveguide region 
+        WN: the number of unit cells in the waveguide region 
+        hx: hole diameter prefactor 1
+        hx_min: the hole diameter prefactor 1 we are tapering to 
+        hy: hole diameter prefactor 2
+        hy_min: the hole diameter prefactor 2 we are tapering to 
+        w: the beam width prefactor
+        h0: the beam height
+        n_f: the refractive index associated with the material
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    waveguide_cells_L = []
+    amin = t_wvg*a
+    a_wv = cubic_tapering(a,amin,WN)
+    hx_wv = np.linspace(hx_min,hx,WN)
+    hy_wv = np.linspace(hy_min,hy,WN)
+    for i in range(WN):
+        wvg_unitcell = buildUnitCell_elliptical(a_wv,hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
+        waveguide_cells_L += [wvg_unitcell]
+    return waveguide_cells_L
 
 def sweep_tapering_elliptical_cavity(param):
     """This function sweep through the tapering prefactor and simulate the corresponding resonsance 
