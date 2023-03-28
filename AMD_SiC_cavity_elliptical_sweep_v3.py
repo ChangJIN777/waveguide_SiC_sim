@@ -24,7 +24,7 @@ hy = 1.652696864561149e-07
 w = 1.75
 w0 = 5.005507792174242e-07
 #taper prefactor (for the defect region)
-t = 0.822
+t = 0.852
 #taper prefactor (for the waveguide region)
 t_wvg = 0.82
 #beam height (set by epi-layer thickness)
@@ -36,7 +36,7 @@ l = 10e-6
 target_frequency = 327.3e12
 target_wavelength = 9.16e-07
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.92
+prefactor_mirror_R = 0.965
 #the refractive index associated with the material 
 n_f = 2.6
 #the minimum lattice constant in the waveguide region 
@@ -48,7 +48,7 @@ engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, sav
 #the minimum lattice constant in the tapering region
 amin = a*t
 #the minimum radius prefactor we are tapering to 
-d_min = 0.4386
+d_min = 0.437
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
