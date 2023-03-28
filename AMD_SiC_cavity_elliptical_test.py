@@ -26,7 +26,7 @@ w = 1.75
 w0 = 5.005507792174242e-07
 # w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
-t = 0.818064438856020
+t = 0.818
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -35,9 +35,9 @@ l = 10e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.948909279473536
+prefactor_mirror_R = 0.965
 #taper prefactor (for the waveguide region)
-t_wvg = 0.822444668643262
+t_wvg = 0.852
 #the refractive index associated with the material 
 n_f = 2.6
 #the minimum lattice constant in the waveguide region 
@@ -49,17 +49,17 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 #the minimum lattice constant in the tapering region
 amin = a*t
 #the minimum radius prefactor we are tapering to 
-d_min = 0.448013308945887
+d_min = 0.437
 #the left mirror cell number 
 MN_L = 10
 #the right mirror cell number 
 MN_R = 3
 #the number of taper unit cells 
 TN = 5
-#set the center of the device
-centerCell = MN_L+TN-1 
 #the number of waveguide cells 
 WN = 5
+#set the center of the device (for double sided cavities)
+centerCell = WN+MN_L+TN-1 
 
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -74,7 +74,8 @@ taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
 #add waveguide region 
 hx_min = d_min*hx
 hy_min = d_min*hy
-waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
 
 # ####################################### cavity without the waveguide region (symmetric) ###############################
 # cavity = Cavity1D(
@@ -84,7 +85,7 @@ waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min
 # )
 ####################################### cavity without the waveguide region (asymmetric) ###############################
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
+unit_cells=  waveguide_cells_L + mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
