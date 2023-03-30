@@ -43,7 +43,7 @@ n_f = 2.6
 amin_wvg = t_wvg*a
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 #the minimum lattice constant in the tapering region
 amin = a*t
 #the minimum radius prefactor we are tapering to 
@@ -178,13 +178,16 @@ def run_Sim(param):
 #     param = [t]
 #     sweep_tapering_elliptical_cavity(param)
 
-# sweeping hy
-hy_1 = 1.0e-07
-hy_2 = 2.0e-07
-hy_list = np.linspace(hy_1,hy_2,20)
-for hy in hy_list:
-    hy_min = d_min*hy
-    sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+# # sweeping hy
+# hy_1 = 1.0e-07
+# hy_2 = 2.0e-07
+# hy_list = np.linspace(hy_1,hy_2,20)
+# for hy in hy_list:
+#     hy_min = d_min*hy
+#     sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
+
+# testing the algorithm for sweeping hy 
+sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
 
 # sweeping the beam width  
 # w_list = np.linspace(4.00e-7,8.00e-7,20)
