@@ -179,7 +179,7 @@ def run_Sim(param):
 #     sweep_tapering_elliptical_cavity(param)
 
 # sweeping hy
-hy_1 = 7.0e-08
+hy_1 = 1.0e-07
 hy_2 = 2.0e-07
 hy_list = np.linspace(hy_1,hy_2,20)
 for hy in hy_list:
