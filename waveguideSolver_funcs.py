@@ -1021,20 +1021,21 @@ def sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=
     """this function sweeps through the hy associated with the cavity and calculate the associated Q
 
     Args:
-        a (_type_): _description_
-        hx (_type_): _description_
-        hx_min (_type_): _description_
-        hy (_type_): _description_
-        hy_min (_type_): _description_
-        t_wvg (_type_): _description_
-        WN (_type_): _description_
-        w0 (_type_, optional): _description_. Defaults to w0.
-        h0 (_type_, optional): _description_. Defaults to h0.
-        n_f (_type_, optional): _description_. Defaults to n_f.
-        engine (_type_, optional): _description_. Defaults to engine.
+        a (float): the lattice constant for the mirror cells 
+        hx (float): the hole radius in the x direction 
+        hx_min (float): the minimum value of the hole radius in the x direction (waveguide region)
+        hy (float): the hole radius in the y direction 
+        hy_min (float): the minimum value of the hole radius in the y direction (waveguide region)
+        t (float): the tapering prefactor 
+        t_wvg (float): the waveguide taper prefactor for the lattice constant 
+        WN (int): the number of unit cells in the waveguide region 
+        w0 (float, optional): the beam width of the cavity. Defaults to w0.
+        h0 (float, optional): the beam height of the cavity. Defaults to h0.
+        n_f (float, optional): the refractive index of the dielectric. Defaults to n_f.
+        engine (lumerical engine, optional): the lumerical engine used to run the simulation. Defaults to engine.
 
     Returns:
-        _type_: _description_
+        _type_: none
     """
     print("Start sim ==============================")
     start_time = datetime.now()
@@ -1066,7 +1067,7 @@ def sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 12e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
