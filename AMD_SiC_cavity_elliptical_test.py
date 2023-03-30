@@ -21,7 +21,7 @@ hx = 7.160169206987993e-08
 #hole diameter in the y direction
 hy = 1.652696864561149e-07
 #for testing the cavity 
-hy = hy/2
+hy = hy*(3/4)
 #beam width prefactor
 # w = 1.75 
 w = 1.75
