@@ -1016,3 +1016,103 @@ def sweep_cellNum_ellipticalCavity(param):
     print('Duration: {}'.format(end_time - start_time))
     
     return -1*fitness
+
+def sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+    """this function sweeps through the hy associated with the cavity and calculate the associated Q
+
+    Args:
+        a (_type_): _description_
+        hx (_type_): _description_
+        hx_min (_type_): _description_
+        hy (_type_): _description_
+        hy_min (_type_): _description_
+        t_wvg (_type_): _description_
+        WN (_type_): _description_
+        w0 (_type_, optional): _description_. Defaults to w0.
+        h0 (_type_, optional): _description_. Defaults to h0.
+        n_f (_type_, optional): _description_. Defaults to n_f.
+        engine (_type_, optional): _description_. Defaults to engine.
+
+    Returns:
+        _type_: _description_
+    """
+    print("Start sim ==============================")
+    start_time = datetime.now()
+    #build the left mirror cell region 
+    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
+
+    #build the right mirror cell region 
+    a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+
+    #building cubic tapered cell region
+    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+    
+    #add waveguide region 
+    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+    
+    ####################################### cavity without the waveguide region ###############################
+    cavity = Cavity1D(
+    unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
+    structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+    center_cell=centerCell,
+    center_shift=0,
+    engine=engine
+    )
+    
+    # By setting the save path here, the cavity will save itself after each simulation to this file
+    cavity.save("cavity_elliptical.obj")
+
+    #define mesh size (use 12nm for accuracy, currently set to 12nm)
+    # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(10e-6,2e-6,2e-6)), 12e-9, dy=None, dz=None)
+
+    # simulating the resonance and the Q #########################################################
+    # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
+    #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
+                        analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
+
+    # Print the reults and plot the electric field profiles
+    print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
+        r1["freq"], r1["vmode"],
+        1/(1/r1["qxmin"] + 1/r1["qxmax"]),
+        1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    ))
+
+    cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
+    Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
+    Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    Qxmin = r1["qxmin"]
+    Qxmax = r1["qxmax"]
+    Qy = 1/(2/r1["qymax"])
+    Qz = 1/(1/r1["qzmin"] + 1/r1["qzmax"])
+    
+    print("Qx1: %f, Qx2: %f, Qy: %f, Qz: %f" % (
+        Qxmin, Qxmax, Qy, Qz
+    ))
+    
+    Vmode = r1["vmode"]
+    F = r1["freq"]
+    resonance_f = float(F) # the resonance frequency 
+    resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
+    detuning_wavelength = target_wavelength-resonance_wavelength
+    detuning_wavelength_nm = detuning_wavelength*1e9
+    delta_wavelength = 5e-9 # 5nm tolerance 
+    
+    Q = 1/((1/Qsc) + (1/Qwvg))
+    
+    P = (Q*Qsc) / (Vmode*Vmode)
+    print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
+
+    r1 = cavity.get_results("resonance")[-1]
+        
+    # record the data 
+    data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength]
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_cellNum_v3.csv"
+    record_data(data,file_name)
+    
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
+    
+    return 

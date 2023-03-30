@@ -80,7 +80,7 @@ def run_Sim(param):
 
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-    mirror_cells_right = buildMirrorRegion_elliptical(a,hx,hy,MN_R,w0,h0,n_f,engine)
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 
     #building cubic tapered cell region
     taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
@@ -163,10 +163,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-# optimization algorithm
-p0 = [t,t_wvg,prefactor_mirror_R,d_min]
-bnd = [(None,1),(None,1),(None,1),(None,1)]
-popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# # optimization algorithm
+# p0 = [t,t_wvg,prefactor_mirror_R,d_min]
+# bnd = [(None,1),(None,1),(None,1),(None,1)]
+# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -176,6 +176,12 @@ popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 # for t in t_list:
 #     param = [t]
 #     sweep_tapering_elliptical_cavity(param)
+
+# sweeping hy
+t_list = np.linspace(0.4,1,20)
+for t in t_list:
+    param = [t]
+    sweep_tapering_elliptical_cavity(param)
 
 # sweeping the beam width  
 # w_list = np.linspace(4.00e-7,8.00e-7,20)
