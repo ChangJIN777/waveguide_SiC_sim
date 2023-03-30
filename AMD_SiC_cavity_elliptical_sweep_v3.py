@@ -15,7 +15,7 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.838218812324136e-07
+a = 2.838218812324136e-7
 #hole diameter in the x direction 
 hx = 7.160169206987993e-08
 #hole diameter in the y direction 
@@ -24,9 +24,9 @@ hy = 1.652696864561149e-07
 w = 1.75
 w0 = 5.005507792174242e-07
 #taper prefactor (for the defect region)
-t = 0.852
+t = 0.818
 #taper prefactor (for the waveguide region)
-t_wvg = 0.82
+t_wvg = 0.852
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -43,12 +43,13 @@ n_f = 2.6
 amin_wvg = t_wvg*a
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-# engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 #the minimum lattice constant in the tapering region
 amin = a*t
 #the minimum radius prefactor we are tapering to 
 d_min = 0.437
+hx_min = d_min*hx
+hy_min = d_min*hy
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
@@ -178,10 +179,12 @@ def run_Sim(param):
 #     sweep_tapering_elliptical_cavity(param)
 
 # sweeping hy
-t_list = np.linspace(0.4,1,20)
-for t in t_list:
-    param = [t]
-    sweep_tapering_elliptical_cavity(param)
+hy_1 = 7.0e-08
+hy_2 = 2.0e-07
+hy_list = np.linspace(hy_1,hy_2,20)
+for hy in hy_list:
+    hy_min = d_min*hy
+    sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
 
 # sweeping the beam width  
 # w_list = np.linspace(4.00e-7,8.00e-7,20)

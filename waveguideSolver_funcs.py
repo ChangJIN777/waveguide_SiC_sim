@@ -1109,7 +1109,7 @@ def sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w0,h0=h0
         
     # record the data 
     data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_cellNum_v3.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_hy_v1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
