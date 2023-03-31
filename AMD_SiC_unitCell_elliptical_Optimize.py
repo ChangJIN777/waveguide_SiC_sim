@@ -36,34 +36,29 @@ n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
 
-# sweep through hy and record the bandgap and midband value 
-hy_list = np.linspace(hy/2,hy,20)
-for hy_sweep in hy_list:
-    hy_nm = hy_sweep*1e9
-    print("hy: %f nm " %(hy_nm))
-    p0 = [a,hx,hy_sweep,w0,h0]
-    unitCellOptimization_SiC_elliptical(p0)
+# # sweep through hy and record the bandgap and midband value 
+# hy_list = np.linspace(hy/2,hy,20)
+# for hy_sweep in hy_list:
+#     hy_nm = hy_sweep*1e9
+#     print("hy: %f nm " %(hy_nm))
+#     p0 = [a,hx,hy_sweep,w0,h0]
+#     unitCellOptimization_SiC_elliptical(p0)
 # debugging
 # p0 = [a,hx,hy,w0,h0]
 # unitCellOptimization_SiC_elliptical(p0)
 
-# # do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
-# # a_list = np.linspace(2.7e-07,2.9e-07,10)
+# do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
+# a_list = np.linspace(2.7e-07,2.9e-07,10)
 # a_list = np.linspace(2.50e-7,3.00e-7,10)
-# dx_list = np.linspace(0.5,0.9,5)
-# dy_list = np.linspace(0.5,1.75,5)
-# for a in a_list:
-#     for dx in dx_list:
-#         hx = dx*a/2
-#         for dy in dy_list:
-#             hy = dy*a/2
-#             w0 = w*a
-#             p0 = [a,hx,hy,w0]
-#             hx_nm = hx*1e9
-#             hy_nm = hy*1e9
-#             a_nm = a*1e9
-#             print("a: %f nm hx: %f nm hy: %f nm" %(a_nm, hx_nm, hy_nm))
-#             unitCellOptimization_SiC_elliptical(p0)
+hx_list = np.linspace(hx/2,hx*1.5,20)
+hy_list = np.linspace(hy/2,hy,20)
+for hx in hx_list:
+    for hy in hy_list:
+        p0 = [a,hx,hy,w0,h0]
+        hx_nm = hx*1e9
+        hy_nm = hy*1e9
+        print("hx: %f nm hy: %f nm" %(hx_nm, hy_nm))
+        unitCellOptimization_SiC_elliptical(p0)
             
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
 # a_0 = a
