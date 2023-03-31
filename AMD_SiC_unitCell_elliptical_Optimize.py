@@ -49,10 +49,10 @@ amin_wvg = t_wvg*a
 
 # do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
 # a_list = np.linspace(2.7e-07,2.9e-07,10)
-# a_list = np.linspace(2.50e-7,3.00e-7,10)
-hx_list = np.linspace(hx/2,hx*1.5,20)
-hy_list = np.linspace(hy/2,hy,20)
-for hx in hx_list:
+a_list = np.linspace(2.50e-7,3.00e-7,10)
+# hx_list = np.linspace(hx/2,hx*1.5,10)
+hy_list = np.linspace(hy/2,hy,10)
+for a in a_list:
     for hy in hy_list:
         p0 = [a,hx,hy,w0,h0]
         hx_nm = hx*1e9
