@@ -57,7 +57,8 @@ for a in a_list:
         p0 = [a,hx,hy,w0,h0]
         hx_nm = hx*1e9
         hy_nm = hy*1e9
-        print("hx: %f nm hy: %f nm" %(hx_nm, hy_nm))
+        a_nm = a*1e9
+        print("hx: %f nm hy: %f nm a: %f nm" %(hx_nm, hy_nm, a_nm))
         unitCellOptimization_SiC_elliptical(p0)
             
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
