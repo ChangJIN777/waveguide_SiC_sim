@@ -94,9 +94,9 @@ for hy_sweep in hy_list:
 # testing the algorithm
 # unitCellOptimization_SiC_elliptical(p0)
 
-# Sweep the beam width 
-w0_list = np.linspace(4e-7,8e-7,10)
-for w0 in w0_list:
-    p0 = [a,hx,hy,w0,h0]
-    print("beam width: %f" %(w0))
-    unitCellOptimization_SiC_elliptical(p0)
+# # Sweep the beam width 
+# w0_list = np.linspace(4e-7,8e-7,10)
+# for w0 in w0_list:
+#     p0 = [a,hx,hy,w0,h0]
+#     print("beam width: %f" %(w0))
+#     unitCellOptimization_SiC_elliptical(p0)
