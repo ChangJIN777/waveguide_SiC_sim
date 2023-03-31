@@ -175,8 +175,8 @@ def run_Sim(param):
 # optimization algorithm
 p0 = [hy,w0]
 bnd = [(None,None),(None,None)]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
-run_Sim(p0) # debugging 
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# run_Sim(p0) # debugging 
 
 # # sweeping the taper prefactor 
 # t_list = np.linspace(0.4,1,20)
