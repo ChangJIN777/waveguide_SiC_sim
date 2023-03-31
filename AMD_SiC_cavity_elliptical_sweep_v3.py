@@ -178,13 +178,20 @@ def run_Sim(param):
 #     param = [t]
 #     sweep_tapering_elliptical_cavity(param)
 
-# sweeping hy
-hy_1 = 1.0e-07
-hy_2 = 2.0e-07
-hy_list = np.linspace(hy_1,hy_2,20)
-for hy in hy_list:
-    hy_min = d_min*hy
-    sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
+# # sweeping hy
+# hy_1 = 1.0e-07
+# hy_2 = 2.0e-07
+# hy_list = np.linspace(hy_1,hy_2,20)
+# for hy in hy_list:
+#     hy_min = d_min*hy
+#     sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
+
+# sweeping w0
+w0_min = 500e-09
+w0_max = 800e-09
+w0_list = np.linspace(w0_min,w0_max,20)
+for w0 in w0_list:
+    sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
 
 # testing the algorithm for sweeping hy 
 # sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)

@@ -56,7 +56,9 @@ MN_L = 10
 #the unit cell number in the right mirror region 
 MN_R = 3
 #the unit cell number in the tapering region 
-TN = 6
+TN = 5
+#the number of cells in the waveguide region
+WN = 5
 #target wavelength 
 target_wavelength = 916e-9 
 #set the center of the device
@@ -1017,7 +1019,7 @@ def sweep_cellNum_ellipticalCavity(param):
     
     return -1*fitness
 
-def sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+def sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
     """this function sweeps through the hy associated with the cavity and calculate the associated Q
 
     Args:
@@ -1110,7 +1112,7 @@ def sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=
         
     # record the data 
     data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_hy_v1.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_w0_v1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
