@@ -36,13 +36,16 @@ n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
 
-# sweep through hy and record the bandgap and midband value 
-hy_list = np.linspace(hy/2,hy,20)
-for hy_sweep in hy_list:
-    hy_nm = hy_sweep*1e9
-    print("hy: %f nm " %(hy_nm))
-    p0 = [a,hx,hy_sweep,w0,h0]
-    unitCellOptimization_SiC_elliptical(p0)
+# # sweep through hy and record the bandgap and midband value 
+# hy_list = np.linspace(hy/2,hy,20)
+# for hy_sweep in hy_list:
+#     hy_nm = hy_sweep*1e9
+#     print("hy: %f nm " %(hy_nm))
+#     p0 = [a,hx,hy_sweep,w0,h0]
+#     unitCellOptimization_SiC_elliptical(p0)
+# debugging
+p0 = [a,hx,hy,w0,h0]
+unitCellOptimization_SiC_elliptical(p0)
 
 # # do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
 # # a_list = np.linspace(2.7e-07,2.9e-07,10)
