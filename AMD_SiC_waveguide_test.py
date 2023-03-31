@@ -16,23 +16,14 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 # Define geometry paramaters 
-#waveguide taper cell number
-WN = 6
-#taper cell number
-TN = 8 
-#mirror cell number (left region) 
-MN_L = 20
-#mirror cell number (right region)
-MN_R = 3
 #lattice constant
-# a = 2.801277586646125e-7
-a = 2.80e-7
-#hole diameter prefactor 
-# d = 0.642241102375429
-d = 0.64
+a = 2.838218812324136e-7
+#hole diameters  
+hx = 7.160169206987993e-08
+hy = 1.652696864561149e-07
+hy = hy/2
 #beam width prefactor
-# w = 1.692961161046466
-w = 1.69
+w0 = 5.005507792174242e-07
 #taper prefactor (for the defect region)
 t = 0.6
 #taper prefactor (for the waveguide region)
@@ -40,7 +31,7 @@ t_wvg = 0.875
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
-l = 15e-6
+l = 10e-6
 #the prefactor associated with the weaker mirror region
 prefactor_mirror_R = 1
 # The target resonance frequency, in Hz

@@ -15,24 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.8333e-7
-#the tapering prefactor 
-t = 0.6
-#hole diameter prefactor 1
-hx = 7.0833e-8
-#hole diameter prefactor 2
-hy = 1.5937e-7
-#hole diameter prefactor 1
-d1 = 0.67
-#hole diameter prefactor 2
-# d2 = 0.77
-d2 = 1.2
-#beam width prefactor
-w = 1.75
-#taper prefactor (for the defect region)
-t = 0.8
-#taper prefactor (for the waveguide region)
-t_wvg = 0.875
+a = 2.838218812324136e-7
+#hole diameter in the x direction
+hx = 7.160169206987993e-08
+#hole diameter in the y direction
+hy = 1.652696864561149e-07
+#beam width 
+w0 = 5.005507792174242e-07
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -46,6 +35,14 @@ prefactor_mirror_R = 1
 n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
+
+# sweep through hy and record the bandgap and midband value 
+hy_list = np.linspace(hy/2,hy,20)
+for hy_sweep in hy_list:
+    hy_nm = hy_sweep*1e9
+    print("hy: %f nm =============" %(hy_nm))
+    p0 = [a,hx,hy_sweep,w0,h0]
+    unitCellOptimization_SiC_elliptical(p0)
 
 # # do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
 # # a_list = np.linspace(2.7e-07,2.9e-07,10)
@@ -65,14 +62,14 @@ amin_wvg = t_wvg*a
 #             print("a: %f nm hx: %f nm hy: %f nm" %(a_nm, hx_nm, hy_nm))
 #             unitCellOptimization_SiC_elliptical(p0)
             
-# optimizing for the mirror unit cells (SWEEPING CODE) ###################
-a_0 = a
-hx_0 = hx*0.75
-hy_0 = hy*0.75
-w0 = w*a_0
-p0 = [a_0,hx_0,hy_0,w0,h0]
-bnd = ((2.5e-07,3.0e-07),(None,None),(None,None),(None,None),(None,None))
-popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
+# # optimizing for the mirror unit cells (SWEEPING CODE) ###################
+# a_0 = a
+# hx_0 = hx*0.75
+# hy_0 = hy*0.75
+# w0 = w*a_0
+# p0 = [a_0,hx_0,hy_0,w0,h0]
+# bnd = ((2.5e-07,3.0e-07),(None,None),(None,None),(None,None),(None,None))
+# popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
 # # optimizing for the waveguide unit cells
 # p0 = [amin_wvg]
