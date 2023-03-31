@@ -512,7 +512,6 @@ def unitCellOptimization_SiC_elliptical(params):
     Returns:
         fitness: the optimization parameter (we want large bandgap and small detuning)
     """
-    print("Starting sim ===================") # for debugging purpose
     a = params[0]
     hx = params[1]
     hy = params[2]
@@ -543,7 +542,6 @@ def unitCellOptimization_SiC_waveguide_elliptical(params):
     Returns:
         fitness: the optimization parameter (we want large bandgap and small detuning)
     """
-    print("Starting sim ===================") # for debugging purpose
     a = params[0]
     hx = params[1]
     hy = params[2]

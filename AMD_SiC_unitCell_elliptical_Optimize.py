@@ -40,7 +40,7 @@ amin_wvg = t_wvg*a
 hy_list = np.linspace(hy/2,hy,20)
 for hy_sweep in hy_list:
     hy_nm = hy_sweep*1e9
-    print("hy: %f nm =============" %(hy_nm))
+    print("hy: %f nm " %(hy_nm))
     p0 = [a,hx,hy_sweep,w0,h0]
     unitCellOptimization_SiC_elliptical(p0)
 
