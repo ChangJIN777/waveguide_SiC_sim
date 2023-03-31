@@ -66,6 +66,7 @@ def run_Sim(param):
     print("Start sim ==============================")
     start_time = datetime.now()
     hy = param[0]
+    w0=param[1]
     a_R = a*prefactor_mirror_R
     #the minimum lattice constant in the tapering region
     amin = a*t 
@@ -117,8 +118,17 @@ def run_Sim(param):
     cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    Qxmin = r1["qxmin"]
+    Qxmax = r1["qxmax"]
+    Qy = 1/(2/r1["qymax"])
+    Qz = 1/(1/r1["qzmin"] + 1/r1["qzmax"])
     Vmode = r1["vmode"]
     F = r1["freq"]
+    
+    print("Qx1: %f, Qx2: %f, Qy: %f, Qz: %f" % (
+        Qxmin, Qxmax, Qy, Qz
+    ))
+    
     resonance_f = float(F) # the resonance frequency 
     resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
     detuning_wavelength = target_wavelength-resonance_wavelength
@@ -153,7 +163,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,w0,t_wvg,d_min,t,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_hy_v2.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_hy_w0_v1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -162,13 +172,11 @@ def run_Sim(param):
     
     return -1*fitness
 
-# # optimization algorithm
-# p0 = [t,t_wvg,prefactor_mirror_R,d_min]
-# bnd = [(None,1),(None,1),(None,1),(None,1)]
+# optimization algorithm
+p0 = [hy,w0]
+bnd = [(None,None),(None,None)]
 # popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
-
-# debugging 
-# run_Sim(p0)
+run_Sim(p0) # debugging 
 
 # # sweeping the taper prefactor 
 # t_list = np.linspace(0.4,1,20)
@@ -176,13 +184,13 @@ def run_Sim(param):
 #     param = [t]
 #     sweep_tapering_elliptical_cavity(param)
 
-# sweeping hy
-hy_1 = 1.0e-07
-hy_2 = 2.0e-07
-hy_list = np.linspace(hy_1,hy_2,20)
-for hy in hy_list:
-    hy_min = d_min*hy
-    sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
+# # sweeping hy
+# hy_1 = 1.0e-07
+# hy_2 = 2.0e-07
+# hy_list = np.linspace(hy_1,hy_2,20)
+# for hy in hy_list:
+#     hy_min = d_min*hy
+#     sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
 
 # testing the algorithm for sweeping hy 
 # sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
