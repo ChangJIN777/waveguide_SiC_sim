@@ -15,14 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.838218812324136e-7
+a = 2.888888888888889e-07
 #hole diameter in the x direction 
 hx = 7.160169206987993e-8
 #hole diameter in the y direction 
-hy = 1.652696864561149e-7
+hy = 1.377247387134291e-07
 #beam width prefactor
-w = 1.75
-w0 = 5.0209e-07
+w0 = 5.005507792174242e-07
 #taper prefactor (for the defect region)
 t = 0.818
 #taper prefactor (for the waveguide region)
@@ -49,6 +48,8 @@ engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, sav
 amin = a*t
 #the minimum radius prefactor we are tapering to 
 d_min = 0.437
+hxmin_wvg = d_min*hx
+hymin_wvg = d_min*hy
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
@@ -68,8 +69,6 @@ def run_Sim(param):
     hy = param[2]
     w0 = param[3]
     # the minimum hole size we are tapering to in the linear region
-    hxmin_wvg = d_min*hx
-    hymin_wvg = d_min*hy
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
@@ -86,7 +85,7 @@ def run_Sim(param):
     ####################################### cavity without the waveguide region ###############################
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
-    structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+    structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
     center_cell=centerCell,
     center_shift=0,
     engine=engine
@@ -114,6 +113,10 @@ def run_Sim(param):
     cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    Qxmin = r1["qxmin"]
+    Qxmax = r1["qxmax"]
+    Qy = 1/(2/r1["qymax"])
+    Qz = 1/(1/r1["qzmin"] + 1/r1["qzmax"])
     Vmode = r1["vmode"]
     F = r1["freq"]
     resonance_f = float(F) # the resonance frequency 
@@ -121,27 +124,25 @@ def run_Sim(param):
     detuning_wavelength = target_wavelength-resonance_wavelength
     detuning_wavelength_nm = detuning_wavelength*1e9
     delta_wavelength = 5e-9 # 5nm tolerance 
+
+    Q = 1/((1/Qsc) + (1/Qwvg))  
+    if Q > 500000:
+        Q = 500000
+    
+    if Qwvg > 500000:
+        Qwvg = 500000
     
     # for optimizing for overcoupled cavity 
     if Qsc > Qwvg:
-        gx = Qsc/Qwvg
+        gx = Qsc/Qxmax
     else:
         gx = 1e-6 
     
     #prevent the mode volume from going to unrealistic values 
     if Vmode < 0.48:
         Vmode = 1e6
-    
-    Q = 1/((1/Qsc) + (1/Qwvg))
 
-    if Q > 500000:
-        Q = 500000
-    
-    if Qwvg > 500000:
-        Qwvg = 500000
         
-    
-    
     P = (Q*Qsc)/ (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
 
@@ -150,8 +151,8 @@ def run_Sim(param):
     fitness = np.sqrt((gx)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v16.csv"
+    data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_v17.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()

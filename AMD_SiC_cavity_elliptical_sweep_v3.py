@@ -15,13 +15,12 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.838218812324136e-7
+a = 2.888888888888889e-07
 #hole diameter in the x direction 
 hx = 7.160169206987993e-08
 #hole diameter in the y direction 
-hy = 1.652696864561149e-07
+hy = 1.377247387134291e-07
 #beam width prefactor
-w = 1.75
 w0 = 5.005507792174242e-07
 #taper prefactor (for the defect region)
 t = 0.818
