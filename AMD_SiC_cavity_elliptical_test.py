@@ -20,6 +20,7 @@ a = 2.838218812324136e-7
 hx = 7.160169206987993e-08
 #hole diameter in the y direction
 hy = 1.377247387134291e-07
+hy /= 2
 #beam width prefactor
 w0 = 5.005507792174242e-07
 # w0 = 4.699560661981287e-7
