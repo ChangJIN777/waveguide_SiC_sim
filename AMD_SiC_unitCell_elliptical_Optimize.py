@@ -19,7 +19,7 @@ a = 2.838218812324136e-7
 #hole diameter in the x direction
 hx = 7.160169206987993e-08
 #hole diameter in the y direction
-hy = 1.652696864561149e-07
+hy = 1.377247387134291e-07
 #beam width 
 w0 = 5.005507792174242e-07
 #beam height (set by epi-layer thickness)
@@ -49,10 +49,10 @@ amin_wvg = t_wvg*a
 
 # do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
 # a_list = np.linspace(2.7e-07,2.9e-07,10)
-a_list = np.linspace(2.50e-7,3.00e-7,10)
-# hx_list = np.linspace(hx/2,hx*1.5,10)
-hy_list = np.linspace(hy/2,hy,10)
-for a in a_list:
+# a_list = np.linspace(2.50e-7,3.00e-7,10)
+hx_list = np.linspace(5e-08,1e-07,10)
+hy_list = np.linspace(5e-08,2e-07,20)
+for hx in hx_list:
     for hy in hy_list:
         p0 = [a,hx,hy,w0,h0]
         hx_nm = hx*1e9
