@@ -20,6 +20,7 @@ a = 2.888888888888889e-07
 hx = 7.160169206987993e-8
 #hole diameter in the y direction 
 hy = 1.377247387134291e-07
+hy /= 2
 #beam width prefactor
 w0 = 5.005507792174242e-07
 #taper prefactor (for the defect region)
