@@ -15,7 +15,7 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.775047787137548e-07
+a = 2.90e-07
 #hole diameter in the x direction
 hx = 7.076170823568784e-08
 hx /= 2
