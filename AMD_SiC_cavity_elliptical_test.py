@@ -20,8 +20,7 @@ a = 2.857332184893757e-7
 hx = 7.031039274276191e-8
 #hole diameter in the y direction
 hy = 1.679705299133866e-7
-#hole diameters in the y direction for the weak mirror region 
-hy_weak = hy/2
+hy = (3/4)*hy
 #beam width prefactor
 w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
@@ -65,7 +64,7 @@ mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
 #build the right mirror cell region 
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy_weak,MN_R,w0,h0,n_f,engine)
+mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 
 #building cubic tapered cell region
 taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
