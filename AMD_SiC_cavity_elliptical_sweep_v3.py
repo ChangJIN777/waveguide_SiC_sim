@@ -128,12 +128,7 @@ def run_Sim(param):
     detuning_wavelength = target_wavelength-resonance_wavelength
     detuning_wavelength_nm = detuning_wavelength*1e9
     delta_wavelength = 5e-9 # 5nm tolerance 
-    
-    # for optimizing for overcoupled cavity 
-    if Qsc > Qwvg:
-        gx = Qsc/Qwvg
-    else:
-        gx = 1e-6 
+
     
     #prevent the mode volume from going to unrealistic values 
     if Vmode < 0.48:
@@ -146,6 +141,13 @@ def run_Sim(param):
     
     if Qwvg > 500000:
         Qwvg = 500000
+        
+        
+    # for optimizing for overcoupled cavity 
+    if Qsc > Qwvg:
+        gx = Qsc/Qwvg
+    else:
+        gx = 1e-6 
     
     P = (Q*Qsc)/ (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
