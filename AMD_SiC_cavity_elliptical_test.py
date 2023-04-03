@@ -24,7 +24,7 @@ hy = (3/4)*hy
 #beam width prefactor
 w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
-t = 0.818
+t = 0.9
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
