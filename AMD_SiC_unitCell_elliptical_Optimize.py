@@ -103,7 +103,7 @@ amin_wvg = t_wvg*a
 #     unitCellOptimization_SiC_elliptical(p0)
 
 # Sweep the lattice constants
-a_list = np.linspace(3.00e-7,4.00e-7,20)
+a_list = np.linspace(4.00e-7,5.00e-7,20)
 for a in a_list:
     p0 = [a,hx,hy,w0,h0]
     a_nm = a*1e09
