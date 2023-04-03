@@ -15,7 +15,7 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.775047787137548e-07
+a = 2.90e-07
 #hole diameter in the x direction
 hx = 7.076170823568784e-08
 hx /= 2
@@ -102,10 +102,19 @@ amin_wvg = t_wvg*a
 #     print("beam width: %f" %(w0))
 #     unitCellOptimization_SiC_elliptical(p0)
 
-# Sweep the lattice constants
-a_list = np.linspace(4.00e-7,5.00e-7,20)
-for a in a_list:
+# # Sweep the lattice constants
+# a_list = np.linspace(4.00e-7,5.00e-7,20)
+# for a in a_list:
+#     p0 = [a,hx,hy,w0,h0]
+#     a_nm = a*1e09
+#     print("the lattice constant: %f nm" %(a_nm))
+#     unitCellOptimization_SiC_elliptical(p0)
+    
+    
+# Sweep the hx
+hx_list = np.linspace(1.00e-8,8.00e-8,20)
+for hx in hx_list:
     p0 = [a,hx,hy,w0,h0]
-    a_nm = a*1e09
-    print("the lattice constant: %f nm" %(a_nm))
+    hx_nm = hx*1e09
+    print("hx: %f nm" %(hx_nm))
     unitCellOptimization_SiC_elliptical(p0)
