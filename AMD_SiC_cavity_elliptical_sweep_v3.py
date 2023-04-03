@@ -142,7 +142,6 @@ def run_Sim(param):
     if Qwvg > 500000:
         Qwvg = 500000
         
-        
     # for optimizing for overcoupled cavity 
     if Qsc > Qwvg:
         gx = Qsc/Qwvg
