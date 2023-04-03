@@ -15,13 +15,15 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.838218812324136e-7
+a = 2.775047787137548e-07
 #hole diameter in the x direction
-hx = 7.160169206987993e-08
+hx = 7.076170823568784e-08
+hx /= 2
 #hole diameter in the y direction
-hy = 1.377247387134291e-07
+hy = 1.730259002115936e-07
+hy /= 2
 #beam width 
-w0 = 5.005507792174242e-07
+w0 = 4.699560661981287e-7
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -47,19 +49,19 @@ amin_wvg = t_wvg*a
 # p0 = [a,hx,hy,w0,h0]
 # unitCellOptimization_SiC_elliptical(p0)
 
-# do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
-# a_list = np.linspace(2.7e-07,2.9e-07,10)
-# a_list = np.linspace(2.50e-7,3.00e-7,10)
-hx_list = np.linspace(5e-08,1e-07,10)
-hy_list = np.linspace(5e-08,2e-07,20)
-for hx in hx_list:
-    for hy in hy_list:
-        p0 = [a,hx,hy,w0,h0]
-        hx_nm = hx*1e9
-        hy_nm = hy*1e9
-        a_nm = a*1e9
-        print("hx: %f nm hy: %f nm a: %f nm" %(hx_nm, hy_nm, a_nm))
-        unitCellOptimization_SiC_elliptical(p0)
+# # do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
+# # a_list = np.linspace(2.7e-07,2.9e-07,10)
+# # a_list = np.linspace(2.50e-7,3.00e-7,10)
+# hx_list = np.linspace(5e-08,1e-07,10)
+# hy_list = np.linspace(5e-08,2e-07,20)
+# for hx in hx_list:
+#     for hy in hy_list:
+#         p0 = [a,hx,hy,w0,h0]
+#         hx_nm = hx*1e9
+#         hy_nm = hy*1e9
+#         a_nm = a*1e9
+#         print("hx: %f nm hy: %f nm a: %f nm" %(hx_nm, hy_nm, a_nm))
+#         unitCellOptimization_SiC_elliptical(p0)
             
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
 # a_0 = a
@@ -99,3 +101,11 @@ for hx in hx_list:
 #     p0 = [a,hx,hy,w0,h0]
 #     print("beam width: %f" %(w0))
 #     unitCellOptimization_SiC_elliptical(p0)
+
+# Sweep the lattice constants
+a_list = np.linspace(2.50e-7,3.00e-7,20)
+for a in a_list:
+    p0 = [a,hx,hy,w0,h0]
+    a_nm = a*1e09
+    print("the lattice constant: %f nm" %(a_nm))
+    unitCellOptimization_SiC_elliptical(p0)
