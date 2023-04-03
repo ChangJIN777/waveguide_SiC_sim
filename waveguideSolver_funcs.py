@@ -723,17 +723,18 @@ def sweep_tapering_elliptical_cavity(param):
     detuning_wavelength_nm = detuning_wavelength*1e9
     delta_wavelength = 5e-9 # 5nm tolerance 
     
-    #prevent the mode volume from going to unrealistic values 
-    if Q > 500000:
-        Q = 500000
+    Q = 1/((1/Qsc) + (1/Qwvg))
     
-    if Qwvg > 500000:
-        Qwvg = 500000
+    #prevent the mode volume from going to unrealistic values 
+    if Q > 1000000:
+        Q = 1000000
+    
+    if Qwvg > 1000000:
+        Qwvg = 1000000
     
     if Vmode < 0.48:
         Vmode = 1e6
     
-    Q = 1/((1/Qsc) + (1/Qwvg))
     
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
