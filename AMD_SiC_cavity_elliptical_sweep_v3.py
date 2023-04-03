@@ -15,11 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.888888888888889e-07
+a = 2.90e-07
 #hole diameter in the x direction 
-hx = 7.160169206987993e-08
+hx = 7.076170823568784e-08
+hx /= 2
 #hole diameter in the y direction 
-hy = 1.377247387134291e-07
+hy = 1.730259002115936e-07
+hy /= 2
 #beam width prefactor
 w0 = 5.005507792174242e-07
 #taper prefactor (for the defect region)
@@ -154,7 +156,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,w0,t_wvg,d_min,t,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v15.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_prefactors_v1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -163,10 +165,10 @@ def run_Sim(param):
     
     return -1*fitness
 
-# # optimization algorithm
-# p0 = [t,t_wvg,prefactor_mirror_R,d_min]
-# bnd = [(None,1),(None,1),(None,1),(None,1)]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# optimization algorithm
+p0 = [t,t_wvg,prefactor_mirror_R,d_min]
+bnd = [(None,1),(None,1),(None,1),(None,1)]
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
@@ -185,12 +187,12 @@ def run_Sim(param):
 #     hy_min = d_min*hy
 #     sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
 
-# sweeping w0
-w0_min = 500e-09
-w0_max = 800e-09
-w0_list = np.linspace(w0_min,w0_max,20)
-for w0 in w0_list:
-    sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
+# # sweeping w0
+# w0_min = 500e-09
+# w0_max = 800e-09
+# w0_list = np.linspace(w0_min,w0_max,20)
+# for w0 in w0_list:
+#     sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
 
 # testing the algorithm for sweeping hy 
 # sweep_cellHeight_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine)
