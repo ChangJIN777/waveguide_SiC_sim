@@ -20,6 +20,8 @@ a = 2.857332184893757e-7
 hx = 7.031039274276191e-8
 #hole diameter in the y direction
 hy = 1.679705299133866e-7
+#hole diameters in the y direction for the weak mirror region 
+hy_weak = hy/2
 #beam width prefactor
 w0 = 4.699560661981287e-7
 #taper prefactor (for the defect region)
@@ -56,23 +58,23 @@ TN = 5
 #the number of waveguide cells 
 WN = 5
 #set the center of the device (for double sided cavities)
-centerCell = WN+MN_L+TN-1 
+centerCell = MN_L+TN-1 
 
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 
 #build the right mirror cell region 
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy_weak,MN_R,w0,h0,n_f,engine)
 
 #building cubic tapered cell region
 taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
 
 #add waveguide region 
 hx_min = d_min*hx
-hy_min = d_min*hy
-waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
-waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+hy_min = d_min*hy_weak
+waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy_weak,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+# waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
 
 # ####################################### cavity without the waveguide region (symmetric) ###############################
 # cavity = Cavity1D(
@@ -82,7 +84,7 @@ waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_mi
 # )
 ####################################### cavity without the waveguide region (asymmetric) ###############################
 cavity = Cavity1D(
-unit_cells=  waveguide_cells_L + mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
+unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
