@@ -14,11 +14,13 @@ from datetime import datetime
 import csv
 
 #lattice constant
-a = 2.8333e-7
+a = 2.90e-07
 #hole diameter in the x direction 
-hx = 7.0833e-8
+hx = 7.076170823568784e-08
+hx /= 2
 #hole diameter in the y direction 
-hy = 1.5937e-7
+hy = 1.730259002115936e-07
+hy /= 2
 #define the useful constants 
 n_f = 2.6 # for SiC
 # the target frequency 
@@ -26,8 +28,7 @@ target_frequency = 327.3e12
 # the beam height 
 h0 = 250e-9
 d_0 = 0.64 # the default radius prefactor
-w_0 = 1.75 # the default beam width prefactor 
-w0= 4.82e-7 #beam width prefactor
+w0= 5.005507792174242e-07 #beam width prefactor
 # default engine 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
@@ -36,10 +37,10 @@ engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, sav
 # default location of the data files 
 file_loc = "./sim_data/"
 #taper prefactor (for the defect region)
-t = 0.822
+t = 0.818
 amin = a*t
 #taper prefactor (for the waveguide region)
-t_wvg = 0.75
+t_wvg = 0.852
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -48,7 +49,7 @@ l = 10e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.92
+prefactor_mirror_R = 0.965
 #the refractive index associated with the material 
 n_f = 2.6
 #the unit cell number in the left mirror region 
@@ -59,6 +60,10 @@ MN_R = 3
 TN = 5
 #the number of cells in the waveguide region
 WN = 5
+#the minimum radius prefactor we are tapering to 
+d_min = 0.437
+hxmin_wvg = d_min*hx
+hymin_wvg = d_min*hy
 #target wavelength 
 target_wavelength = 916e-9 
 #set the center of the device
@@ -676,14 +681,18 @@ def sweep_tapering_elliptical_cavity(param):
     
     centerCell = MN_L+TN-1
 
+    #add waveguide region  
+    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
+    
     ####################################### cavity without the waveguide region ###############################
     cavity = Cavity1D(
-    unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
+    unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
     center_cell=centerCell,
     center_shift=0,
     engine=engine
     )
+    
     # By setting the save path here, the cavity will save itself after each simulation to this file
     cavity.save("cavity_elliptical.obj")
 
@@ -714,16 +723,16 @@ def sweep_tapering_elliptical_cavity(param):
     delta_wavelength = 5e-9 # 5nm tolerance 
     
     #prevent the mode volume from going to unrealistic values 
-    if Vmode < 0.48:
-        Vmode = 1e6
-    
-    Q = 1/((1/Qsc) + (1/Qwvg))
-
     if Q > 500000:
         Q = 500000
     
     if Qwvg > 500000:
         Qwvg = 500000
+    
+    if Vmode < 0.48:
+        Vmode = 1e6
+    
+    Q = 1/((1/Qsc) + (1/Qwvg))
     
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
@@ -734,7 +743,7 @@ def sweep_tapering_elliptical_cavity(param):
     
     # record the data 
     data = [a,t,hx,hy,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v4.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_taperingPrefactor_v1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
