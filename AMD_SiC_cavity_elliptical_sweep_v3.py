@@ -93,7 +93,7 @@ def run_Sim(param):
     ####################################### cavity without the waveguide region ###############################
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
-    structures=[ BoxStructure(Vec3(0), Vec3(l, w*a, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+    structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
     center_cell=centerCell,
     center_shift=0,
     engine=engine
