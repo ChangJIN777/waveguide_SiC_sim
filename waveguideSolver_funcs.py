@@ -28,7 +28,8 @@ target_frequency = 327.3e12
 # the beam height 
 h0 = 250e-9
 d_0 = 0.64 # the default radius prefactor
-w0= 5.005507792174242e-07 #beam width prefactor
+w0= 5.005507792174242e-07 #beam width
+w_0 = 1.75 
 # default engine 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
 FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
