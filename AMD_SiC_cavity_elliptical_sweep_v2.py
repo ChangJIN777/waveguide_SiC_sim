@@ -18,7 +18,6 @@ from waveguideSolver_funcs import *
 a = 2.90e-07
 #hole diameter in the x direction 
 hx = 7.076170823568784e-08
-hx /= 2
 #hole diameter in the y direction 
 hy = 1.730259002115936e-07
 hy /= 2
@@ -154,7 +153,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_v18.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_geometricalParams_v1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -163,19 +162,19 @@ def run_Sim(param):
     
     return -1*fitness
 
-# # optimization algorithm
-# p0 = [a,hx,hy,w0]
-# bnd = [(None,None),(None,a),(None,None),(None,None)]
-# popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
+# optimization algorithm
+p0 = [a,hx,hy,w0]
+bnd = [(None,None),(None,a),(None,None),(None,None)]
+popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
 # run_Sim(p0)
 
-# sweeping the taper prefactor 
-t_list = np.linspace(0.4,1,20)
-for t in t_list:
-    param = [t]
-    sweep_tapering_elliptical_cavity(param)
+# # sweeping the taper prefactor 
+# t_list = np.linspace(0.4,1,20)
+# for t in t_list:
+#     param = [t]
+#     sweep_tapering_elliptical_cavity(param)
 
 # sweeping the beam width  
 # w_list = np.linspace(4.00e-7,8.00e-7,20)
