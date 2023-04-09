@@ -73,11 +73,16 @@ mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0
 #building cubic tapered cell region
 taper_cells = buildTaperRegion_elliptical_asymmetric(a,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,engine)
 
-#add waveguide region 
-hx_min = d_min*hx
-hy_min = d_min*hy
-waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+#add waveguide region (v1)
+# hx_min = d_min*hx
+# hy_min = d_min*hy
+# waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
 # waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+
+#add waveguide region (v2)
+hx_min = d_min*hx_weak
+hy_min = d_min*hy_weak
+waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx_weak,hx_min,hy_weak,hy_min,t_wvg,WN,w0,h0,n_f,engine)
 
 # ####################################### cavity without the waveguide region (symmetric) ###############################
 # cavity = Cavity1D(
