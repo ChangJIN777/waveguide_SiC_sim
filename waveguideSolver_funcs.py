@@ -126,6 +126,22 @@ def buildTapering_asymmetric(a_L,a_R,amin,taperNum):
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
+def buildTapering_asymmetric_v2(a_L,a_R,amin,TN_L,TN_R):
+    """
+    function for calculating the lattice constants for the tapering region of the cavity 
+    Note: this is used to build ASYMMETRIC taper cell region 
+    amin: the minimum lattice constant in the tapering region
+    TN_L: the number of tapering cells on the left side of the tapering region 
+    TN_R: the number of tapering cells on the right side of the tapering region 
+    a_L: the lattice constant on the left side of the tapering region 
+    a_R: the lattice constant on the right side of the tapering region
+    """
+    a_taper_R = cubic_tapering(a_R,amin,taperNum=TN_R)
+    a_taper_L = cubic_tapering(a_L,amin,taperNum=TN_L)
+    a_taper_L = a_taper_L[::-1]
+    tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
+    return tapering_region
+
 def buildWaveguideRegion_right(a,hx,hy,w0,t_wvg,WN,h0=h0,n_f=n_f,engine=engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity
     
@@ -505,6 +521,30 @@ def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0=h0,n_f=n_f,engine=en
         temp_cell = buildUnitCell_elliptical(i,hx,hy,w0,h0,n_f,engine)
         taper_cells += [temp_cell]
     return taper_cells
+
+def buildTaperRegion_elliptical_asymmetric(a_L,a_R,amin,hx,hy,TN_L,TN_R,w0,h0=h0,n_f=n_f,engine=engine):
+    """the function used to build taper region with elliptical holes
+
+    Args:
+        a_L (float): the lattice constant used to build the mirror region on the left side 
+        a_R (float): the lattice constant used to build the mirror region on the right side 
+        hx (float): hole diameter in the x direction
+        hy (float): hole diameter in the y direction
+        w0 (float): the beam width 
+        amin: the minimum lattice constant in the tapering region
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        TN_L (int): the number of tapering cells on the left side of the tapering region 
+        TN_R (int): the number of tapering cells on the right side of the tapering region
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    taper_cells = []
+    aList_taper = buildTapering_asymmetric_v2(a_L,a_R,amin,TN_L,TN_R)
+    for i in aList_taper:
+        temp_cell = buildUnitCell_elliptical(i,hx,hy,w0,h0,n_f,engine)
+        taper_cells += [temp_cell]
+    return taper_cells
+
 
 def unitCellOptimization_SiC_elliptical(params):
     """this function is used to optimize the unit cells for the waveguide regions of the cavity

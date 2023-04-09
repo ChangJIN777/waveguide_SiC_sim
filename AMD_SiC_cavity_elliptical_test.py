@@ -53,10 +53,12 @@ MN_L = 10
 MN_R = 3
 #the number of taper unit cells 
 TN = 5
+TN_L = 6
+TN_R = 4
 #the number of waveguide cells 
 WN = 5
 #set the center of the device (for double sided cavities)
-centerCell = MN_L+TN-1 
+centerCell = MN_L+TN_L-1 
 
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -66,7 +68,7 @@ a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirr
 mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 
 #building cubic tapered cell region
-taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+taper_cells = buildTaperRegion_elliptical_asymmetric(a,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,engine)
 
 #add waveguide region 
 hx_min = d_min*hx
