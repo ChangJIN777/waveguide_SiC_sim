@@ -15,13 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.920390625000000e-07
+a = 2.91e-07
 #hole diameter in the x direction 
-hx = 7.015359980553738e-08
+hx = 193.94e-09
 #hole diameter in the y direction 
-hy = 9.077100936881650e-08
+hy = 225.1e-09
 #beam width prefactor
-w0 = 5.040702768837969e-07
+w0 = 4.92e-7
 #taper prefactor (for the defect region)
 t = 0.8
 #taper prefactor (for the waveguide region)
@@ -56,8 +56,10 @@ MN_L = 10
 MN_R = 3
 #the number of taper unit cells 
 TN = 5
+TN_L = 6
+TN_R = 4
 #set the center of the device
-centerCell = MN_L+TN-1 
+centerCell = MN_L+TN_L-1 
 #the number of cells in the waveguide region
 WN = 5
 
@@ -74,10 +76,10 @@ def run_Sim(param):
 
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
-    mirror_cells_right = buildMirrorRegion_elliptical(a,hx,hy,MN_R,w0,h0,n_f,engine)
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 
     #building cubic tapered cell region
-    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+    taper_cells = buildTaperRegion_elliptical_asymmetric(a,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,engine)
 
     #add waveguide region 
     waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
@@ -152,7 +154,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_geometricalParams_v2.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_geometricalParams_v3.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
