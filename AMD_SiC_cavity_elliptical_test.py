@@ -15,15 +15,15 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.775047787137548e-07
+a = 2.91e-07
 #hole diameter in the x direction
-hx = 7.076170823568784e-08
+hx = 193.94e-09
 #hole diameter in the y direction
-hy = 1.730259002115936e-07
+hy = 225.1e-09
 #beam width prefactor
-w0 = 4.699560661981287e-7
+w0 = 4.92e-7
 #taper prefactor (for the defect region)
-t = 0.818
+t = 0.8
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -67,22 +67,22 @@ mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
 hx_weak = hx
 hy_weak = hy/2
-# mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
-mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0,n_f,engine)\
+mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+# mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0,n_f,engine)\
 
 #building cubic tapered cell region
 taper_cells = buildTaperRegion_elliptical_asymmetric(a,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,engine)
 
 #add waveguide region (v1)
-# hx_min = d_min*hx
-# hy_min = d_min*hy
-# waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
-# waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+hx_min = d_min*hx
+hy_min = d_min*hy
+waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
 
-#add waveguide region (v2)
-hx_min = d_min*hx_weak
-hy_min = d_min*hy_weak
-waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx_weak,hx_min,hy_weak,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+# #add waveguide region (v2)
+# hx_min = d_min*hx_weak
+# hy_min = d_min*hy_weak
+# waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx_weak,hx_min,hy_weak,hy_min,t_wvg,WN,w0,h0,n_f,engine)
 
 # ####################################### cavity without the waveguide region (symmetric) ###############################
 # cavity = Cavity1D(
