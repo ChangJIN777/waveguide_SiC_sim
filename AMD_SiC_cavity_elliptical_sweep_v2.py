@@ -18,8 +18,10 @@ from waveguideSolver_funcs import *
 a = 2.91e-07
 #hole diameter in the x direction 
 hx = 193.94e-09
+hx /= 4
 #hole diameter in the y direction 
 hy = 225.1e-09
+hy /= 2
 #beam width prefactor
 w0 = 4.92e-7
 #taper prefactor (for the defect region)
