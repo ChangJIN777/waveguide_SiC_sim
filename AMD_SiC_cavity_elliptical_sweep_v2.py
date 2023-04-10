@@ -152,7 +152,7 @@ def run_Sim(param):
 
     r1 = cavity.get_results("resonance")[-1]
     
-    fitness = np.sqrt((gx)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
+    fitness = np.sqrt((Qsc/Qxmax)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
