@@ -136,11 +136,11 @@ def run_Sim(param):
     if Qwvg > 500000:
         Qwvg = 500000
     
-    # for optimizing for overcoupled cavity 
-    if Qsc > Qwvg:
-        gx = Qsc/Qxmax
-    else:
-        gx = 1e-6 
+    # # for optimizing for overcoupled cavity 
+    # if Qsc > Qwvg:
+    #     gx = Qsc/Qxmax
+    # else:
+    #     gx = 1e-6 
     
     #prevent the mode volume from going to unrealistic values 
     if Vmode < 0.48:
