@@ -19,6 +19,7 @@ a = 2.91e-07
 #hole diameter in the x direction
 hx = 193.94e-09
 hx /= 2
+hx /= 2
 #hole diameter in the y direction
 hy = 225.1e-09
 hy /= 2
