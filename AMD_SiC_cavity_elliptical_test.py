@@ -15,13 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.857332184893757e-07
+a = 2.584949186634943e-7
 #hole diameter in the x direction
-hx = 7.031039274276191e-08
+hx = 7.090632552595702e-08
 #hole diameter in the y direction
-hy = 1.2287961235672244e-7
+hy = 1.287281229517707e-07
 #beam width prefactor
-w0 = 4.465264070034032e-7
+w0 = 4.799418009665091e-07
 #taper prefactor (for the defect region)
 t = 0.8
 #beam height (set by epi-layer thickness)
@@ -32,7 +32,7 @@ l = 15e-6
 # 916nm = 327.3e12
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.937666708063571
+prefactor_mirror_R = 0.965
 #taper prefactor (for the waveguide region)
 t_wvg = 0.852
 #the refractive index associated with the material 
@@ -46,7 +46,7 @@ engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, wo
 #the minimum lattice constant in the tapering region
 amin = a*t
 #the minimum radius prefactor we are tapering to 
-d_min = 0.452429933915226
+d_min = 0.437
 #the left mirror cell number 
 MN_L = 10
 #the right mirror cell number 
@@ -66,7 +66,7 @@ mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 #build the right mirror cell region 
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
 hx_weak = hx
-hy_weak = hy*0.913078637409368
+hy_weak = hy
 mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 # mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0,n_f,engine)
 
