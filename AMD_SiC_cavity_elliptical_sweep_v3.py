@@ -58,7 +58,7 @@ TN = 5
 TN_L = 8
 TN_R = 4
 #set the center of the device
-centerCell = MN_L+TN-1 
+centerCell = MN_L+TN_L-1 
 #the number of cells in the waveguide region
 WN = 5
 #resizing factor --> for adjusting hy 
@@ -85,6 +85,8 @@ def run_Sim(param):
 
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
+    hx_weak = hx
+    hy_weak = hy*hy_prefactor
     mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 
     #building cubic tapered cell region
@@ -145,22 +147,17 @@ def run_Sim(param):
     if Qwvg > 500000:
         Qwvg = 500000
         
-    # for optimizing for overcoupled cavity 
-    if Qsc > Qwvg:
-        gx = Qsc/Qwvg
-    else:
-        gx = 1e-6 
     
     P = (Q*Qsc)/ (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
 
     r1 = cavity.get_results("resonance")[-1]
     
-    fitness = np.sqrt((gx)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
+    fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,hx,hy,w0,t_wvg,d_min,t,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_prefactors_v1.csv"
+    data = [a,hx,hy,w0,t_wvg,d_min,t,prefactor_mirror_R,hy_prefactor,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_prefactors_v2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -170,8 +167,8 @@ def run_Sim(param):
     return -1*fitness
 
 # optimization algorithm
-p0 = [t,t_wvg,prefactor_mirror_R,d_min]
-bnd = [(None,1),(None,1),(None,1),(None,1)]
+p0 = [t,t_wvg,prefactor_mirror_R,d_min,hy_prefactor]
+bnd = [(None,1),(None,1),(None,1),(None,1),(None,1)]
 popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
