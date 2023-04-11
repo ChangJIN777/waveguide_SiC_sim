@@ -67,8 +67,8 @@ mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
 hx_weak = hx
 hy_weak = hy*0.913078637409368
-# mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
-mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0,n_f,engine)
+mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+# mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0,n_f,engine)
 
 #building cubic tapered cell region
 taper_cells = buildTaperRegion_elliptical_asymmetric(a,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,engine)
