@@ -29,7 +29,7 @@ t_wvg = 0.852
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
-l = 10e-6
+l = 15e-6
 # The target resonance frequency, in Hz
 # 916nm = 327.3e12
 target_frequency = 327.3e12
@@ -103,7 +103,7 @@ def run_Sim(param):
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
     #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
     r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                        analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
+                        analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8))
 
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
