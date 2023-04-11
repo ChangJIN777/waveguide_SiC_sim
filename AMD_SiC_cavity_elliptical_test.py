@@ -92,7 +92,7 @@ waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_mi
 # )
 ####################################### cavity without the waveguide region (asymmetric) ###############################
 cavity = Cavity1D(
-unit_cells=  taper_cells + mirror_cells_right + waveguide_cells_R,
+unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
