@@ -15,18 +15,15 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.91e-07
+a = 2.857332184893757e-7
 #hole diameter in the x direction
-hx = 193.94e-09
-hx /= 2
-hx /= 2
+hx = 7.031039274276191e-8
 #hole diameter in the y direction
-hy = 225.1e-09
-hy /= 2
+hy = 1.679705299133866e-7
 #beam width prefactor
-w0 = 4.92e-7
+w0 = 1.75*a
 #taper prefactor (for the defect region)
-t = 0.8
+t = 0.823960141783961
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
@@ -56,7 +53,7 @@ MN_L = 10
 MN_R = 3
 #the number of taper unit cells 
 TN = 5
-TN_L = 6
+TN_L = 8
 TN_R = 4
 #the number of waveguide cells 
 WN = 5
@@ -69,7 +66,7 @@ mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 #build the right mirror cell region 
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
 hx_weak = hx
-hy_weak = hy*(3/4)
+hy_weak = hy*(1/2)
 mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
 # mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0,n_f,engine)\
 
