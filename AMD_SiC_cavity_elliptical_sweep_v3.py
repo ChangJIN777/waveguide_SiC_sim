@@ -15,15 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.90e-07
+a = 2.857332184893757e-7
 #hole diameter in the x direction 
-hx = 7.076170823568784e-08
-hx /= 2
+hx = 7.031039274276191e-8
 #hole diameter in the y direction 
-hy = 1.730259002115936e-07
-hy /= 2
+hy = 1.679705299133866e-7
 #beam width prefactor
-w0 = 5.005507792174242e-07
+w0 = 1.75*a
 #taper prefactor (for the defect region)
 t = 0.818
 #taper prefactor (for the waveguide region)
@@ -57,10 +55,14 @@ MN_L = 10
 MN_R = 3
 #the number of taper unit cells 
 TN = 5
+TN_L = 8
+TN_R = 4
 #set the center of the device
 centerCell = MN_L+TN-1 
 #the number of cells in the waveguide region
 WN = 5
+#resizing factor --> for adjusting hy 
+hy_prefactor = 0.9
 
 def run_Sim(param):
     print("Start sim ==============================")
@@ -70,6 +72,7 @@ def run_Sim(param):
     prefactor_mirror_R = param[2]
     #the minimum radius prefactor we are tapering to 
     d_min = param[3]
+    hy_prefactor = param[4]
     a_R = a*prefactor_mirror_R
     #the minimum lattice constant in the tapering region
     amin = a*t 

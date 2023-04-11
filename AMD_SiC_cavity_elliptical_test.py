@@ -67,8 +67,8 @@ mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
 a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
 hx_weak = hx
 hy_weak = hy*(1/2)
-mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
-# mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0,n_f,engine)\
+# mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx_weak,hy_weak,MN_R,w0,h0,n_f,engine)\
 
 #building cubic tapered cell region
 taper_cells = buildTaperRegion_elliptical_asymmetric(a,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,engine)
@@ -92,7 +92,7 @@ waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_mi
 # )
 ####################################### cavity without the waveguide region (asymmetric) ###############################
 cavity = Cavity1D(
-unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
+unit_cells=  taper_cells + mirror_cells_right + waveguide_cells_R,
 structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
 center_cell=centerCell,
 center_shift=0,
