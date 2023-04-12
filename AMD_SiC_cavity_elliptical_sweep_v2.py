@@ -23,7 +23,7 @@ hy = 1.240769835794245e-07
 #beam width prefactor
 w0 = 4.709362810532443e-07
 #taper prefactor (for the defect region)
-t = 0.8
+t = 0.818
 #taper prefactor (for the waveguide region)
 t_wvg = 0.852
 #beam height (set by epi-layer thickness)
@@ -70,8 +70,6 @@ def run_Sim(param):
     hx = param[1]
     hy = param[2]
     w0 = param[3]
-    # also include the tapering defect prefactor
-    t = param[4] 
     # the minimum hole size we are tapering to in the linear region
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -166,8 +164,8 @@ def run_Sim(param):
     return -1*fitness
 
 # optimization algorithm
-p0 = [a,hx,hy,w0,t]
-bnd = [(None,None),(None,a),(None,None),(None,None),(0,1)]
+p0 = [a,hx,hy,w0]
+bnd = [(None,None),(None,a),(None,None),(None,None)]
 popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
