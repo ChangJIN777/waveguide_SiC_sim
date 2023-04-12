@@ -53,8 +53,8 @@ MN_L = 10
 MN_R = 3
 #the number of taper unit cells 
 TN = 5
-TN_L = 8
-TN_R = 4
+TN_L = 6
+TN_R = 6
 #the number of waveguide cells 
 WN = 5
 #set the center of the device (for double sided cavities)
