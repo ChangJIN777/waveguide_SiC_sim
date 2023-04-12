@@ -66,12 +66,16 @@ WN = 5
 def run_Sim(param):
     print("Start sim ==============================")
     start_time = datetime.now()
+    # unit cell parameters
     a = param[0]
     hx = param[1]
     hy = param[2]
     w0 = param[3]
-    # also include the tapering defect prefactor
-    t = param[4] 
+    # tapering parameters 
+    t = param[4]
+    t_wvg = param[5]
+    prefactor_mirror_R = param[6]
+    d_min = param[7]
     # the minimum hole size we are tapering to in the linear region
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -166,8 +170,8 @@ def run_Sim(param):
     return -1*fitness
 
 # optimization algorithm
-p0 = [a,hx,hy,w0,t]
-bnd = [(None,None),(None,a),(None,None),(None,None),(0,1)]
+p0 = [a,hx,hy,w0,t,t_wvg,prefactor_mirror_R,d_min]
+bnd = [(None,None),(None,a),(None,None),(None,None),(None,1),(None,1),(None,1),(None,1)]
 popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
