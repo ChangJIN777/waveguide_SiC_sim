@@ -23,7 +23,7 @@ hy = 1.240769835794245e-07
 #beam width prefactor
 w0 = 4.709362810532443e-07
 #taper prefactor (for the defect region)
-t = 0.8
+t = 0.818
 #taper prefactor (for the waveguide region)
 t_wvg = 0.852
 #beam height (set by epi-layer thickness)
@@ -53,7 +53,7 @@ hymin_wvg = d_min*hy
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 3
+MN_R = 5
 #the number of taper unit cells 
 TN = 5
 TN_L = 6
@@ -72,7 +72,6 @@ def run_Sim(param):
     hy = param[2]
     w0 = param[3]
     # tapering parameters 
-    t = param[4]
     t_wvg = param[5]
     prefactor_mirror_R = param[6]
     d_min = param[7]
@@ -134,17 +133,12 @@ def run_Sim(param):
     delta_wavelength = 5e-9 # 5nm tolerance 
 
     Q = 1/((1/Qsc) + (1/Qwvg))  
-    if Q > 500000:
-        Q = 500000
     
-    if Qwvg > 500000:
-        Qwvg = 500000
+    if Q > 1500000:
+        Q = 1500000
     
-    # # for optimizing for overcoupled cavity 
-    # if Qsc > Qwvg:
-    #     gx = Qsc/Qxmax
-    # else:
-    #     gx = 1e-6 
+    if Qwvg > 1500000:
+        Qwvg = 1500000
     
     #prevent the mode volume from going to unrealistic values 
     if Vmode < 0.48:
@@ -160,7 +154,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_unitCellParams_v6.csv"
+    file_name = "OptimizeListFull_Overcoupled_cavity_v3_sweep_t1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -170,8 +164,8 @@ def run_Sim(param):
     return -1*fitness
 
 # optimization algorithm
-p0 = [a,hx,hy,w0,t,t_wvg,prefactor_mirror_R,d_min]
-bnd = [(None,None),(None,a),(None,None),(None,None),(None,1),(None,1),(None,1),(None,1)]
+p0 = [a,hx,hy,w0]
+bnd = [(None,None),(None,a),(None,None),(None,None)]
 popt = scipy.optimize.minimize(run_Sim,p0,method='Nelder-Mead')
 
 # debugging 
