@@ -71,10 +71,6 @@ def run_Sim(param):
     hx = param[1]
     hy = param[2]
     w0 = param[3]
-    # tapering parameters 
-    t_wvg = param[5]
-    prefactor_mirror_R = param[6]
-    d_min = param[7]
     # the minimum hole size we are tapering to in the linear region
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
