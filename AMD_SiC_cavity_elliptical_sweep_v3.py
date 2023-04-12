@@ -15,13 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.857332184893757e-7
+a = 2.796929535831381e-07
 #hole diameter in the x direction 
-hx = 7.031039274276191e-8
+hx = 7.046230850833163e-08
 #hole diameter in the y direction 
-hy = 1.2287961235672244e-7
+hy = 1.240769835794245e-07
 #beam width prefactor
-w0 = 4.465264070034032e-7
+w0 = 4.709362810532443e-07
 #taper prefactor (for the defect region)
 t = 0.818
 #taper prefactor (for the waveguide region)
@@ -55,14 +55,12 @@ MN_L = 10
 MN_R = 3
 #the number of taper unit cells 
 TN = 5
-TN_L = 8
-TN_R = 4
+TN_L = 6
+TN_R = 6
 #set the center of the device
 centerCell = MN_L+TN_L-1 
 #the number of cells in the waveguide region
 WN = 5
-#resizing factor --> for adjusting hy 
-hy_prefactor = 0.9
 
 def run_Sim(param):
     print("Start sim ==============================")
@@ -153,8 +151,8 @@ def run_Sim(param):
     fitness = np.sqrt((Qsc/Qwvg)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,hx,hy,w0,t_wvg,d_min,t,prefactor_mirror_R,hy_prefactor,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_prefactors_v3.csv"
+    data = [a,hx,hy,w0,t_wvg,d_min,t,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
+    file_name = "OptimizeListFull_elliptical_cavity_sweep_prefactors_v4.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
