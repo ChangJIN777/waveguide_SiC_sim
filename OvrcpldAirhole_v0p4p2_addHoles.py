@@ -19,9 +19,8 @@ FDTDexeLoc = os.path.join(FDTDLoc,'bin/fdtd-solutions')
 FDTDmpiLoc = os.path.join(FDTDLoc,'bin/fdtd-engine-ompi-lcl')
 
 
-hole_radii = np.loadtxt(os.path.join(os.path.curdir, 'v0p4p2/holeStruct_v2.txt'), dtype=float, usecols=(0,1), unpack=False)
-hole_radii /= 2
-lattice_constants = np.loadtxt(os.path.join(os.path.curdir, 'v0p4p2/periodStruct_v2.txt'), dtype=float, usecols=(0), unpack=False)
+hole_radii = np.loadtxt(os.path.join(os.path.curdir, 'v0p4p2/holeStruct.txt'), dtype=float, usecols=(0,1), unpack=False)
+lattice_constants = np.loadtxt(os.path.join(os.path.curdir, 'v0p4p2/periodStruct.txt'), dtype=float, usecols=(0), unpack=False)
 center_cell = 12
 # Unit cells are triangular prisms
 beam_width = 0.482e-6
@@ -47,7 +46,7 @@ for ((radius_x,radius_y), lattice_constant) in zip(hole_radii,lattice_constants)
 cavity = Cavity1D(
   unit_cells=unit_cells,
   structures=[BoxStructure(Vec3(0), Vec3(beam_length,beam_width,beam_height), 
-                        DielectricMaterial(n_f, order=2,color="red"))],
+                        DielectricMaterial(2.417, order=2,color="red"))],
   engine=engine,
   center_cell=center_cell,
   center_shift=0
