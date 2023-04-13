@@ -130,11 +130,11 @@ def run_Sim(param):
 
     Q = 1/((1/Qsc) + (1/Qwvg))  
     
-    if Q > 1500000:
-        Q = 1500000
+    # if Q > 1500000:
+    #     Q = 1500000
     
-    if Qwvg > 1500000:
-        Qwvg = 1500000
+    # if Qwvg > 1500000:
+    #     Qwvg = 1500000
     
     #prevent the mode volume from going to unrealistic values 
     if Vmode < 0.48:

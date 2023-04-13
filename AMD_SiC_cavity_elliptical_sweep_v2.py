@@ -128,11 +128,12 @@ def run_Sim(param):
     delta_wavelength = 5e-9 # 5nm tolerance 
 
     Q = 1/((1/Qsc) + (1/Qwvg))  
-    if Q > 500000:
-        Q = 500000
     
-    if Qwvg > 500000:
-        Qwvg = 500000
+    # if Q > 500000:
+    #     Q = 500000
+    
+    # if Qwvg > 500000:
+    #     Qwvg = 500000
     
     # # for optimizing for overcoupled cavity 
     # if Qsc > Qwvg:
