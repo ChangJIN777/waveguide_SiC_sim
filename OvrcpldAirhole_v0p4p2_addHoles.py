@@ -20,6 +20,7 @@ FDTDmpiLoc = os.path.join(FDTDLoc,'bin/fdtd-engine-ompi-lcl')
 
 
 hole_radii = np.loadtxt(os.path.join(os.path.curdir, 'v0p4p2/holeStruct.txt'), dtype=float, usecols=(0,1), unpack=False)
+hole_radii /= 2
 lattice_constants = np.loadtxt(os.path.join(os.path.curdir, 'v0p4p2/periodStruct.txt'), dtype=float, usecols=(0), unpack=False)
 center_cell = 12
 # Unit cells are triangular prisms
