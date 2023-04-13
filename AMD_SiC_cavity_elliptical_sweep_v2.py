@@ -59,7 +59,7 @@ TN = 5
 TN_L = 6
 TN_R = 6
 #set the center of the device
-centerCell = MN_L+TN_L-1 
+centerCell = MN_L+TN_L
 #the number of cells in the waveguide region
 WN = 5
 
@@ -154,7 +154,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_sweep_unitCellParams_v6.csv"
+    file_name = "OptimizeListFull_Overcoupled_cavity_v2_sweep_t1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
