@@ -53,11 +53,11 @@ hymin_wvg = d_min*hy
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 5
+MN_R = 3
 #the number of taper unit cells 
 TN = 5
-TN_L = 6
-TN_R = 6
+TN_L = 8
+TN_R = 4
 #set the center of the device
 centerCell = MN_L+TN_L
 #the number of cells in the waveguide region
@@ -130,11 +130,11 @@ def run_Sim(param):
 
     Q = 1/((1/Qsc) + (1/Qwvg))  
     
-    # if Q > 1500000:
-    #     Q = 1500000
+    if Q > 500000:
+        Q = 500000
     
-    # if Qwvg > 1500000:
-    #     Qwvg = 1500000
+    if Qwvg > 500000:
+        Qwvg = 500000
     
     #prevent the mode volume from going to unrealistic values 
     if Vmode < 0.48:
@@ -150,7 +150,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_Overcoupled_cavity_v3_sweep_t2.csv"
+    file_name = "OptimizeListFull_Overcoupled_cavity_v1_sweep_t1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
