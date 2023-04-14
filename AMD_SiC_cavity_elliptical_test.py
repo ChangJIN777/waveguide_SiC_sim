@@ -58,7 +58,7 @@ TN_R = 4
 #the number of waveguide cells 
 WN = 5
 #set the center of the device (for double sided cavities)
-centerCell = MN_L+TN_L+1
+centerCell = MN_L+TN_L
 
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -91,7 +91,7 @@ engine=engine
 cavity.save("cavity.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 12nm)
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 12e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q #########################################################
 r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
