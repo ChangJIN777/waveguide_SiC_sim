@@ -15,13 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.796929535831381e-07
+a = 2.843e-07
 #hole diameter in the x direction 
-hx = 7.046230850833163e-08
+hx = 7.24e-08
 #hole diameter in the y direction 
-hy = 1.240769835794245e-07
+hy = 1.275e-07
 #beam width prefactor
-w0 = 4.709362810532443e-07
+w0 = 4.686e-07
 #taper prefactor (for the defect region)
 t = 0.818
 #taper prefactor (for the waveguide region)
@@ -59,7 +59,7 @@ TN = 5
 TN_L = 8
 TN_R = 4
 #set the center of the device
-centerCell = MN_L+TN_L
+centerCell = MN_L+TN_L-1
 #the number of cells in the waveguide region
 WN = 5
 
@@ -155,7 +155,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_Overcoupled_cavity_v4_sweep_t1.csv"
+    file_name = "OptimizeListFull_Overcoupled_cavity_v4_sweep_t2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
