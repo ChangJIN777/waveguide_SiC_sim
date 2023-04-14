@@ -15,13 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.524273729325481e-07
+a = 2.766338119033225e-07
 #hole diameter in the x direction
-hx = 6.829443934549338e-08
+hx = 7.409552129079250e-08
 #hole diameter in the y direction
-hy = 1.352337282693008e-07
+hy = 1.304747030452386e-07
 #beam width
-w0 = 4.949911216844509e-07
+w0 = 4.621062257834960e-07
 #taper prefactor (for the defect region)
 t = 0.818
 #beam height (set by epi-layer thickness)
@@ -50,11 +50,11 @@ d_min = 0.437
 #the left mirror cell number 
 MN_L = 10
 #the right mirror cell number 
-MN_R = 5
+MN_R = 3
 #the number of taper unit cells 
 TN = 5
-TN_L = 6
-TN_R = 6
+TN_L = 8
+TN_R = 4
 #the number of waveguide cells 
 WN = 5
 #set the center of the device (for double sided cavities)
@@ -77,19 +77,7 @@ taper_cells = buildTaperRegion_elliptical_asymmetric(a,a_R,amin,hx,hy,TN_L,TN_R,
 hx_min = d_min*hx
 hy_min = d_min*hy
 waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
-waveguide_cells_L = buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
 
-# #add waveguide region (v2)
-# hx_min = d_min*hx_weak
-# hy_min = d_min*hy_weak
-# waveguide_cells_R = buildWaveguideRegion_elliptical_right_v2(a,hx_weak,hx_min,hy_weak,hy_min,t_wvg,WN,w0,h0,n_f,engine)
-
-# ####################################### cavity without the waveguide region (symmetric) ###############################
-# cavity = Cavity1D(
-# unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
-# structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
-# engine=engine
-# )
 ####################################### cavity without the waveguide region (asymmetric) ###############################
 cavity = Cavity1D(
 unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells_R,
