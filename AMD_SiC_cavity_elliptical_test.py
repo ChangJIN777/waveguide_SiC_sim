@@ -15,13 +15,13 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.843419598607545e-07
+a = 2.849371964628219e-07
 #hole diameter in the x direction
-hx = 7.239651908334866e-08
+hx = 7.178347679286287e-08
 #hole diameter in the y direction
-hy = 1.275169371659274e-07
+hy = 1.264034270215387e-07
 #beam width
-w0 = 4.685680009412013e-07
+w0 = 4.591628740269132e-07
 #taper prefactor (for the defect region)
 t = 0.818
 #beam height (set by epi-layer thickness)
@@ -50,7 +50,7 @@ d_min = 0.437
 #the left mirror cell number 
 MN_L = 10
 #the right mirror cell number 
-MN_R = 3
+MN_R = 1
 #the number of taper unit cells 
 TN = 5
 TN_L = 8
