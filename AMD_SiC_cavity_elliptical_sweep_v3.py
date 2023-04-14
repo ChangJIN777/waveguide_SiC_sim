@@ -136,11 +136,11 @@ def run_Sim(param):
     
     Q = 1/((1/Qsc) + (1/Qwvg))
 
-    if Q > 500000:
-        Q = 500000
+    # if Q > 500000:
+    #     Q = 500000
     
-    if Qwvg > 500000:
-        Qwvg = 500000
+    # if Qwvg > 500000:
+    #     Qwvg = 500000
         
     
     P = (Q*Qsc)/ (Vmode*Vmode)
