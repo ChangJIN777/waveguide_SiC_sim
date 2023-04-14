@@ -52,11 +52,11 @@ hy_min = d_min*hy
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 3
+MN_R = 1
 #the number of taper unit cells 
 TN = 5
-TN_L = 6
-TN_R = 6
+TN_L = 8
+TN_R = 4
 #set the center of the device
 centerCell = MN_L+TN_L-1 
 #the number of cells in the waveguide region
@@ -152,7 +152,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,w0,t_wvg,d_min,t,prefactor_mirror_R,Vmode,Qwvg,Qsc,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_elliptical_cavity_v6_sweep_prefactors_t1.csv"
+    file_name = "OptimizeListFull_elliptical_cavity_v6_sweep_prefactors_t2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
