@@ -58,7 +58,7 @@ TN_R = 4
 #the number of waveguide cells 
 WN = 5
 #set the center of the device (for double sided cavities)
-centerCell = MN_L+TN_L
+centerCell = MN_L+TN_L+1
 
 #build the left mirror cell region 
 mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
