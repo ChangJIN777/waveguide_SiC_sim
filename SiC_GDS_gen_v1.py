@@ -16,8 +16,8 @@ from datetime import datetime
 from waveguideSolver_funcs import *
     
 #list of lattice constant we want to sweep through 
-a_min = 2.766338119033225e-07
-a_max = 2.766338119033225e-07
+a_min = (2.766338119033225e-07)*0.8
+a_max = (2.766338119033225e-07)*1.2
 a_number = 10
 a_list = np.linspace(a_min,a_max,a_number)
 
