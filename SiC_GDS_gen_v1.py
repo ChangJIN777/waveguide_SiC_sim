@@ -16,17 +16,17 @@ from datetime import datetime
 from waveguideSolver_funcs import *
     
 #list of lattice constant we want to sweep through 
-a_min = (2.766338119033225e-07)*0.95
-a_max = (2.766338119033225e-07)*1.05
+a_min = (279.7e-09)*0.95
+a_max = (279.7e-09)*1.05
 a_number = 11
 a_list = np.linspace(a_min,a_max,a_number)
 
 #hole diameter in the x direction
-hx = 7.409552129079250e-08
+hx = 70.46e-09
 #hole diameter in the y direction
-hy = 1.304747030452386e-07
+hy = 124.1e-09
 #beam width
-w0 = 4.621062257834960e-07
+w0 = 470.9e-09
 #taper prefactor (for the defect region)
 t = 0.818
 #beam height (set by epi-layer thickness)
