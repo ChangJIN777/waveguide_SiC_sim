@@ -143,7 +143,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "elliptical_cavity_design_v1_lattice_tolerance_test.csv"
+    file_name = "elliptical_cavity_design_v1_hole_dim_tolerance_test.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
@@ -153,13 +153,25 @@ def run_Sim(param):
     return -1*fitness
 
 
-# testing the tolerance of the design (lattice constant)
-a_min = 0.8*a 
-a_max = 1.2*a 
-a_list = np.linspace(a_min,a_max,10)
-for a_item in a_list:
-    param = [a_item,hx,hy,w0]
-    run_Sim(param)
+# # testing the tolerance of the design (lattice constant)
+# a_min = 0.8*a 
+# a_max = 1.2*a 
+# a_list = np.linspace(a_min,a_max,10)
+# for a_item in a_list:
+#     param = [a_item,hx,hy,w0]
+#     run_Sim(param)
+
+# testing the tolerance of the design (hx and hy)
+hx_min = 0.8*hx
+hx_max = 1.2*hx 
+hy_min = 0.8*hy
+hy_max = 1.2*hy
+hx_list = np.linspace(hx_min,hx_max,10)
+hy_list = np.linspace(hy_min,hy_max,10)
+for hx_item in hx_list:
+    for hy_item in hy_list:
+        param = [a,hx_item,hy_item,w0]
+        run_Sim(param)
     
 # sweeping the beam width  
 # w_list = np.linspace(4.00e-7,8.00e-7,20)
