@@ -142,7 +142,7 @@ def run_Sim(param):
     #     gx = 1e-6 
     
     #prevent the mode volume from going to unrealistic values 
-    if Vmode < 0.48:
+    if Vmode < 0.45:
         Vmode = 1e6
 
         
