@@ -105,7 +105,6 @@ def build_cavity_v5(a,hy_min):
 # generate GDS from the design
 for i in range(len(a_list)):
     for j in range(len(hy_min_list)):
-        num = num+1
         cavity_temp = build_cavity_v5(a_list[i],hy_min_list[i])
         parser = DielectricExtrusionFaceGDSParser(cavity_temp)
         parser.show()
