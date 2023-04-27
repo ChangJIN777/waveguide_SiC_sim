@@ -103,15 +103,13 @@ def build_cavity_v1(a,hy_min):
     
     return cavity
 
-num = 0
 # generate GDS from the design
 for i in range(len(a_list)):
     for j in range(len(hy_min_list)):
-        num = num+1
         # build the cavity using the parameters in the list
         cavity_temp = build_cavity_v1(a_list[i],hy_min_list[j])
         # generate and save the GDS files
         parser = DielectricExtrusionFaceGDSParser(cavity_temp)
         parser.show()
-        file_name = "SiC_cavity_v1_num_%d.gds"%(num)
+        file_name = "SiC_cavity_v1_a_%d_hy_%d.gds"%(i,j)
         parser.save(file_name)
