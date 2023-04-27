@@ -16,8 +16,8 @@ from datetime import datetime
 from waveguideSolver_funcs import *
     
 #list of lattice constant we want to sweep through 
-a_min = (284.3e-09)*0.95
-a_max = (284.3e-09)*1.05
+a_min = (284.3e-09)*0.9
+a_max = (284.3e-09)*1.1
 a_number = 11
 a_list = np.linspace(a_min,a_max,a_number)
 
@@ -62,11 +62,13 @@ TN_L = 8
 TN_R = 4
 #the number of waveguide cells 
 WN = 5
+# list of minimum tapered hole width 
+hy_min_list = [60e-9,120e-9,hy_min,180e-9]
 
 #set the center of the device (for double sided cavities)
 centerCell = MN_L+TN_L
 
-def build_cavity_v1(a):
+def build_cavity_v5(a,hy_min):
     """_summary_
 
     Args:
@@ -100,10 +102,13 @@ def build_cavity_v1(a):
     
     return cavity
 
+num = 0
 # generate GDS from the design
 for i in range(len(a_list)):
-    cavity_temp = build_cavity_v1(a_list[i])
-    parser = DielectricExtrusionFaceGDSParser(cavity_temp)
-    parser.show()
-    file_name = "SiC_cavity_v5_num_%d.gds"%(i)
-    parser.save(file_name)
+    for j in range(len(hy_min_list)):
+        num = num+1
+        cavity_temp = build_cavity_v5(a_list[i],hy_min_list[i])
+        parser = DielectricExtrusionFaceGDSParser(cavity_temp)
+        parser.show()
+        file_name = "SiC_cavity_v5_num_%d.gds"%(num)
+        parser.save(file_name)
