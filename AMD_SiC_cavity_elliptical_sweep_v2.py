@@ -53,7 +53,7 @@ hymin_wvg = d_min*hy
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 1
+MN_R = 3
 #the number of taper unit cells 
 TN = 5
 TN_L = 6
@@ -151,18 +151,23 @@ def run_Sim(param):
 
     r1 = cavity.get_results("resonance")[-1]
     
-    fitness = np.sqrt((Qsc/Qxmax)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
+    ## added to generate critically coupled cavity #################################
+    delta_Q = np.abs(Qsc-Qwvg)
+    Q_tolerance = 5000 # the tolerance for the difference in Qwvg and Qsc
+    fitness_critical = np.sqrt((Qsc/Qxmax)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2))*np.exp(-((delta_Q/Q_tolerance)**2)))
+    
+    fitness_over = np.sqrt((Qsc/Qxmax)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
-    data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_Overcoupled_cavity_v7_sweep_t1.csv"
+    data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness_critical]
+    file_name = "OptimizeListFull_Criticallycoupled_cavity_v1_sweep_t1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
-    print('fitness: %f'%(fitness))
+    print('fitness: %f'%(fitness_critical))
     print('Duration: {}'.format(end_time - start_time))
     
-    return -1*fitness
+    return -1*fitness_critical
 
 # optimization algorithm
 p0 = [a,hx,hy,w0]
