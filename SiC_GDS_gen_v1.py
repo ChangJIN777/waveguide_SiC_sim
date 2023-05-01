@@ -65,6 +65,8 @@ WN = 5
 
 # list of minimum tapered hole width 
 hy_min_list = [60e-9,120e-9,hy_min,180e-9]
+# list of minimum waveguide width we are sweeping through 
+w_list = [60e-9,120e-9,180e-9]
 
 #set the center of the device (for double sided cavities)
 centerCell = MN_L+TN_L
