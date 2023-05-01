@@ -84,7 +84,7 @@ def run_Sim(param):
     #add waveguide region 
     waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
     
-    ####################################### cavity without the waveguide region ###############################
+    ####################################### cavity with the waveguide region ###############################
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
