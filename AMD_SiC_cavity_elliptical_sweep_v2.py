@@ -129,11 +129,11 @@ def run_Sim(param):
 
     Q = 1/((1/Qsc) + (1/Qwvg))  
     
-    # if Q > 500000:
-    #     Q = 500000
+    if Q > 500000:
+        Q = 500000
     
-    # if Qwvg > 500000:
-    #     Qwvg = 500000
+    if Qwvg > 500000:
+        Qwvg = 500000
     
     # # for optimizing for overcoupled cavity 
     # if Qsc > Qwvg:
@@ -153,14 +153,14 @@ def run_Sim(param):
     
     ## added to generate critically coupled cavity #################################
     delta_Q = np.abs(Qsc-Qwvg)
-    Q_tolerance = 5000 # the tolerance for the difference in Qwvg and Qsc
+    Q_tolerance = 100000 # the tolerance for the difference in Qwvg and Qsc
     fitness_critical = np.sqrt((Qsc/Qxmax)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2))*np.exp(-((delta_Q/Q_tolerance)**2)))
     
     fitness_over = np.sqrt((Qsc/Qxmax)*P*np.exp(-((detuning_wavelength/delta_wavelength)**2)))
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness_critical]
-    file_name = "OptimizeListFull_Criticallycoupled_cavity_v2_sweep_t3.csv"
+    file_name = "OptimizeListFull_Criticallycoupled_cavity_v7_sweep_t1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
