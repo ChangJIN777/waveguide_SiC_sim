@@ -160,7 +160,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness_critical]
-    file_name = "OptimizeListFull_Criticallycoupled_cavity_v7_sweep_t1.csv"
+    file_name = "OptimizeListFull_Criticallycoupled_cavity_v7_sweep_t2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()
