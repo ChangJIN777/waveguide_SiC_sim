@@ -15,11 +15,14 @@ from datetime import datetime
 
 from waveguideSolver_funcs import *
     
-#list of lattice constant we want to sweep through 
-a_min = (284.3e-09)*0.9
-a_max = (284.3e-09)*1.1
-a_number = 11
-a_list = np.linspace(a_min,a_max,a_number)
+# #list of lattice constant we want to sweep through 
+# a_min = (284.3e-09)*0.9
+# a_max = (284.3e-09)*1.1
+# a_number = 11
+# a_list = np.linspace(a_min,a_max,a_number)
+
+# the test device made for dose testing 
+a_list = [284.3e-09]
 
 #hole diameter in the x direction
 hx = 72.40e-09
@@ -111,10 +114,18 @@ def build_cavity_v5(a,hy_min):
 #         file_name = "SiC_cavity_v5_a_%d_hy_%d.gds"%(i,j)
 #         parser.save(file_name)
         
-# generate GDS from the design
+# # generate GDS from the design
+# for i in range(len(a_list)):
+#     cavity_temp = build_cavity_v5(a_list[i],hy_min)
+#     parser = DielectricExtrusionFaceGDSParser(cavity_temp)
+#     parser.show()
+#     file_name = "SiC_cavity_v5_a_%d.gds"%(i)
+#     parser.save(file_name)
+    
+# generate GDS from the design (dosage test)
 for i in range(len(a_list)):
     cavity_temp = build_cavity_v5(a_list[i],hy_min)
     parser = DielectricExtrusionFaceGDSParser(cavity_temp)
     parser.show()
-    file_name = "SiC_cavity_v5_a_%d.gds"%(i)
+    file_name = "SiC_cavity_v5_a_%d_dose_test.gds"%(i)
     parser.save(file_name)

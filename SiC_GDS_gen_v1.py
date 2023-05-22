@@ -15,11 +15,14 @@ from datetime import datetime
 
 from waveguideSolver_funcs import *
     
-#list of lattice constant we want to sweep through 
-a_min = (279.7e-09)*0.9
-a_max = (279.7e-09)*1.1
-a_number = 11
-a_list = np.linspace(a_min,a_max,a_number)
+# #list of lattice constant we want to sweep through 
+# a_min = (279.7e-09)*0.9
+# a_max = (279.7e-09)*1.1
+# a_number = 11
+# a_list = np.linspace(a_min,a_max,a_number)
+
+# the test device made for dose testing 
+a_list = [284.3e-09]
 
 #hole diameter in the x direction
 hx = 70.46e-09
@@ -65,8 +68,6 @@ WN = 5
 
 # list of minimum tapered hole width 
 hy_min_list = [60e-9,120e-9,hy_min,180e-9]
-# list of minimum waveguide width we are sweeping through 
-w_list = [60e-9,120e-9,180e-9]
 
 #set the center of the device (for double sided cavities)
 centerCell = MN_L+TN_L
@@ -117,11 +118,19 @@ def build_cavity_v1(a,hy_min):
 #         parser.save(file_name)
         
 # generate GDS from the design
+# for i in range(len(a_list)):
+#     # build the cavity using the parameters in the list
+#     cavity_temp = build_cavity_v1(a_list[i],hy_min)
+#     # generate and save the GDS files
+#     parser = DielectricExtrusionFaceGDSParser(cavity_temp)
+#     parser.show()
+#     file_name = "SiC_cavity_v1_a_%d.gds"%(i)
+#     parser.save(file_name)
+
+# generate GDS from the design (dosage test)
 for i in range(len(a_list)):
-    # build the cavity using the parameters in the list
     cavity_temp = build_cavity_v1(a_list[i],hy_min)
-    # generate and save the GDS files
     parser = DielectricExtrusionFaceGDSParser(cavity_temp)
     parser.show()
-    file_name = "SiC_cavity_v1_a_%d.gds"%(i)
+    file_name = "SiC_cavity_v1_a_%d_dose_test.gds"%(i)
     parser.save(file_name)
