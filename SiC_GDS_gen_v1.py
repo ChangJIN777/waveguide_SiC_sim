@@ -35,7 +35,8 @@ t = 0.818
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
-l = 15e-6
+# l = 15e-6
+l = 10e-6 # reduced the length of the cavity so it does not collapse during the undercut 
 # The target resonance frequency, in Hz
 target_frequency = 327.3e12
 #the prefactor associated with the weaker mirror region
@@ -65,9 +66,6 @@ TN_L = 8
 TN_R = 4
 #the number of waveguide cells 
 WN = 5
-
-# list of minimum tapered hole width 
-hy_min_list = [60e-9,120e-9,hy_min,180e-9]
 
 #set the center of the device (for double sided cavities)
 centerCell = MN_L+TN_L
@@ -132,5 +130,5 @@ for i in range(len(a_list)):
     cavity_temp = build_cavity_v1(a_list[i],hy_min)
     parser = DielectricExtrusionFaceGDSParser(cavity_temp)
     parser.show()
-    file_name = "SiC_cavity_v1_a_%d_dose_test.gds"%(i)
+    file_name = "SiC_cavity_v1_a_%d_dose_test_t2.gds"%(i)
     parser.save(file_name)
