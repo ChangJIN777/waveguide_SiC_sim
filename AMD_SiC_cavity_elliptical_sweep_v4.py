@@ -27,7 +27,7 @@ t = 0.818
 #taper prefactor (for the waveguide region)
 t_wvg = 0.852
 #beam height (set by epi-layer thickness)
-h0 = 250e-9
+h0 = 500e-9
 # cavity beam length
 l = 15e-6
 # The target resonance frequency, in Hz
@@ -71,6 +71,7 @@ def run_Sim(param):
     hx = param[1]
     hy = param[2]
     w0 = param[3]
+    target_frequency = param[4]
     # the minimum hole size we are tapering to in the linear region
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -149,7 +150,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_Overcoupled_cavity_v3_sweep_t1.csv"
+    file_name = "OptimizeListFull_Overcoupled_cavity_500nm_v1.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()

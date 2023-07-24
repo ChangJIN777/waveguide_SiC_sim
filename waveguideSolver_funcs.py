@@ -26,7 +26,7 @@ n_f = 2.6 # for SiC
 # the target frequency 
 target_frequency = 327.3e12
 # the beam height 
-h0 = 250e-9
+h0 = 500e-9 # adapted for the new SiC wafers 
 d_0 = 0.64 # the default radius prefactor
 w0= 5.005507792174242e-07 #beam width
 w_0 = 1.75 
@@ -58,9 +58,9 @@ MN_L = 10
 #the unit cell number in the right mirror region 
 MN_R = 3
 #the unit cell number in the tapering region 
-TN = 5
+TN = 6
 #the number of cells in the waveguide region
-WN = 5
+WN = 3
 #the minimum radius prefactor we are tapering to 
 d_min = 0.437
 hxmin_wvg = d_min*hx
@@ -1162,6 +1162,108 @@ def sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,en
     # record the data 
     data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength]
     file_name = "OptimizeListFull_elliptical_cavity_sweep_w0_v1.csv"
+    record_data(data,file_name)
+    
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
+    
+    return 
+
+def sim_ellipticalCavity_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_name,MN_L,MN_R,TN,WN=WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+    """this function sweeps through the hy associated with the cavity and calculate the associated Q
+
+    Args:
+        a (float): the lattice constant for the mirror cells 
+        hx (float): the hole radius in the x direction 
+        hx_min (float): the minimum value of the hole radius in the x direction (waveguide region)
+        hy (float): the hole radius in the y direction 
+        hy_min (float): the minimum value of the hole radius in the y direction (waveguide region)
+        t (float): the tapering prefactor 
+        t_wvg (float): the waveguide taper prefactor for the lattice constant 
+        target_frequency: the frequency of the resonance we are targeting 
+        file_name (string): the name of the file we are going to save the result under 
+        WN (int): the number of unit cells in the waveguide region 
+        w0 (float, optional): the beam width of the cavity. Defaults to w0.
+        h0 (float, optional): the beam height of the cavity. Defaults to h0.
+        n_f (float, optional): the refractive index of the dielectric. Defaults to n_f.
+        engine (lumerical engine, optional): the lumerical engine used to run the simulation. Defaults to engine.
+
+    Returns:
+        _type_: none
+    """
+    print("Start sim ==============================")
+    start_time = datetime.now()
+    #build the left mirror cell region 
+    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
+
+    #build the right mirror cell region 
+    a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
+    amin = t*a # the defect lattice constant 
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+
+    #building cubic tapered cell region
+    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+    
+    #add waveguide region 
+    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine)
+    
+    ####################################### cavity without the waveguide region ###############################
+    cavity = Cavity1D(
+    unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
+    structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+    center_cell=centerCell,
+    center_shift=0,
+    engine=engine
+    )
+    
+    # By setting the save path here, the cavity will save itself after each simulation to this file
+    cavity.save("cavity_elliptical.obj")
+
+    #define mesh size (use 12nm for accuracy, currently set to 12nm)
+    # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
+
+    # simulating the resonance and the Q #########################################################
+    # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
+    #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
+
+    # Print the reults and plot the electric field profiles
+    print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
+        r1["freq"], r1["vmode"],
+        1/(1/r1["qxmin"] + 1/r1["qxmax"]),
+        1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    ))
+
+    cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
+    Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
+    Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    Qxmin = r1["qxmin"]
+    Qxmax = r1["qxmax"]
+    Qy = 1/(2/r1["qymax"])
+    Qz = 1/(1/r1["qzmin"] + 1/r1["qzmax"])
+    
+    print("Qx1: %f, Qx2: %f, Qy: %f, Qz: %f" % (
+        Qxmin, Qxmax, Qy, Qz
+    ))
+    
+    Vmode = r1["vmode"]
+    F = r1["freq"]
+    resonance_f = float(F) # the resonance frequency 
+    resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
+    detuning_wavelength = target_wavelength-resonance_wavelength
+    detuning_wavelength_nm = detuning_wavelength*1e9
+    delta_wavelength = 5e-9 # 5nm tolerance 
+    
+    Q = 1/((1/Qsc) + (1/Qwvg))
+    
+    P = (Q*Qsc) / (Vmode*Vmode)
+    print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
+
+    r1 = cavity.get_results("resonance")[-1]
+        
+    # record the data 
+    data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength]
     record_data(data,file_name)
     
     end_time = datetime.now()
