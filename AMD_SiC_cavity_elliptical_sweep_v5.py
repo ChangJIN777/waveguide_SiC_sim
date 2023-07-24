@@ -45,7 +45,8 @@ n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
-FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+FDTDloc="C:\Program Files\Lumerical\v221" # note: this is specified to be run on Feynman 
 # engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 #the minimum lattice constant in the tapering region
@@ -70,7 +71,7 @@ file_name = "OptimizeListFull_Overcoupled_cavity_500nm_testRun_1.csv"
 # debugging 
 hx_min = d_min*hx
 hy_min = d_min*hy
-sim_ellipticalCavity_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_name,MN_L,MN_R,TN,w0=w0)
+sim_ellipticalCavity_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_name,MN_L,MN_R,TN,w0=w0,engine=engine)
 
 # # sweeping the unit cell parameters
 # target_frequencies = np.linspace(200e12,500e12,5)
