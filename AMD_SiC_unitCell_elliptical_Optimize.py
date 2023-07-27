@@ -15,17 +15,15 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 2.90e-07
+a = 284.3e-09
 #hole diameter in the x direction
-hx = 7.076170823568784e-08
-hx /= 2
+hx = 72.40e-09 
 #hole diameter in the y direction
-hy = 1.730259002115936e-07
-hy /= 2
+hy = 127.5e-09
 #beam width 
-w0 = 4.699560661981287e-7
+w0 = 468.6e-09
 #beam height (set by epi-layer thickness)
-h0 = 250e-9
+h0 = 500e-9
 # cavity beam length
 l = 10e-6
 # The target resonance frequency, in Hz
@@ -51,25 +49,20 @@ amin_wvg = t_wvg*a
 
 # # do a low resolution sweep over the desired parameter range (LOOPING CODE/Mirror region) ############
 # # a_list = np.linspace(2.7e-07,2.9e-07,10)
-# # a_list = np.linspace(2.50e-7,3.00e-7,10)
+# a_list = np.linspace(2.60e-7,2.70e-7,10)
 # hx_list = np.linspace(5e-08,1e-07,10)
 # hy_list = np.linspace(5e-08,2e-07,20)
-# for hx in hx_list:
-#     for hy in hy_list:
-#         p0 = [a,hx,hy,w0,h0]
-#         hx_nm = hx*1e9
-#         hy_nm = hy*1e9
-#         a_nm = a*1e9
-#         print("hx: %f nm hy: %f nm a: %f nm" %(hx_nm, hy_nm, a_nm))
-#         unitCellOptimization_SiC_elliptical(p0)
+# for a in a_list:
+#     p0 = [a,hx,hy,w0,h0]
+#     hx_nm = hx*1e9
+#     hy_nm = hy*1e9
+#     a_nm = a*1e9
+#     print("hx: %f nm hy: %f nm a: %f nm" %(hx_nm, hy_nm, a_nm))
+#     unitCellOptimization_SiC_elliptical(p0)
             
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
-# a_0 = a
-# hx_0 = hx*0.75
-# hy_0 = hy*0.75
-# w0 = w*a_0
-# p0 = [a_0,hx_0,hy_0,w0,h0]
-# bnd = ((2.5e-07,3.0e-07),(None,None),(None,None),(None,None),(None,None))
+# p0 = [a,hx,hy,w0,h0]
+# bnd = ((2e-07,4.0e-07),(None,None),(None,None),(None,None),(None,None))
 # popt = scipy.optimize.minimize(unitCellOptimization_SiC_elliptical,p0,method='Nelder-Mead')
 
 # # optimizing for the waveguide unit cells
@@ -111,10 +104,10 @@ amin_wvg = t_wvg*a
 #     unitCellOptimization_SiC_elliptical(p0)
     
     
-# Sweep the hx
-hx_list = np.linspace(1.00e-8,8.00e-8,20)
-for hx in hx_list:
-    p0 = [a,hx,hy,w0,h0]
-    hx_nm = hx*1e09
-    print("hx: %f nm" %(hx_nm))
-    unitCellOptimization_SiC_elliptical(p0)
+# # Sweep the hx
+# hx_list = np.linspace(1.00e-8,8.00e-8,20)
+# for hx in hx_list:
+#     p0 = [a,hx,hy,w0,h0]
+#     hx_nm = hx*1e09
+#     print("hx: %f nm" %(hx_nm))
+#     unitCellOptimization_SiC_elliptical(p0)

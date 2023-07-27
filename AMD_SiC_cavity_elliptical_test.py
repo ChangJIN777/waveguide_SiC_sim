@@ -15,23 +15,19 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 284.3e-09
-a = a*2
+a = 263e-09
 #hole diameter in the x direction
 hx = 72.40e-09 
-hx = hx*2
 #hole diameter in the y direction
 hy = 127.5e-09
-hy = hy*2
 #beam width
 w0 = 468.6e-09
-w0=w0*2
 #taper prefactor (for the defect region)
 t = 0.818
 #beam height (set by epi-layer thickness)
 h0 = 500e-9
 # cavity beam length
-l = 15e-6
+l = 20e-6
 # The target resonance frequency, in Hz
 # 916nm = 327.3e12
 target_frequency = 327.3e12
@@ -44,8 +40,9 @@ n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
-FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
+# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+FDTDloc="C:/Program Files/Lumerical/v221/" # note: this is specified to be run on Feynman 
+engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, working_path="./fsps")
 # engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 #the minimum lattice constant in the tapering region
 amin = a*t
@@ -95,11 +92,11 @@ engine=engine
 cavity.save("cavity.obj")
 
 #define mesh size (use 12nm for accuracy, currently set to 12nm)
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 12e-9, dy=None, dz=None)
+man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 20e-9, dy=None, dz=None)
 
 # simulating the resonance and the Q #########################################################
 r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
-                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,4,8))
+                    analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8))
 
 
 # Print the reults and plot the electric field profiles

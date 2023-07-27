@@ -32,8 +32,8 @@ w0= 5.005507792174242e-07 #beam width
 w_0 = 1.75 
 # default engine 
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
-FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-# FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
+# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
 engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 # default location of the data files 
 file_loc = "./sim_data/"
@@ -45,7 +45,7 @@ t_wvg = 0.852
 #beam height (set by epi-layer thickness)
 h0 = 250e-9
 # cavity beam length
-l = 10e-6
+l = 15e-6
 # The target resonance frequency, in Hz
 # 916nm = 327.3e12
 target_frequency = 327.3e12
@@ -571,7 +571,7 @@ def unitCellOptimization_SiC_elliptical(params):
     # we want large bandgap and small detuning 
     delta_wv = 1e-9
     fitness = np.exp(-(detuning/delta_wv)**2)*bg_mg_rat
-    file_name = "unitcell_Optimization_elliptical_sweep_hx_v1.csv"
+    file_name = "unitcell_Optimization_elliptical_500nm_testRun_1.csv"
     data = [a,hx,hy,w0,h0,detuning,mg,bg_mg_rat,bg,diel_freq, air_freq,fitness]
     record_data(data,file_name)
     return -1*fitness
@@ -1169,7 +1169,7 @@ def sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,en
     
     return 
 
-def sim_ellipticalCavity_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_name,MN_L,MN_R,TN,WN=WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+def sim_ellipticalCavity_coarse_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_name,MN_L,MN_R,TN,WN=WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
     """this function sweeps through the hy associated with the cavity and calculate the associated Q
 
     Args:
@@ -1217,16 +1217,16 @@ def sim_ellipticalCavity_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_
     )
     
     # By setting the save path here, the cavity will save itself after each simulation to this file
-    cavity.save("cavity_elliptical.obj")
+    cavity.save("cavity.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 20e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
     #                     analyze_time=1000e-15,analyze_fspan=5.0e12,mesh_regions = [man_mesh], sim_size=Vec3(4,8,8))
-    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(4,4,8))
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8))
 
     # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
@@ -1235,7 +1235,7 @@ def sim_ellipticalCavity_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_
         1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     ))
 
-    cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
+    cavity = Cavity1D(load_path="cavity.obj",engine=engine)
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     Qxmin = r1["qxmin"]
@@ -1263,7 +1263,7 @@ def sim_ellipticalCavity_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_
     r1 = cavity.get_results("resonance")[-1]
         
     # record the data 
-    data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength]
+    data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength,resonance_wavelength]
     record_data(data,file_name)
     
     end_time = datetime.now()

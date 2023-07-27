@@ -15,7 +15,7 @@ from datetime import datetime
 from waveguideSolver_funcs import *
 
 #lattice constant
-a = 284.3e-09
+a = 263.3e-09
 #hole diameter in the x direction 
 hx = 72.40e-09
 #hole diameter in the y direction 
@@ -29,7 +29,7 @@ t_wvg = 0.852
 #beam height (set by epi-layer thickness)
 h0 = 500e-9
 # cavity beam length
-l = 15e-6
+l = 20e-6
 # The target resonance frequency, in Hz
 # 916nm = 327.3e12
 target_frequency = 327.3e12
@@ -41,7 +41,8 @@ n_f = 2.6
 #the minimum lattice constant in the waveguide region 
 amin_wvg = t_wvg*a
 # Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
-FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+FDTDloc="C:/Program Files/Lumerical/v221/" # note: this is specified to be run on Feynman 
 # engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
 engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
 #the minimum lattice constant in the tapering region
@@ -53,15 +54,15 @@ hymin_wvg = d_min*hy
 #the left mirror cell number 
 MN_L = 10 
 #the right mirror cell number 
-MN_R = 5
+MN_R = 3
 #the number of taper unit cells 
-TN = 5
-TN_L = 8
-TN_R = 4
+TN = 6
+TN_L = 6
+TN_R = 6
 #set the center of the device
 centerCell = MN_L+TN_L-1
 #the number of cells in the waveguide region
-WN = 2
+WN = 3
 
 def run_Sim(param):
     print("Start sim ==============================")
@@ -71,7 +72,6 @@ def run_Sim(param):
     hx = param[1]
     hy = param[2]
     w0 = param[3]
-    target_frequency = param[4]
     # the minimum hole size we are tapering to in the linear region
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -95,11 +95,11 @@ def run_Sim(param):
     engine=engine
     )
     # By setting the save path here, the cavity will save itself after each simulation to this file
-    cavity.save("cavity_elliptical.obj")
+    cavity.save("cavity.obj")
 
     #define mesh size (use 12nm for accuracy, currently set to 12nm)
     # man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,0.6e-6,0.5e-6)), 12e-9, dy=None, dz=None)
-    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
+    man_mesh = MeshRegion(BBox(Vec3(0),Vec3(5e-6,2e-6,2e-6)), 20e-9, dy=None, dz=None)
 
     # simulating the resonance and the Q #########################################################
     # r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, 
@@ -114,7 +114,7 @@ def run_Sim(param):
         1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     ))
 
-    cavity = Cavity1D(load_path="cavity_testing.obj",engine=engine)
+    cavity = Cavity1D(load_path="cavity.obj",engine=engine)
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     Qxmin = r1["qxmin"]
@@ -138,7 +138,7 @@ def run_Sim(param):
     #     Qwvg = 500000
     
     #prevent the mode volume from going to unrealistic values 
-    if Vmode < 0.48:
+    if Vmode < 0.4:
         Vmode = 1e6
 
     P = (Q*Qsc)/ (Vmode*Vmode)
@@ -150,7 +150,7 @@ def run_Sim(param):
     
     # record the data 
     data = [a,hx,hy,t,w0,prefactor_mirror_R,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Q,F,detuning_wavelength,fitness]
-    file_name = "OptimizeListFull_Overcoupled_cavity_500nm_v1.csv"
+    file_name = "OptimizeListFull_Overcoupled_cavity_500nm_v2.csv"
     record_data(data,file_name)
     
     end_time = datetime.now()

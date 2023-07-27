@@ -16,7 +16,7 @@ from waveguideSolver_funcs import *
 
 #lattice constant
 # a = 2.801277586646125e-7
-a = 2.80e-7
+a = 263.3e-09
 #hole diameter prefactor 
 d = 0.64
 #beam width prefactor
@@ -26,7 +26,7 @@ t = 0.8
 #taper prefactor (for the waveguide region)
 t_wvg = 0.75
 #beam height (set by epi-layer thickness)
-h0 = 250e-9
+h0 = 500e-9
 # cavity beam length
 l = 15e-6
 # The target resonance frequency, in Hz
