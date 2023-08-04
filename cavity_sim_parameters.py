@@ -14,12 +14,12 @@ import csv
 cavity_params = {
     # unit cell dimensions
     "a": 2.63 * 1e-07, #lattice constant 
-    "hx": 7.08 * 1e-08,
-    "hy": 1.73 * 1e-07,
+    "hx": 72.40e-09 ,
+    "hy": 127.5e-09,
     "thickness": 500 * 1e-9,
     "beam_width": 5.01 * 1e-07,
     # material parameters
-    "n_refrative": 2.6,
+    "n_refractive": 2.6,
     # device parameters 
     "MN_Left": 10, # the number of mirror cells on the left side of the cavity 
     "MN_Right": 3, # the number of mirror cells on the right side of the cavity
@@ -41,7 +41,7 @@ sim_params = {
     "save_fsps": True, # specify if we are going to save the fsps file 
     "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
     "mesh_res": 15*1e-9, # specify the resolution of the meshing we are using 
-    "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box 
+    "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
     "running_cluster": False, # specify if we are running the code on the cluster 
     "running_local": True, # specify if we are running on local PC
     "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
