@@ -21,7 +21,8 @@ class SimulationObject(ABC):
   parameters (structures, unit cells, etc). This ensures that all the simulation results associated with
   a particular instance of a SimulationObject come from simulating the same object.
   """
-  def __init__(self, engine=None, load_path=None, metadata=None):
+  def __init__(self, engine=None, load_path=None, metadata=None,
+               close = False):
     """
     Parameters
     ----------
@@ -36,6 +37,8 @@ class SimulationObject(ABC):
     """
     if engine is None:
       engine = getDefaultEngine()
+
+    self.close = close
 
     self.engine = engine
     self._simulate_results = {}
@@ -269,6 +272,7 @@ class SimulationObject(ABC):
         session.set_mesh_regions(mesh_regions)
 
         args.append(session)
+        self.session = session
 
       res = getattr(self, sim_type)(*args, **kwargs)
     except Exception as e:
@@ -277,7 +281,8 @@ class SimulationObject(ABC):
 
     if t not in self._no_sess_sims and session:
       sess_res = session.get_postrunres()
-      session.close()
+      if self.close:
+        session.close()
 
     if t not in self._simulate_results:
       self._simulate_results[t] = []

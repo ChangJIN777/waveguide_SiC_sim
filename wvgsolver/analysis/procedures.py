@@ -11,18 +11,19 @@ except:
 from ..utils.meep import U_A, U_K, U_F, U_T
 
 class FrequencySpectrum(Analysis):
-  def __init__(self, bbox, freqs, nmonitors=5, start_time=0):
+  def __init__(self, bbox, freqs, nmonitors=5, start_time=0,
+               name = None):
     self.nmonitors = nmonitors
     self.monitor_names = []
     for i in range(self.nmonitors):
-      self.monitor_names.append(randstring())
+      self.monitor_names.append(randstring() if name is None else name+str(i))
     self.bbox = bbox
     self.freqs = freqs
     self.start_time = start_time
 
   def _setup_lumerical(self, sess):
     for i in range(self.nmonitors):
-      r = np.random.random_sample((3, )) - 0.5
+      r = np.random.random_sample((3, )) * 0.5
       pos = self.bbox.pos + Vec3(r[0], r[1], r[2]) * self.bbox.size
       sess.fdtd.addtime(name=self.monitor_names[i], monitor_type=1, x=pos.x, y=pos.y,
       z=pos.z, output_Hx=False, output_Hy=False, output_Hz=False, min_sampling_per_cycle=10000)
@@ -33,24 +34,21 @@ class FrequencySpectrum(Analysis):
       sess.fdtd.delete()
 
   def _analyze_lumerical(self, sess):
-    sess.fdtd.putv("f", self.freqs)
-    script = """
-    mnames = {%s};
-    comps = {"Ex", "Ey", "Ez"};
-    fd = 0;
-    for(m=mnames) {
-      t = pinch(getdata(m, 't'));
-      for(comp=comps) {
-        msignal = pinch(getdata(m, comp)) * exp(-0.5*(t-max(t)*0.5)^2/((max(t)*0.25)^2));
-        fd = fd + abs(czt(msignal,t,2*pi*f)); 
-      }
-    }
 
-    """ % (", ".join([ "'" + s + "'" for s in self.monitor_names ]))
-    sess.fdtd.eval(script)
-
-    return sess.fdtd.getv("fd")
-
+    f = sess.fdtd
+    signal = 0
+    fd = 0
+    
+    for comp in ['Ex','Ey','Ez']:
+      for name in self.monitor_names:
+        field = f.pinch(f.getdata(name,comp))
+        t = f.pinch(f.getdata(name, 't'))
+        
+        msignal = field * f.exp(-0.5*(t-max(t)*0.5)**2/((max(t)*0.25)**2))
+        fd += abs(f.czt(msignal,t,2*f.pi()*self.freqs))
+        signal += field
+    return fd,signal,t
+  
   def _setup_eff1d(self, sess):
     pass
   
@@ -61,6 +59,39 @@ class FrequencySpectrum(Analysis):
     res = np.zeros(len(self.freqs))
     res[np.abs(self.freqs - sess.engine.mode_f).argmin()] = 1
     return res
+
+
+class QLumerical(FrequencySpectrum):
+  def __init__(self, bbox, freqs, start_time=0,**kwargs ):
+    super().__init__(bbox = bbox, freqs = freqs, start_time = start_time,
+                     **kwargs)
+
+  def _analyze_lumerical(self, sess):
+    fMin = min(self.freqs)
+    fMax = max(self.freqs)
+    tSourcesFinished = self.start_time
+    f = sess.fdtd
+
+    t = f.pinch(f.getdata(self.monitor_names[0],'t'))
+    tFilter = t > tSourcesFinished
+    combinedSignal = 0
+    for name in self.monitor_names:
+      for comp in ['Ex','Ey','Ez']:
+        sig = f.pinch(f.getresult(name,comp))
+        combinedSignal += sig
+    tCut = t[tFilter]
+    signalCut = combinedSignal[tFilter]
+
+    resonances = f.findresonances(tCut,signalCut,np.array([fMin,fMax]))
+    f0 = resonances[:,0]
+    Q = resonances[:,2]
+    amp = resonances[:,3]
+    err = resonances[:,5]
+    lda = (f.c()/f0)*10**9
+    
+    return f0,Q,lda,amp,err,t,combinedSignal
+    
+        
 
 class WaveEnergy(Analysis):
   def __init__(self, bbox, target_freq, start_time, downsample):
@@ -100,44 +131,32 @@ class WaveEnergy(Analysis):
     tm = self.time_monitor
     im = self.index_monitor
 
-    sess.fdtd.putv("freq", freq)
+    f = sess.fdtd
 
-    script = """
-    im = "%s";
-    index_x = pinch(getdata(im, "index_x"));
-    index_y = pinch(getdata(im, "index_y"));
-    index_z = pinch(getdata(im, "index_z"));
-    
-    tm = "%s";
-    Ex = getdata(tm, "Ex");
-    Ey = getdata(tm, "Ey");
-    Ez = getdata(tm, "Ez");
-    xv = getdata(tm, "x");
-    yv = getdata(tm, "y");
-    zv = getdata(tm, "z");
-    t = getdata(tm, "t");
+    sess.timeMonitor = tm
+    sess.indexMonitor = im
 
-    Tpoints = length(t);
+    Ex = f.getdata(tm,'Ex')
+    Ey = f.getdata(tm, "Ey")
+    Ez = f.getdata(tm, "Ez")
+    eps_x = f.getdata(im, "index_x")**2
+    eps_y = f.getdata(im, "index_y")**2
+    eps_z = f.getdata(im, "index_z")**2
+    t = f.getdata(tm, "t")[:,0]
+    xv = f.getdata(tm, "x")[:,0];
+    yv = f.getdata(tm, "y")[:,0];
+    zv = f.getdata(tm, "z")[:,0];
 
-    E = matrix(Tpoints);
-    E_maxdensity = matrix(Tpoints);
-    for(i=1:Tpoints) {
-        Edensity = (index_x^2 * (pinch(Ex, 4, i))^2 + index_y^2 * (pinch(Ey, 4, i))^2 + index_z^2 * (pinch(Ez, 4, i))^2);
-        E(i) = integrate(Edensity, 1:3, xv, yv, zv);
-        E_maxdensity(i) = max(Edensity);
-    }
+    from numpy import trapz
 
-    E_avg = real(eps0 * 0.5 * (max(E) + min(E)));
-    E_maxdensity_avg = real(eps0 * 0.5 * (max(E_maxdensity) + min(E_maxdensity)));
-    index_x_max = max(index_x);
-    index_y_max = max(index_y);
-    index_z_max = max(index_z);
-    """ % (im, tm)
+    Edensity = eps_x*abs(Ex[:,:,:])**2 + eps_y*abs(Ey[:,:,:])**2 + eps_z*abs(Ez[:,:,:])**2
+    Integral = trapz(trapz(trapz(Edensity,xv,axis=0),yv,axis=0),zv,axis=0)
 
-    sess.fdtd.eval(script)
-    return sess.fdtd.getv("E_avg"), sess.fdtd.getv("E_maxdensity_avg"), \
-      sess.fdtd.getv("index_x_max"), sess.fdtd.getv("index_y_max"), \
-      sess.fdtd.getv("index_z_max")
+    #workaround for the problems with strange peak values when using symmetries
+    EdensityMax = f.eps0()*np.array([np.sort(Edensity[:,:,:,i].flatten())[-4] for i in range(Edensity.shape[3])]).mean().real
+##    EdensityMax = f.eps0()*Edensity.max(axis = (0,1,2)).mean().real
+    return f.eps0()*Integral.mean().real, EdensityMax, \
+      eps_x.real.max()**0.5, eps_y.real.max()**0.5, eps_z.real.max()**0.5
   
   def set_resobj(self, En):
     self.En = En

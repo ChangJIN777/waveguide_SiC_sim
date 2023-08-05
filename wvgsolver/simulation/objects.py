@@ -1,7 +1,7 @@
 from ..geometry.sources import DipoleSource, ModeSource
 from ..utils.linalg import Vec3, BBox
 from ..utils.constants import F_EPSILON, AXIS_X, AXIS_Y, AXIS_Z, C_LIGHT
-from ..analysis.procedures import FrequencySpectrum, SideWavePower, WaveEnergy, WaveProfile, Transmission
+from ..analysis.procedures import *
 from .base import SimulationObject
 from ..parse.plotables import Bandstructure, EField, Quasipotential
 import logging
@@ -328,7 +328,10 @@ class Cavity1D(Waveguide):
   additional structures (such as a beam). All simulations on this cavity are performed by stacking the list of
   unit cells in the x dimension, centering this stack around the origin, and adding any additional structures.
   """
-  def __init__(self, unit_cells=[], structures=[], size=None, center_cell=None, center_shift=None, engine=None, load_path=None, metadata=None):
+  def __init__(self, unit_cells=[], structures=[], size=None, center_cell=None,
+               center_shift=None, engine=None, load_path=None, metadata=None,
+               component = 'Ey', boundaries = ['ymin'],
+               **kwargs):
     """
     Parameters
     ----------
@@ -355,17 +358,44 @@ class Cavity1D(Waveguide):
       data, including the list of unit cells, from that file
     metadata : any
       Any associated metadata
-    """
+    """ 
+    self.boundaries = boundaries
+    self.component = component
+    self.direction = 'x'
+    self._unit_cellsC = []
     
     self._unit_cells = unit_cells if isinstance(unit_cells, list) else [unit_cells]
     self._center_cell = center_cell
     self._center_shift = center_shift
     self._size_override = size
 
-    super().__init__(structures=structures, engine=engine, load_path=load_path, size=size, metadata=metadata)
+    super().__init__(structures=structures, engine=engine, load_path=load_path,
+                     size=size, metadata=metadata)
 
     self._default_sim_type = "resonance"
     self._no_sess_sims = ["quasipotential"]
+
+    self.getSymmetries()
+
+
+  def getSymmetries(self):
+    self.symmetries = []
+    for boundary in self.boundaries:
+      if boundary == 'xmin':
+        if self.component == 'Ey':
+          self.symmetries.append('symmetric')
+        else:
+          self.symmetries.append('antisymmetric')
+
+      if boundary == 'ymin':
+        if self.component == 'Ex':
+          self.symmetries.append('symmetric')
+        else:
+          self.symmetries.append('antisymmetric')
+
+      if boundary == 'zmin':
+        self.symmetries.append('symmetric')
+           
 
   def get_unit_cells(self):
     return self._unit_cells
@@ -477,7 +507,9 @@ class Cavity1D(Waveguide):
     return Quasipotential(output)
 
   def _simulate_resonance(self, sess, target_freq=400e12, source_pulselength=60e-15, analyze_fspan=3e14, \
-      analyze_time=590e-15, eref_time=80e-15, TEonly=True, sim_size=Vec3(2, 4, 4), energy_downsample=2):
+      analyze_time=590e-15, eref_time=80e-15, TEonly=True, sim_size=Vec3(2, 4, 4), energy_downsample=2,
+      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False):
+    
     """Simulate the cavity's resonance frequency and obtain directional Q factors, mode volume, and 
     electric field profile data. The simulation comprises of one dipole polarized along the y-axis
     in the center of the cavity, and all simulation results are calculated in the last 20 fs 
@@ -534,66 +566,288 @@ class Cavity1D(Waveguide):
       Finally, "eremain" is the approximate fraction of energy remaining in the simuation at the end.
     """
     size = self._getsize()
-    analyze_frange = (target_freq - analyze_fspan / 2, target_freq + analyze_fspan / 2)
+    
 
+
+    #sim region
     bbox = BBox(Vec3(0), size * sim_size)
 
-    sess.set_sim_region(size=bbox.size * Vec3(1.2, 1, 1), boundaries={
-      "ymin": "antisymmetric" if TEonly else "pml"
-    })
-    sess.set_sources(DipoleSource(f=target_freq, pulse_length=source_pulselength, pulse_offset=2.1*source_pulselength, pos=Vec3(0), axis=Vec3(0, 1, 0)))
+    boundariesDict = {self.boundaries[i]:self.symmetries[i] for i in range(len(self.boundaries))}
+    vecMultiplier = Vec3(1,1,1)
+    if len(self._unit_cells) > 0:
+      vecMultiplier.x = 1.2
+    if len(self._unit_cellsC) > 0:
+      vecMultiplier.y = 1.2
+    sess.set_sim_region(size=bbox.size * vecMultiplier, boundaries=boundariesDict)
+
+    #setting source
+
+    if self.component[1] == 'x':
+      axis = Vec3(1,0,0)
+    elif self.component[1] == 'y':
+      axis = Vec3(0,1,0)
+    elif self.component[1] == 'z':
+      axis = Vec3(0,0,1)
+
+    dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
+
+    if (target_freq is None) == False: 
+      sess.set_sources(DipoleSource(f=target_freq, pulse_length=source_pulselength, pulse_offset=2.1*source_pulselength,
+                                    pos=Vec3(0), axis=axis,dipole_type = dipole_type,
+                                    optimize_for_short_pulse = optimize_for_short_pulse))
+      deltaFreq = 0.44/source_pulselength
+      freq1 = target_freq-deltaFreq/2
+      freq2 = target_freq+deltaFreq/2
+      analyze_frange = (target_freq - analyze_fspan / 2, target_freq + analyze_fspan / 2)
+    else:
+      freq1Source = sess.fdtd.c()/(centerWl+0.5*deltaWl)
+      freq2Source = sess.fdtd.c()/(centerWl-0.5*deltaWl)
+      freq1Analysis = sess.fdtd.c()/(centerWl-4*deltaWl)
+      freq2Analysis = sess.fdtd.c()/(centerWl+4*deltaWl)
+      sess.set_sources(DipoleSource(frange = (freq1Source,freq2Source),
+                                    pulse_offset=2.1*6e-15,
+                                    pos=Vec3(0), axis=axis,dipole_type = dipole_type,
+                                    optimize_for_short_pulse = optimize_for_short_pulse))
+      target_freq = sess.fdtd.c()/centerWl
+      analyze_frange = (freq1Analysis,freq2Analysis)
+      
     sess.set_sim_time(analyze_time + 5 / target_freq)
 
     st = analyze_time
 
+    if self.direction == 'x':
+      bboxMultiplier = Vec3(0.3,0,0)
+    else:
+      bboxMultiplier = Vec3(0,0.3,0)
+        
     spectrum_freqs = np.linspace(analyze_frange[0], analyze_frange[1], 100000)
     analysis = {
-      "res": FrequencySpectrum(BBox(bbox.pos, size*Vec3(0.3, 0, 0)), spectrum_freqs),
-      "eref": WaveEnergy(bbox, target_freq, eref_time, energy_downsample),
+      "res": FrequencySpectrum(BBox(bbox.pos, size*bboxMultiplier), spectrum_freqs),
+      "resLumerical": QLumerical(BBox(bbox.pos, size*bboxMultiplier), spectrum_freqs,
+                               name = 'resLum',start_time = 400e-15,nmonitors=5),
+##      "eref": WaveEnergy(bbox, target_freq, eref_time, energy_downsample),
       "e": WaveEnergy(bbox, target_freq, st, energy_downsample),
-      "pxmin": SideWavePower(bbox, AXIS_X, -1, st, target_freq),
       "pxmax": SideWavePower(bbox, AXIS_X, 1, st, target_freq),
       "pymax": SideWavePower(bbox, AXIS_Y, 1, st, target_freq),
-      "pzmin": SideWavePower(bbox, AXIS_Z, -1, st, target_freq),
       "pzmax": SideWavePower(bbox, AXIS_Z, 1, st, target_freq),
-      "xyprofile": WaveProfile(BBox(bbox.pos + Vec3(0, 0, 0.45*size.z), bbox.size), AXIS_Z, st, target_freq),
+      "xyprofile": WaveProfile(BBox(bbox.pos + Vec3(0, 0, 0), bbox.size), AXIS_Z, st, target_freq),
       "yzprofile": WaveProfile(bbox, AXIS_X, st, target_freq),
     }
-    if not TEonly:
-      analysis["pymin"] = SideWavePower(bbox, AXIS_Y, -1, st, target_freq)
+    for i in ['xmin','ymin','zmin']:
+      if i not in self.boundaries:
+        if i == 'ymin':
+          analysis["pymin"] = SideWavePower(bbox, AXIS_Y, -1, st, target_freq)
+          
+        elif i == 'xmin':
+          analysis["pxmin"] = SideWavePower(bbox, AXIS_X, -1, st, target_freq)
+          
+        elif i == 'zmin':
+          analysis["pzmin"] = SideWavePower(bbox, AXIS_Z, -1, st, target_freq)
     
     sess.run(analysis, analyze=False)
 
-    res = sess.analyze("res")
+    res,signal,t = sess.analyze("res")
     freq = spectrum_freqs[np.argmax(res)]
-
+    freqLum,Qlum,ldaLum,ampLum,errLum,tLum,signalLum = sess.analyze('resLumerical')
+    
     e, edensity, index_x,_,_ = sess.analyze("e", freq = freq)
-    eref,_,_,_,_ = sess.analyze("eref", freq = freq)
+##    eref,_,_,_,_ = sess.analyze("eref", freq = freq)
 
     vmode = (e / edensity) / (C_LIGHT / (freq * index_x))**3
 
-    qxmin = 2*np.pi*freq*e/sess.analyze("pxmin")
-    qxmax = 2*np.pi*freq*e/sess.analyze("pxmax")
-    if not TEonly:
-      qymin = 2*np.pi*freq*e/sess.analyze("pymin")
+    self.savedResults = {'e':e,
+                         'edensity':edensity,
+                         'res':res,
+                         'spectrum_freqs':spectrum_freqs,
+                         'signal':signal,
+                         't':t,
+                         'tLum':tLum,
+                         'signalLum':signalLum,
+                         'ampLum':ampLum,
+                         'errLum':errLum}
+
+    qxmax = 2*np.pi*freq*e/sess.analyze("pxmax")    
     qymax = 2*np.pi*freq*e/sess.analyze("pymax")
-    qzmin = 2*np.pi*freq*e/sess.analyze("pzmin")
     qzmax = 2*np.pi*freq*e/sess.analyze("pzmax")
+    
     xyprofile = sess.analyze("xyprofile")
     yzprofile = sess.analyze("yzprofile")
 
+    self.savedResults['xyprofile'] = xyprofile
+    self.savedResults['yzprofile'] = yzprofile
+
     output = {
       "freq": freq,
-      "qxmin": qxmin,
       "qxmax": qxmax,
       "qymax": qymax,
-      "qzmin": qzmin,
       "qzmax": qzmax,
       "vmode": vmode,
       "eremain": e,
       "xyprofile": EField(xyprofile, ("x", "y")),
-      "yzprofile": EField(yzprofile, ("y", "z"))
+      "yzprofile": EField(yzprofile, ("y", "z")),
+      'freqLum':freqLum,
+      'Qlum':Qlum,
+      'ldaLum':ldaLum
     }
-    if not TEonly:
+
+    if 'ymin' not in self.boundaries:
+
+      qymin = 2*np.pi*freq*e/sess.analyze('pymin')
       output["qymin"] = qymin
+    else:
+      output["qymin"] = qymax
+
+    if 'xmin' not in self.boundaries:
+      qxmin = 2*np.pi*freq*e/sess.analyze('pxmin')
+      output["qxmin"] = qxmin
+    else:
+      output["qxmin"] = qxmax
+      
+    if 'zmin' not in self.boundaries:
+      qzmin = 2*np.pi*freq*e/sess.analyze('pzmin')
+      output["qzmin"] = qzmin
+    else:
+      output["qzmin"] = qzmax
+    
     return output
+
+class Crossbeam(Cavity1D):
+    def __init__(self,
+                 unit_cells=[],
+                 structures=[],
+                 unit_cellsC=[],
+                 structuresC=[],
+                 size=None,
+                 center_cell=None,
+                 center_shift=None,
+                 engine=None,
+                 load_path=None,
+                 metadata=None,
+                 cavity_gap = 0,
+                 cavity_gapC = 0,
+                 component = 'Ey',
+                 direction = 'x',
+                 **kwargs):
+
+      super().__init__(unit_cells=unit_cells, structures=structures,
+                       size=size, center_cell=center_cell, center_shift=center_shift,
+                       engine=engine, load_path = load_path, metadata = metadata,
+                       component = component,**kwargs)
+
+      self._unit_cellsC = unit_cellsC if isinstance(unit_cellsC, list) else [unit_cellsC]
+      self._structuresC = structuresC
+      self.cavity_gap = cavity_gap
+      self.cavity_gapC = cavity_gapC
+      self.direction = direction
+
+      
+    def get_structuresY(self, sim_type=None):
+    
+      if len(self._unit_cellsC) < 1:
+        return [ s.copy() for s in self._structuresC]
+    
+      center_cell = self._center_cell
+      if center_cell is None:
+        center_cell = int(len(self._unit_cellsC) / 2) - 1
+
+      center_shift = self._center_shift
+      if center_shift is None:
+        center_shift = 0
+        if len(self._unit_cellsC) % 2 == 1:
+          center_shift = -self._unit_cellsC[int(len(self._unit_cellsC) / 2)].get_size().y / 2
+  
+      structs = []
+      offset = Vec3(0)
+      shift = 0
+      for i in range(len(self._unit_cellsC)):
+        c = self._unit_cellsC[i]
+        ysize = c.get_size().y
+        for s in c.get_structures():
+          copy_s = s.copy()
+          if i <= center_cell:
+            copy_s.pos += offset + Vec3(0, ysize/2, 0) - Vec3(0,self.cavity_gapC/2,0)
+          else:
+            copy_s.pos += offset + Vec3(0, ysize/2, 0) + Vec3(0,self.cavity_gapC/2,0)
+          structs.append(copy_s)
+        
+        if i <= center_cell:
+          shift += ysize
+        offset.y += ysize
+
+      for s in structs:
+        s.pos.y -= shift - center_shift
+
+      for s in self._structuresC:
+        copy_s = s.copy()
+        structs.append(copy_s)
+      
+      return structs
+
+    def get_structuresX(self, sim_type=None):
+      if len(self._unit_cells) < 1:
+        return [ s.copy() for s in self._structures ]
+      
+      center_cell = self._center_cell
+      if center_cell is None:
+        center_cell = int(len(self._unit_cells) / 2) - 1
+
+      center_shift = self._center_shift
+      if center_shift is None:
+        center_shift = 0
+        if len(self._unit_cells) % 2 == 1:
+          center_shift = -self._unit_cells[int(len(self._unit_cells) / 2)].get_size().x / 2
+
+      structs = []
+      offset = Vec3(0)
+      shift = 0
+      for i in range(len(self._unit_cells)):
+        c = self._unit_cells[i]
+        xsize = c.get_size().x
+        for s in c.get_structures():
+          copy_s = s.copy()
+          if i <= center_cell:
+            copy_s.pos += offset + Vec3(xsize/2, 0, 0) - Vec3(self.cavity_gap/2,0,0)
+          else:
+            copy_s.pos += offset + Vec3(xsize/2, 0, 0) + Vec3(self.cavity_gap/2,0,0)
+          structs.append(copy_s)
+
+        if i <= center_cell:
+          shift += xsize
+        offset.x += xsize
+      for s in structs:
+        s.pos.x -= shift - center_shift
+
+      for s in self._structures:
+        copy_s = s.copy()
+        structs.append(copy_s)
+
+      return structs
+
+    def get_structures(self, sim_type=None):
+      return self.get_structuresX() + self.get_structuresY()
+
+    def _getsize(self):
+      if self._size_override:
+        return self._size_override
+
+      x = 0
+      y = 0
+      z = 0
+
+      for c in self._unit_cells:
+      
+        size = c.get_size()
+        x += size.x
+        y = max(y, size.y)
+        z = max(z, size.z)
+
+      if len(self._unit_cellsC)> 0:
+        y = 0
+      for c in self._unit_cellsC:
+      
+        size = c.get_size()
+        x = max(x, size.x)
+        y += size.y
+        z = max(z, size.z)
+
+      return Vec3(x, y, z)

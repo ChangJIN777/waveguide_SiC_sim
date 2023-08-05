@@ -10,17 +10,24 @@ except:
   pass
 
 class DipoleSource(Source):
-  def __init__(self, frange=None, f=None, pulse_length=None, pulse_offset=None, pos=Vec3(0.0), axis=Vec3(0.0, 0.0, 1.0), phase=0.0):
+  def __init__(self, frange=None, f=None, pulse_length=None, pulse_offset=None, pos=Vec3(0.0),
+               axis=Vec3(0.0, 0.0, 1.0), phase=0.0,dipole_type = 'Electric dipole',
+               optimize_for_short_pulse = True):
     super().__init__(pos, frange, f, pulse_length, pulse_offset)
     self.axis = axis
     self.phase = phase
+    self.dipole_type = dipole_type
+    self.optimize_for_short_pulse = optimize_for_short_pulse
 
   def _add_lumerical(self, session):
     theta, phi = axis_to_spherical(self.axis)
 
-    dipole = session.fdtd.adddipole(theta=theta, phi=phi, phase=180*self.phase/np.pi)
+    dipole = session.fdtd.adddipole(theta=theta, phi=phi, phase=180*self.phase/np.pi,dipole_type=self.dipole_type)
     self._config_freq_lumerical(dipole)
-
+    dipole.dipole_type = self.dipole_type
+    print(self.optimize_for_short_pulse)
+    dipole.optimize_for_short_pulse = self.optimize_for_short_pulse
+    
   def _add_eff1d(self, session):
     if self.frange is not None:
       frange = self.frange

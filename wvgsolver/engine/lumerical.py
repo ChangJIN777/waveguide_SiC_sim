@@ -84,15 +84,20 @@ class LumericalSession(Session):
     self.fsp_data = None
 
     self.fdtd = self.engine.lumapi.FDTD(hide=self.engine.hide, serverArgs={ "timeoutdasda": "0" })
+
     self.fdtd.addstructuregroup(name=self.structures_group)
     self.fdtd.addgroup(name=self.sources_group)
     self.fdtd.addgroup(name=self.mesh_regions_group)
     self.sim_region = self.fdtd.addfdtd(mesh_accuracy=self.engine.mesh_accuracy, use_early_shutoff=False)
+    self.fdtd.set('force symmetric x mesh',True)
+    self.fdtd.set('force symmetric y mesh',True)
+    self.fdtd.set('force symmetric z mesh',True)
     self.sim_region.pml_profile = 4
     self.sim_region.pml_min_layers = self.engine.pml_layers
     self.sim_region.pml_max_layers = self.engine.pml_layers
 
   def _set_mesh_regions(self, regions=[]):
+
     self.fdtd.switchtolayout()
     self.fdtd.groupscope(self.mesh_regions_group)
     self.fdtd.deleteall()
@@ -100,9 +105,11 @@ class LumericalSession(Session):
     for r in regions:
       r.add(self)
     
+
     self.fdtd.groupscope("::model")
 
   def close(self):
+    
     if self.fdtd is not None:
       self.fdtd.close()
 
