@@ -13,6 +13,11 @@ import os
 from datetime import datetime
 
 from waveguideSolver_funcs import *
+from cavity_sim_parameters import * 
+
+# import the cavity and simulation parameters 
+cavity_params = cavity_sim_parameters.cavity_params
+sim_params = cavity_sim_parameters.sim_params
 
 r1 = sim_ellipticalCavity_v2(cavity_params,sim_params)
 
