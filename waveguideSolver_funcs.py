@@ -13,63 +13,6 @@ import os
 from datetime import datetime
 import csv
 
-#lattice constant
-a = 2.90e-07
-#hole diameter in the x direction 
-hx = 7.076170823568784e-08
-hx /= 2
-#hole diameter in the y direction 
-hy = 1.730259002115936e-07
-hy /= 2
-#define the useful constants 
-n_f = 2.6 # for SiC
-# the beam height 
-h0 = 500e-9 # adapted for the new SiC wafers 
-d_0 = 0.64 # the default radius prefactor
-w0= 5.005507792174242e-07 #beam width
-w_0 = 1.75 
-# default engine 
-# Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations
-# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
-FDTDloc='C:/Program Files/Lumerical/v221/' # for running on the local desktop
-engine = LumericalEngine(mesh_accuracy=5, hide=True, lumerical_path=FDTDloc, save_fsp=False)
-# default location of the data files 
-file_loc = "./sim_data/"
-#taper prefactor (for the defect region)
-t = 0.818
-amin = a*t
-#taper prefactor (for the waveguide region)
-t_wvg = 0.852
-#beam height (set by epi-layer thickness)
-h0 = 250e-9
-# cavity beam length
-l = 15e-6
-# The target resonance frequency, in Hz
-# 916nm = 327.3e12
-target_frequency = 327.3e12
-#the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 0.965
-#the refractive index associated with the material 
-n_f = 2.6
-#the unit cell number in the left mirror region 
-MN_L = 10 
-#the unit cell number in the right mirror region 
-MN_R = 3
-#the unit cell number in the tapering region 
-TN = 6
-#the number of cells in the waveguide region
-WN = 3
-#the minimum radius prefactor we are tapering to 
-d_min = 0.437
-hxmin_wvg = d_min*hx
-hymin_wvg = d_min*hy
-#target wavelength 
-target_wavelength = 916e-9 
-#set the center of the device
-centerCell = MN_L+TN-1 
-man_mesh = MeshRegion(BBox(Vec3(0),Vec3(4e-6,2e-6,2e-6)), 15e-9, dy=None, dz=None)
-
-
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
     """
@@ -140,7 +83,7 @@ def buildTapering_asymmetric_v2(a_L,a_R,amin,TN_L,TN_R):
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
-def buildWaveguideRegion_right(a,hx,hy,w0,t_wvg,WN,h0=h0,n_f=n_f,engine=engine):
+def buildWaveguideRegion_right(a,hx,hy,w0,t_wvg,WN,h0,n_f,engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity
     
     Args:
@@ -206,7 +149,7 @@ def buildTaperRegion(a_L,a_R,amin,d,w,h0,n_f,TN,engine):
         taper_cells += [UnitCell(structures=[ taper_box, taper_hole ], size=Vec3(i,w0,h0), engine=engine)]
     return taper_cells
 
-def buildUnitCell(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def buildUnitCell(a,d,w,h0,n_f,engine):
     """the function use the given parameters to build a unit cell 
 
     Args:
@@ -227,7 +170,7 @@ def buildUnitCell(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
-def sim_bandGap_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
+def sim_bandGap_elliptical(a,hx,hy,w0,h0,n_f,engine):
     """the function generates the bandgap associated with the simulated unit cell
 
     Args:
@@ -268,7 +211,7 @@ def sim_bandGap_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
 
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg
 
-def sim_bandGap(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def sim_bandGap(a,d,w,h0,n_f,engine):
     """the function generates the bandgap associated with the simulated unit cell
 
     Args:
@@ -306,7 +249,7 @@ def sim_bandGap(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
 
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k
 
-def band_structure(a,d,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def band_structure(a,d,w,h0,n_f,engine):
     
     start_time = datetime.now()
     cell = buildUnitCell(a,d,w,h0,n_f,engine)
@@ -359,7 +302,7 @@ def unitCellOptimization_SiC(params):
     return fitness
 
 # simulating the unit cell band structures
-def bandStructSim(a,d,w,n_f,fmin,fmax,f_grating,kmin,kmax,knum,engine,h0=250e-9):
+def bandStructSim(a,d,w,n_f,fmin,fmax,f_grating,kmin,kmax,knum,engine,h0):
     """this function simulate the band structure of a unit cell with parameters given by the inputs
         a: the lattice constant 
         d: hole diameter prefactor 
@@ -404,13 +347,13 @@ def unitCellOptimization_SiC(params):
     record_data(data,file_name)
     return detuning
 
-def record_data(data,file_name,file_loc=file_loc):
+def record_data(data,file_name,file_loc):
     denstination = file_loc + file_name
     with open(denstination,"a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow(data)
         
-def buildWaveguideRegion_right_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def buildWaveguideRegion_right_v2(a,d,d_min,t_wvg,WN,w,h0,n_f,engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
     
     Args:
@@ -436,7 +379,7 @@ def buildWaveguideRegion_right_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
     return waveguide_cells_R
 
-def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=engine):
+def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w,h0,n_f,engine):
     """Function used to generate a cubic tapered waveguide region to be added to the left side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
     
     Args:
@@ -461,7 +404,7 @@ def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w=w_0,h0=h0,n_f=n_f,engine=e
         waveguide_cells_L += [UnitCell(structures=[ waveguide_box_L, waveguide_hole_L ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
     return waveguide_cells_L
 
-def buildUnitCell_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
+def buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine):
     """the function use the given parameters to build a unit cell with elliptical holes
 
     Args:
@@ -481,7 +424,7 @@ def buildUnitCell_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
     cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
-def buildMirrorRegion_elliptical(a,hx,hy,MN,w0,h0=h0,n_f=n_f,engine=engine):
+def buildMirrorRegion_elliptical(a,hx,hy,MN,w0,h0,n_f,engine):
     """the function used to build mirriro region with elliptical holes
 
     Args:
@@ -498,7 +441,7 @@ def buildMirrorRegion_elliptical(a,hx,hy,MN,w0,h0=h0,n_f=n_f,engine=engine):
     mirror_cells = [mirror_cell] * MN
     return mirror_cells
 
-def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0=h0,n_f=n_f,engine=engine):
+def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
     """the function used to build taper region with elliptical holes
 
     Args:
@@ -520,7 +463,7 @@ def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0=h0,n_f=n_f,engine=en
         taper_cells += [temp_cell]
     return taper_cells
 
-def buildTaperRegion_elliptical_asymmetric(a_L,a_R,amin,hx,hy,TN_L,TN_R,w0,h0=h0,n_f=n_f,engine=engine):
+def buildTaperRegion_elliptical_asymmetric(a_L,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,engine):
     """the function used to build taper region with elliptical holes
 
     Args:
@@ -598,7 +541,7 @@ def unitCellOptimization_SiC_waveguide_elliptical(params):
     record_data(data,file_name)
     return detuning
 
-def band_structure_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
+def band_structure_elliptical(a,hx,hy,w0,h0,n_f,engine):
     """This function simulate the band structure of the unit cells with elliptical holes 
 
     Args:
@@ -621,7 +564,7 @@ def band_structure_elliptical(a,hx,hy,w0,h0=h0,n_f=n_f,engine=engine):
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
 
-def buildWaveguideRegion_elliptical_right(a,hx,hy,t_wvg,WN,w0,h0=h0,n_f=n_f,engine=engine):
+def buildWaveguideRegion_elliptical_right(a,hx,hy,t_wvg,WN,w0,h0,n_f,engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity
     
     Args:
@@ -646,7 +589,7 @@ def buildWaveguideRegion_elliptical_right(a,hx,hy,t_wvg,WN,w0,h0=h0,n_f=n_f,engi
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
     return waveguide_cells_R
 
-def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
     
     Args:
@@ -673,7 +616,7 @@ def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w
         waveguide_cells_R += [wvg_unitcell]
     return waveguide_cells_R
 
-def buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+def buildWaveguideRegion_elliptical_left_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine):
     """Function used to generate a cubic tapered waveguide region to be added to the left side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
     
     Args:
@@ -1066,7 +1009,7 @@ def sweep_cellNum_ellipticalCavity(param):
     
     return -1*fitness
 
-def sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+def sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0,h0,n_f,engine):
     """this function sweeps through the hy associated with the cavity and calculate the associated Q
 
     Args:
@@ -1167,7 +1110,7 @@ def sim_ellipticalCavity(a,hx,hx_min,hy,hy_min,t,t_wvg,WN,w0=w0,h0=h0,n_f=n_f,en
     
     return 
 
-def sim_ellipticalCavity_coarse_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_name,MN_L,MN_R,TN,WN=WN,w0=w0,h0=h0,n_f=n_f,engine=engine):
+def sim_ellipticalCavity_coarse_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_name,MN_L,MN_R,TN,WN,w0,h0,n_f,engine):
     """this function sweeps through the hy associated with the cavity and calculate the associated Q
 
     Args:
@@ -1231,21 +1174,30 @@ def sim_ellipticalCavity_coarse_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequenc
 
     return r1
 
-def report_results(r1,file_name):
+def report_results(r1,cavity_params,sim_params,file_name,file_loc):
     """
         this function take the simulation result object then report and save all of its properties
 
         Args:
         r1 (struct): data structure that contains all the simulation results 
     """
-     # Print the reults and plot the electric field profiles
+    # load the cavity parameters
+    target_frequency = sim_params["target_frequency"]
+    TN = cavity_params["TN"]
+    t = cavity_params["C_lattice_tapering_prefactor"]
+    w0 = cavity_params["beam_width"]
+    MN_R = cavity_params["MN_Right"]
+    a = cavity_params["a"]
+    hx = cavity_params["hx"]
+    hy = cavity_params["hy"]
+
+    # Print the reults and plot the electric field profiles
     print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
         r1["freq"], r1["vmode"],
         1/(1/r1["qxmin"] + 1/r1["qxmax"]),
         1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     ))
 
-    cavity = Cavity1D(load_path="cavity.obj",engine=engine)
     Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
     Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     Qxmin = r1["qxmin"]
@@ -1261,6 +1213,7 @@ def report_results(r1,file_name):
     F = r1["freq"]
     resonance_f = float(F) # the resonance frequency 
     resonance_wavelength=(3e8)/resonance_f # the resonance wavelength 
+    target_wavelength = (3e8)/target_frequency # the resulting wavelength
     detuning_wavelength = target_wavelength-resonance_wavelength
     detuning_wavelength_nm = detuning_wavelength*1e9
     delta_wavelength = 5e-9 # 5nm tolerance 
@@ -1270,11 +1223,9 @@ def report_results(r1,file_name):
     P = (Q*Qsc) / (Vmode*Vmode)
     print("Q: %f, P: %f, detuning: %f nm" % ( Q, P, detuning_wavelength_nm))
 
-    r1 = cavity.get_results("resonance")[-1]
-        
     # record the data 
     data = [TN,MN_R,a,hx,hy,t,w0,Vmode,Qwvg,Qsc,Qxmin,Qxmax,Qy,Qz,Q,F,detuning_wavelength,resonance_wavelength]
-    record_data(data,file_name)
+    record_data(data,file_name,file_loc)
     
 def check_detuning(r1,source_frequency,cavity_params,sim_params):
     """
@@ -1283,7 +1234,7 @@ def check_detuning(r1,source_frequency,cavity_params,sim_params):
         Args:
         r1 (struct): data structure that contains all the simulation results 
     """
-    freq = r1["freq"]
+    freq = r1["res"]["freq"]
     wavelen_pen = np.exp(-((source_frequency - freq) / 4e12) ** 2)
     rerun_thresh = 0.90
     if wavelen_pen < rerun_thresh:
@@ -1296,6 +1247,8 @@ def check_detuning(r1,source_frequency,cavity_params,sim_params):
         sim_params['source frequency'] = freq
         witness_rerun = sim_ellipticalCavity_v2(cavity_params, sim_params)
         return witness_rerun
+    else:
+        return r1
 
 def setup_engine(sim_params):
     """
@@ -1326,16 +1279,23 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
     hx = cavity_params["hx"]
     hy = cavity_params["hy"]
     MN_L = cavity_params["MN_Left"]
+    MN_R = cavity_params["MN_Right"]
+    WN = cavity_params["WN"]
+    t_wvg = cavity_params["WG_lattice_tapering_prefactor"]
     w0 = cavity_params["beam_width"]
     h0 = cavity_params["thickness"]
     l = cavity_params["cavity_length"]
     n_f = cavity_params["n_refractive"]
     d_min = cavity_params["WG_hole_tapering_prefactor"]
+    t = cavity_params["C_lattice_tapering_prefactor"]
+    TN = cavity_params["TN"]
+    prefactor_mirror_R = cavity_params["M_lattice_prefactor"]
     engine, man_mesh = setup_engine(sim_params)
     hxmin_wvg = d_min*hx
     hymin_wvg = d_min*hy
     # default location of the data files 
     file_loc = sim_params["simulationData_loc"]
+    file_name = sim_params["simulationData_fileName"]
     # The target resonance frequency, in Hz
     # 916nm = 327.3e12 Hz
     target_frequency = sim_params["target_frequency"]
@@ -1370,12 +1330,9 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
     # By setting the save path here, the cavity will save itself after each simulation to this file
     cavity.save("cavity.obj")
 
-    # simulating the resonance and the Q #########################################################
+    # simulating the resonance and the Q 
     r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8))
     
-    # check detuning (prevent unrealistically small mode volumn)
-    # r1 = check_detuning(r1,target_frequency,cavity_params,sim_params)
-
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
 
@@ -1389,27 +1346,35 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
     r1["yzprofile"].show()
 
     cavity = Cavity1D(load_path="cavity.obj",engine=engine)
-    Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
-    Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
-    Vmode = r1["vmode"]
-    F = r1["freq"]
-
-    # for debugging the Q 
-    Qx1 = r1["qxmin"]
-    Qx2 = r1["qxmax"]
-    Qy = 1 / (2 / r1["qymax"])
-    Qz = 1 / (1 / r1["qzmin"] + 1 / r1["qzmax"])
-    print("Qx1: %f, Qx2: %f, Qy: %f, Qz: %f" % (
-        Qx1, Qx2, Qy, Qz
-    ))
-
-    Q = 1/((1/Qsc) + (1/Qwvg))
-    P = (Q*Qsc) / (Vmode*Vmode)
-    print("Q: %f, P: %f" % ( Q, P))
-
     r1 = cavity.get_results("resonance")[-1]
-    print(r1['res']["xyprofile"].max_loc())
-    print(r1['res']["yzprofile"].max_loc())
-    r1["sess_res"].show()
+
+    # check detuning (prevent unrealistically small mode volumn)
+    r1 = check_detuning(r1,target_frequency,cavity_params,sim_params)
+    # report and save the results 
+    report_results(r1['res'],cavity_params,sim_params,file_name,file_loc)
+
+    # cavity = Cavity1D(load_path="cavity.obj",engine=engine)
+    # Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
+    # Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    # Vmode = r1["vmode"]
+    # F = r1["freq"]
+
+    # # for debugging the Q 
+    # Qx1 = r1["qxmin"]
+    # Qx2 = r1["qxmax"]
+    # Qy = 1 / (2 / r1["qymax"])
+    # Qz = 1 / (1 / r1["qzmin"] + 1 / r1["qzmax"])
+    # print("Qx1: %f, Qx2: %f, Qy: %f, Qz: %f" % (
+    #     Qx1, Qx2, Qy, Qz
+    # ))
+
+    # Q = 1/((1/Qsc) + (1/Qwvg))
+    # P = (Q*Qsc) / (Vmode*Vmode)
+    # print("Q: %f, P: %f" % ( Q, P))
+
+    # r1 = cavity.get_results("resonance")[-1]
+    # print(r1['res']["xyprofile"].max_loc())
+    # print(r1['res']["yzprofile"].max_loc())
+    # r1["sess_res"].show()
 
     return r1

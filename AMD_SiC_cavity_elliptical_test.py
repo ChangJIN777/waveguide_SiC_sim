@@ -19,5 +19,5 @@ from cavity_sim_parameters import *
 cavity_params = cavity_sim_parameters.cavity_params
 sim_params = cavity_sim_parameters.sim_params
 
+r1 = dict()
 r1 = sim_ellipticalCavity_v2(cavity_params,sim_params)
-

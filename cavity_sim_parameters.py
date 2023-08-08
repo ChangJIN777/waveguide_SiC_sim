@@ -30,7 +30,7 @@ class cavity_sim_parameters:
         "C_lattice_tapering_prefactor": 0.852, # For the cavity region: the prefactor that defines the minimum lattice constant in the cavity region 
         "WG_lattice_tapering_prefactor": 0.852, # For the waveguide region: the prefactor that defines the minimum lattice constant in the waveguide region 
         "cavity_length": 20e-6, # the length of the device (most be larger than the simulation size)
-        "M_lattice_tapering_prefactor": 0.965 # For the weaker mirror region: the prefactor that specifies the lattice constants of the weaker mirror region 
+        "M_lattice_prefactor": 0.965 # For the weaker mirror region: the prefactor that specifies the lattice constants of the weaker mirror region 
     }
         
     sim_params = {
@@ -41,10 +41,11 @@ class cavity_sim_parameters:
         "hide_GUI": False, # specify if we are going to hide the guide 
         "save_fsps": True, # specify if we are going to save the fsps file 
         "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
+        "simulationData_fileName": "SiC_500nm_testRun_t1.txt",
         "mesh_res": 20e-9, # specify the resolution of the meshing we are using 
         "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
         "running_cluster": False, # specify if we are running the code on the cluster 
         "running_local": True, # specify if we are running on local PC
-        "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
+        "mesh_accuracy": 1, # specify the mesh accuracy of the engine 
         "boundary_condition": ['ymin','zmin'] # specify the symmetry to save time on simulation
     }
