@@ -39,7 +39,7 @@ class cavity_sim_parameters:
         "FDTDloc_local": 'C:/Program Files/Lumerical/v221/', # the location of the FDTD engine on local PC
         "FDTDloc_cluster": "/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/", # the location of the FDTD engine on the cluster
         "hide_GUI": False, # specify if we are going to hide the guide 
-        "save_fsps": True, # specify if we are going to save the fsps file 
+        "save_fsps": False, # specify if we are going to save the fsps file 
         "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
         "simulationData_fileName": "SiC_500nm_testRun_t1.txt",
         "mesh_res": 20e-9, # specify the resolution of the meshing we are using 
@@ -47,5 +47,6 @@ class cavity_sim_parameters:
         "running_cluster": False, # specify if we are running the code on the cluster 
         "running_local": True, # specify if we are running on local PC
         "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
-        "boundary_condition": ['ymin','zmin'] # specify the symmetry to save time on simulation
+        "boundary_condition": ['ymin','zmin'], # specify the symmetry to save time on simulation
+        "show_field_profile": False
     }

@@ -1342,8 +1342,9 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
         1/(1/r1["qxmin"] + 1/r1["qxmax"]),
         1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
     ))
-    r1["xyprofile"].show()
-    r1["yzprofile"].show()
+    if sim_params["show_field_profile"]:
+        r1["xyprofile"].show()
+        r1["yzprofile"].show()
 
     cavity = Cavity1D(load_path="cavity.obj",engine=engine)
     r1 = cavity.get_results("resonance")[-1]

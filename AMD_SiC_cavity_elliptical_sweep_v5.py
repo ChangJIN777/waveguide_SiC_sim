@@ -26,7 +26,10 @@ file_name = "holeDimSweep_500nm_trial1.csv"
 # import the cavity and simulation parameters 
 cavity_params = cavity_sim_parameters.cavity_params
 sim_params = cavity_sim_parameters.sim_params
-cavity_params["simulationData_fileName"] = file_name
+# setup the simulation 
+sim_params["simulationData_fileName"] = file_name
+sim_params["hide_GUI"] = True
+sim_params["save_fsps"] = False
 
 # sweeping the unit cell parameters
 hx_list = np.linspace(50e-09,100e-09,10)
