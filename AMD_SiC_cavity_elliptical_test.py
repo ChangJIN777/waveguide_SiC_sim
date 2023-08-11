@@ -19,6 +19,7 @@ from cavity_sim_parameters import *
 cavity_params = cavity_sim_parameters.cavity_params
 sim_params = cavity_sim_parameters.sim_params
 sim_params["show_field_profile"] = True
+sim_params["save_fsps"] = True
 
 # testing the hole sizes 
 cavity_params["hx"] = 8.889e-08
