@@ -1354,28 +1354,4 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
     # report and save the results 
     report_results(r1['res'],cavity_params,sim_params,file_name,file_loc)
 
-    # cavity = Cavity1D(load_path="cavity.obj",engine=engine)
-    # Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
-    # Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
-    # Vmode = r1["vmode"]
-    # F = r1["freq"]
-
-    # # for debugging the Q 
-    # Qx1 = r1["qxmin"]
-    # Qx2 = r1["qxmax"]
-    # Qy = 1 / (2 / r1["qymax"])
-    # Qz = 1 / (1 / r1["qzmin"] + 1 / r1["qzmax"])
-    # print("Qx1: %f, Qx2: %f, Qy: %f, Qz: %f" % (
-    #     Qx1, Qx2, Qy, Qz
-    # ))
-
-    # Q = 1/((1/Qsc) + (1/Qwvg))
-    # P = (Q*Qsc) / (Vmode*Vmode)
-    # print("Q: %f, P: %f" % ( Q, P))
-
-    # r1 = cavity.get_results("resonance")[-1]
-    # print(r1['res']["xyprofile"].max_loc())
-    # print(r1['res']["yzprofile"].max_loc())
-    # r1["sess_res"].show()
-
     return r1

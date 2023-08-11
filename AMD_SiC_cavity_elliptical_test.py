@@ -18,6 +18,10 @@ from cavity_sim_parameters import *
 # import the cavity and simulation parameters 
 cavity_params = cavity_sim_parameters.cavity_params
 sim_params = cavity_sim_parameters.sim_params
+sim_params["show_field_profile"] = True
 
-r1 = dict()
+# testing the hole sizes 
+cavity_params["hx"] = 8.889e-08
+cavity_params["hy"] = 1.167e-07
+
 r1 = sim_ellipticalCavity_v2(cavity_params,sim_params)
