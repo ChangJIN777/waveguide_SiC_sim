@@ -21,8 +21,7 @@ sim_params = cavity_sim_parameters.sim_params
 sim_params["show_field_profile"] = True
 sim_params["save_fsps"] = True
 
-# testing the hole sizes 
-cavity_params["hx"] = 8.889e-08
-cavity_params["hy"] = 1.167e-07
+# improve the mesh resolution
+sim_params["mesh_res"] = 12e-9
 
 r1 = sim_ellipticalCavity_v2(cavity_params,sim_params)

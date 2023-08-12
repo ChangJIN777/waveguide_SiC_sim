@@ -1,6 +1,6 @@
 %% importing the appropriate data 
 clear; clc;
-file_name = "holeDimSweep_500nm_trial1.csv";
+file_name = "cavity_500nm_optimization_trial1.csv";
 data = importdata(file_name);
 Vmode = data(:,8);
 Qwvg = data(:,9);
@@ -14,7 +14,7 @@ for i = 1:length(Vmode)
     end
 end 
 %% plotting the fitness 
-fitness = (Q.*Qsc)./(Vmode.*Vmode).*exp(-(detuning_wavelength/(1e-9)));
+fitness = (Q.*Qsc)./(Vmode.*Vmode).*exp(-(detuning_wavelength/(1e-9)).^2);
 figure; plot(fitness);
 %% plotting the Q ratios
 ratio = Qsc./Qwvg;
