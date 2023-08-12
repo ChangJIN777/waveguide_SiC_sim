@@ -16,7 +16,7 @@ from cavity_sim_parameters import *
 from waveguideSolver_funcs import *
 
 #filename we are saving the data under 
-file_name = "latticeSweep_500nm_trial2.csv"
+file_name = "latticeSweep_500nm_trial3.csv"
 # import the cavity and simulation parameters 
 cavity_params = cavity_sim_parameters.cavity_params
 sim_params = cavity_sim_parameters.sim_params
@@ -26,7 +26,7 @@ sim_params["hide_GUI"] = True
 sim_params["save_fsps"] = False
 
 # lattice sweep
-a_list = np.linspace(2.5e-7,2.8e-7,20)
+a_list = np.linspace(2.3e-7,2.9e-7,20)
 for a in a_list:
     cavity_params["a"] = a
     sim_ellipticalCavity_v2(cavity_params,sim_params)
