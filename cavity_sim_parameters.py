@@ -15,8 +15,8 @@ class cavity_sim_parameters:
     cavity_params = {
         # unit cell dimensions
         "a": 2.63e-07, #lattice constant 
-        "hx": 72.40e-09 ,
-        "hy": 127.5e-09,
+        "hx": 8.889e-08,
+        "hy": 1.167e-07,
         "thickness": 500e-9,
         "beam_width": 5.01e-07,
         # material parameters
@@ -42,11 +42,11 @@ class cavity_sim_parameters:
         "save_fsps": False, # specify if we are going to save the fsps file 
         "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
         "simulationData_fileName": "SiC_500nm_testRun_t1.txt",
-        "mesh_res": 20e-9, # specify the resolution of the meshing we are using 
+        "mesh_res": 15e-9, # specify the resolution of the meshing we are using 
         "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
         "running_cluster": True, # specify if we are running the code on the cluster 
         "running_local": False, # specify if we are running on local PC
-        "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
+        "mesh_accuracy": 5, # specify the mesh accuracy of the engine 
         "boundary_condition": ['ymin','zmin'], # specify the symmetry to save time on simulation
         "show_field_profile": False
     }
