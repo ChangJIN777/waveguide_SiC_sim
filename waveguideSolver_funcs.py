@@ -1216,3 +1216,4 @@ def calculate_fitness(r1,sim_params):
     if Vmode < 0.4:
         Vmode = 1e6
     fitness = np.exp(-((detuning_wavelength/delta_wavelength)**2))*(Q*Qsc) / (Vmode*Vmode)
+    return fitness

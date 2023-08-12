@@ -31,7 +31,7 @@ def optimization(params):
     cavity_params["hy"] = params[2]
     r1 = sim_ellipticalCavity_v2(cavity_params,sim_params)
     
-    fitness = calculate_fitness(r1,sim_params)
+    fitness = calculate_fitness(r1['res'],sim_params)
     
     print('fitness: %f'%(fitness))
     
