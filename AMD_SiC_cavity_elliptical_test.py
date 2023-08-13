@@ -22,6 +22,6 @@ sim_params["show_field_profile"] = True
 sim_params["save_fsps"] = True
 
 # improve the mesh resolution
-sim_params["mesh_res"] = 10e-9
+sim_params["mesh_res"] = 12e-9
 
 r1 = sim_ellipticalCavity_v2(cavity_params,sim_params)

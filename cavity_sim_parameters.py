@@ -46,7 +46,7 @@ class cavity_sim_parameters:
         "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
         "running_cluster": True, # specify if we are running the code on the cluster 
         "running_local": False, # specify if we are running on local PC
-        "mesh_accuracy": 5, # specify the mesh accuracy of the engine 
+        "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
         "boundary_condition": ['ymin','zmin'], # specify the symmetry to save time on simulation
         "show_field_profile": False
     }
