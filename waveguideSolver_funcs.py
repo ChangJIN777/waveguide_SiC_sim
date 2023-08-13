@@ -1215,5 +1215,5 @@ def calculate_fitness(r1,sim_params):
     # account for unrealistic mode volumes 
     if Vmode < 0.4:
         Vmode = 1e6
-    fitness = np.exp(-((detuning_wavelength/delta_wavelength)**2))*(Q*Qsc) / (Vmode*Vmode)
+    fitness = np.exp(-((detuning_wavelength/delta_wavelength)**2))*(Q*Qsc) / (Qwvg*Qwvg*Vmode*Vmode)
     return fitness
