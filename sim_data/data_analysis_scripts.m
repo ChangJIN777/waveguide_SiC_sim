@@ -1,6 +1,6 @@
 %% importing the appropriate data 
 clear; clc;
-file_name = "cavity_500nm_optimization_trial1.csv";
+file_name = "cavity_500nm_optimization_trial2.csv";
 data = importdata(file_name);
 Vmode = data(:,8);
 Qwvg = data(:,9);
