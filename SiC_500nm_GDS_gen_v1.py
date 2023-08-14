@@ -39,5 +39,5 @@ for i in range(len(a_list)):
     cavity_temp = build_cavity_500nm_v1(cavity_params,sim_params)
     parser = DielectricExtrusionFaceGDSParser(cavity_temp)
     parser.show()
-    file_name = "SiC_500nm_cavity_v3_a_%d.gds"%(i)
+    file_name = "SiC_500nm_cavity_criticallyCoupled_v1_a_%d.gds"%(i)
     parser.save(file_name)
