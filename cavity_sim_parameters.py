@@ -14,11 +14,11 @@ class cavity_sim_parameters:
 
     cavity_params = {
         # unit cell dimensions
-        "a": 2.659e-07, #lattice constant 
-        "hx": 9.131e-08,
-        "hy": 1.166e-07,
+        "a": 2.659447565061841e-07, #lattice constant 
+        "hx": 9.130890420284026e-08,
+        "hy": 1.165931299414795e-07,
         "thickness": 500e-9,
-        "beam_width": 5.0065e-07,
+        "beam_width": 5.006327816216455e-07,
         # material parameters
         "n_refractive": 2.6,
         # device parameters 
