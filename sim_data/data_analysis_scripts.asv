@@ -17,7 +17,7 @@ end
 fitness_overcoupled = (Q.*Qsc)./(Vmode.*Vmode).*exp(-(detuning_wavelength/(1e-9)).^2);
 figure; plot(fitness_overcoupled);
 %% plotting the fitness for critically coupled cavities
-Q_tolerance = 10000;
+Q_tolerance = 100000
 fitness_criticalcoupled = (Q)./(Vmode.*Vmode).*exp(-(detuning_wavelength/(1e-9)).^2).*exp(-((Qwvg-Qsc)/(Q_tolerance)).^2);
 figure; plot(fitness_criticalcoupled);
 %% plotting the Q ratios

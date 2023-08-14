@@ -16,7 +16,7 @@ from cavity_sim_parameters import *
 from waveguideSolver_funcs import *
 
 #filename we are saving the data under 
-file_name = "holeDimSweep_500nm_trial1.csv"
+file_name = "cellNumSweep_500nm_trial1.csv"
 
 # debugging 
 #hx_min = d_min*hx
@@ -31,14 +31,20 @@ sim_params["simulationData_fileName"] = file_name
 sim_params["hide_GUI"] = True
 sim_params["save_fsps"] = False
 
-# sweeping the unit cell parameters
-hx_list = np.linspace(50e-09,100e-09,10)
-hy_list = np.linspace(100e-09,150e-09,10)
-for hx in hx_list:
-    for hy in hy_list:
-        cavity_params["hx"] = hx
-        cavity_params["hy"] = hy
-        sim_ellipticalCavity_v2(cavity_params,sim_params)
+# # sweeping the unit cell parameters
+# hx_list = np.linspace(50e-09,100e-09,10)
+# hy_list = np.linspace(100e-09,150e-09,10)
+# for hx in hx_list:
+#     for hy in hy_list:
+#         cavity_params["hx"] = hx
+#         cavity_params["hy"] = hy
+#         sim_ellipticalCavity_v2(cavity_params,sim_params)
+
+# sweeping the cell numbers 
+MN_Right_list = [4,5,6,7,8,9,10]
+for MN_R in MN_Right_list:
+    cavity_params["MN_Right"] = MN_R
+    sim_ellipticalCavity_v2(cavity_params,sim_params)
 
 # # sweeping the taper prefactor 
 # t_list = np.linspace(0.4,1,20)
@@ -65,11 +71,3 @@ for hx in hx_list:
 # p0 = [w0]
 # bnd = [(None,None)]
 # popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
-
-# # sweeping the cell numbers 
-# TN_list = [2,3,4,5,6,7,8]
-# MN_L_list = [1,2,3,4,5,6,7,8,9,10]
-# for TN in TN_list:
-#     for MN_L in MN_L_list:
-#         param = [MN_L,TN]
-#         sweep_cellNum_ellipticalCavity(param)
