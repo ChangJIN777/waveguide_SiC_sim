@@ -23,7 +23,7 @@ class cavity_sim_parameters:
         "n_refractive": 2.6,
         # device parameters 
         "MN_Left": 10, # the number of mirror cells on the left side of the cavity 
-        "MN_Right": 3, # the number of mirror cells on the right side of the cavity
+        "MN_Right": 6, # the number of mirror cells on the right side of the cavity
         "TN": 6, # symmetric cavity: the number of unit cells in the tapering region 
         "WN": 3, # the number of unit cells in the waveguide region 
         "WG_hole_tapering_prefactor": 0.437, # For the waveguide region: the prefactor that defines the minimum hole dimensions we are tapering to
