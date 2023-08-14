@@ -1,6 +1,6 @@
 %% importing the appropriate data 
 clear; clc;
-file_name = "holeDimSweep_500nm_trial1.csv";
+file_name = "cellNumSweep_500nm_trial1.csv";
 data = importdata(file_name);
 Vmode = data(:,8);
 Qwvg = data(:,9);

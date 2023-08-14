@@ -1192,8 +1192,8 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
 
     return r1
 
-def calculate_fitness(r1,sim_params):
-    """this function calculates the fitness associated with the simulation result
+def calculate_fitness_overCoupled(r1,sim_params):
+    """this function calculates the fitness associated with the simulation result for overcoupled cavities
 
     Args:
         r1 (resonance dict): dict containing all the relevant cavity simulation results
@@ -1207,7 +1207,7 @@ def calculate_fitness(r1,sim_params):
     Qxmin = r1["qxmin"]
     Qxmax = r1["qxmax"]
     Q = 1/((1/Qsc) + (1/Qwvg))
-    delta_wavelength = 1e-9 # 1nm tolerance 
+    delta_wavelength = 0.5e-9 # 1nm tolerance 
     resonance_wavelength=(3e8)/F
     target_wavelength = (3e8)/target_frequency 
     detuning_wavelength = np.abs(resonance_wavelength-target_wavelength)
@@ -1215,6 +1215,31 @@ def calculate_fitness(r1,sim_params):
     if Vmode < 0.4:
         Vmode = 1e6
     fitness = np.exp(-((detuning_wavelength/delta_wavelength)**2))*(Q*Qsc) / (Qwvg*Qwvg*Vmode*Vmode)
+    return fitness
+
+def calculate_fitness_criticallyCoupled(r1,sim_params):
+    """this function calculates the fitness associated with the simulation result for the critically coupled cavities
+
+    Args:
+        r1 (resonance dict): dict containing all the relevant cavity simulation results
+    """
+    # calculate the fitness 
+    target_frequency = sim_params["target_frequency"]
+    Vmode = r1["vmode"]
+    F = r1["freq"]
+    Qwvg = 1/(1/r1["qxmin"] + 1/r1["qxmax"])
+    Qsc = 1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    Qxmin = r1["qxmin"]
+    Qxmax = r1["qxmax"]
+    Q = 1/((1/Qsc) + (1/Qwvg))
+    delta_wavelength = 0.5e-9 # 1nm tolerance 
+    resonance_wavelength=(3e8)/F
+    target_wavelength = (3e8)/target_frequency 
+    detuning_wavelength = np.abs(resonance_wavelength-target_wavelength)
+    # account for unrealistic mode volumes 
+    if Vmode < 0.4:
+        Vmode = 1e6
+    fitness = np.exp(-((detuning_wavelength/delta_wavelength)**2))*(Q) / (Vmode*Vmode)
     return fitness
 
 def build_cavity_500nm_v1(cavity_params,sim_params):

@@ -16,7 +16,7 @@ from cavity_sim_parameters import *
 from waveguideSolver_funcs import *
 
 #filename we are saving the data under 
-file_name = "cavity_500nm_optimization_overCoupled_trial1.csv"
+file_name = "cavity_500nm_optimization_criticallyCoupled_trial1.csv"
 # import the cavity and simulation parameters 
 cavity_params = cavity_sim_parameters.cavity_params
 sim_params = cavity_sim_parameters.sim_params
@@ -25,6 +25,7 @@ sim_params["simulationData_fileName"] = file_name
 sim_params["hide_GUI"] = True
 sim_params["save_fsps"] = False
 sim_params["mesh_res"] = 12e-9
+cavity_params["MN_Right"] = 6
 
 def optimization(params):
     cavity_params["a"] = params[0] # lattice constant 
@@ -33,7 +34,7 @@ def optimization(params):
     cavity_params["beam_width"] = params[3]
     r1 = sim_ellipticalCavity_v2(cavity_params,sim_params)
     
-    fitness = calculate_fitness_overCoupled(r1['res'],sim_params)
+    fitness = calculate_fitness_criticallyCoupled(r1['res'],sim_params)
     
     print('fitness: %f'%(fitness))
     
