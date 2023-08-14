@@ -41,7 +41,7 @@ sim_params["save_fsps"] = False
 #         sim_ellipticalCavity_v2(cavity_params,sim_params)
 
 # sweeping the cell numbers 
-MN_Right_list = [4,5,6,7,8,9,10]
+MN_Right_list = [4,5,6,7]
 for MN_R in MN_Right_list:
     cavity_params["MN_Right"] = MN_R
     sim_ellipticalCavity_v2(cavity_params,sim_params)
