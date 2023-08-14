@@ -22,7 +22,7 @@ sim_params = cavity_sim_parameters.sim_params
 #list of lattice constant we want to sweep through 
 a_min = (cavity_params["a"])*0.9
 a_max = (cavity_params["a"])*1.1
-a_number = 11
+a_number = 5
 a_list = np.linspace(a_min,a_max,a_number)
 
 # # generate GDS from the design
