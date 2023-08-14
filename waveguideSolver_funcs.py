@@ -1154,7 +1154,6 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
     #add waveguide region 
     waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
     
-    ####################################### cavity without the waveguide region ###############################
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
     structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
@@ -1217,3 +1216,57 @@ def calculate_fitness(r1,sim_params):
         Vmode = 1e6
     fitness = np.exp(-((detuning_wavelength/delta_wavelength)**2))*(Q*Qsc) / (Qwvg*Qwvg*Vmode*Vmode)
     return fitness
+
+def build_cavity_500nm_v1(cavity_params,sim_params):
+    """this function generate the gds files from existing design
+
+    Args:
+        cavity_params (dict): dict containing all the cavity parameters
+    """
+    
+    # read the relevant parameter data 
+    a = cavity_params["a"]
+    hx = cavity_params["hx"]
+    hy = cavity_params["hy"]
+    MN_L = cavity_params["MN_Left"]
+    MN_R = cavity_params["MN_Right"]
+    WN = cavity_params["WN"]
+    t_wvg = cavity_params["WG_lattice_tapering_prefactor"]
+    w0 = cavity_params["beam_width"]
+    h0 = cavity_params["thickness"]
+    l = cavity_params["cavity_length"]
+    n_f = cavity_params["n_refractive"]
+    d_min = cavity_params["WG_hole_tapering_prefactor"]
+    t = cavity_params["C_lattice_tapering_prefactor"]
+    TN = cavity_params["TN"]
+    prefactor_mirror_R = cavity_params["M_lattice_prefactor"]
+    engine, man_mesh = setup_engine(sim_params)
+    hxmin_wvg = d_min*hx
+    hymin_wvg = d_min*hy
+    #set the center of the device (for double sided cavities)
+    centerCell = MN_L+TN-1 
+        
+    #build the left mirror cell region 
+    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
+
+    #build the right mirror cell region 
+    a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
+    amin = t*a # the defect lattice constant 
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+
+    #building cubic tapered cell region
+    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+    
+    #add waveguide region 
+    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
+    
+    cavity = Cavity1D(
+    unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
+    structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+    center_cell=centerCell,
+    center_shift=0,
+    engine=engine,
+    boundaries=sim_params["boundary_condition"]
+    )
+    
+    return cavity
