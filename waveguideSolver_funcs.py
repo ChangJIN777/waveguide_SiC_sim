@@ -3,7 +3,7 @@ This file contains all the useful functions for building a overcoupled cavity
 """
 
 from wvgsolver import Cavity1D, UnitCell, Vec3, Waveguide
-from wvgsolver.geometry import BoxStructure, CylinderStructure, DielectricMaterial, MeshRegion
+from wvgsolver.geometry import BoxStructure, CylinderStructure, DielectricMaterial, MeshRegion, PolygonStructure
 from wvgsolver.utils import BBox
 from wvgsolver.engine import LumericalEngine
 
@@ -404,7 +404,7 @@ def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w,h0,n_f,engine):
         waveguide_cells_L += [UnitCell(structures=[ waveguide_box_L, waveguide_hole_L ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
     return waveguide_cells_L
 
-def buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine):
+def buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """the function use the given parameters to build a unit cell with elliptical holes
 
     Args:
@@ -421,10 +421,13 @@ def buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine):
     """
     cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     hole = CylinderStructure(Vec3(0), h0, hx, DielectricMaterial(1, order=1, color="blue"),radius2=hy)
-    cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
+    if do_sc:
+        cell = UnitCell(structures=[ cell_box, hole, sc_cell_box], size=Vec3(a, 2 * w0 + sc_gap, h0), engine=engine)
+    else:
+        cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
     return cell
 
-def buildMirrorRegion_elliptical(a,hx,hy,MN,w0,h0,n_f,engine):
+def buildMirrorRegion_elliptical(a,hx,hy,MN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """the function used to build mirriro region with elliptical holes
 
     Args:
@@ -437,11 +440,11 @@ def buildMirrorRegion_elliptical(a,hx,hy,MN,w0,h0,n_f,engine):
         MN (int): the number of mirror unit cells
         engine: the FDTD engine used to simulate the waveguide region
     """
-    mirror_cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine)
+    mirror_cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
     mirror_cells = [mirror_cell] * MN
     return mirror_cells
 
-def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
+def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """the function used to build taper region with elliptical holes
 
     Args:
@@ -459,11 +462,11 @@ def buildTaperRegion_elliptical(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
     taper_cells = []
     aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
     for i in aList_taper:
-        temp_cell = buildUnitCell_elliptical(i,hx,hy,w0,h0,n_f,engine)
+        temp_cell = buildUnitCell_elliptical(i,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
         taper_cells += [temp_cell]
     return taper_cells
 
-def buildTaperRegion_elliptical_asymmetric(a_L,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,engine):
+def buildTaperRegion_elliptical_asymmetric(a_L,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """the function used to build taper region with elliptical holes
 
     Args:
@@ -482,7 +485,7 @@ def buildTaperRegion_elliptical_asymmetric(a_L,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_
     taper_cells = []
     aList_taper = buildTapering_asymmetric_v2(a_L,a_R,amin,TN_L,TN_R)
     for i in aList_taper:
-        temp_cell = buildUnitCell_elliptical(i,hx,hy,w0,h0,n_f,engine)
+        temp_cell = buildUnitCell_elliptical(i,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
         taper_cells += [temp_cell]
     return taper_cells
 
@@ -589,7 +592,7 @@ def buildWaveguideRegion_elliptical_right(a,hx,hy,t_wvg,WN,w0,h0,n_f,engine):
         waveguide_cells_R += [UnitCell(structures=[ waveguide_box_R, waveguide_hole_R ], size=Vec3(i,w0,h0), engine=engine)]
     return waveguide_cells_R
 
-def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,engine):
+def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """Function used to generate a cubic tapered waveguide region to be added to the right side of the cavity. Note: the new version tapers both the lattice constants and the radius prefactors. 
     
     Args:
@@ -612,7 +615,7 @@ def buildWaveguideRegion_elliptical_right_v2(a,hx,hx_min,hy,hy_min,t_wvg,WN,w0,h
     hx_wv = np.linspace(hx,hx_min,WN)
     hy_wv = np.linspace(hy,hy_min,WN)
     for i in range(WN):
-        wvg_unitcell = buildUnitCell_elliptical(a_wv[i],hx_wv[i],hy_wv[i],w0,h0,n_f,engine)
+        wvg_unitcell = buildUnitCell_elliptical(a_wv[i],hx_wv[i],hy_wv[i],w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
         waveguide_cells_R += [wvg_unitcell]
     return waveguide_cells_R
 
@@ -1265,29 +1268,47 @@ def build_cavity_500nm_v1(cavity_params,sim_params):
     t = cavity_params["C_lattice_tapering_prefactor"]
     TN = cavity_params["TN"]
     prefactor_mirror_R = cavity_params["M_lattice_prefactor"]
+    do_sc = cavity_params["do_sc"]
+    sc_gap = cavity_params["sc_gap"]
     engine, man_mesh = setup_engine(sim_params)
     hxmin_wvg = d_min*hx
     hymin_wvg = d_min*hy
     #set the center of the device (for double sided cavities)
     centerCell = MN_L+TN-1 
+    # used for side coupling
+    sc_cell_box = BoxStructure(sc_pos, wg_size,
+                                DielectricMaterial(n_f, order=2, color="blue"))
+
         
     #build the left mirror cell region 
-    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
+    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
 
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
     amin = t*a # the defect lattice constant 
-    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
 
     #building cubic tapered cell region
-    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
     
     #add waveguide region 
-    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
+    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
+    
+    # if we are using sidecoupling
+    if do_sc:
+        wg_size = Vec3(a, w0, h0)
+        sc_pos = Vec3(0, sc_gap + w0, 0)
+        structs = [BoxStructure(Vec3(0), Vec3(l, w0, h0),
+                                DielectricMaterial(n_f, order=2, color="red")),
+                   BoxStructure(sc_pos, Vec3(l, w0, h0),
+                                DielectricMaterial(n_f, order=2, color="red"))
+                   ]
+    else:
+        structs = [ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ]
     
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
-    structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+    structures= structs,
     center_cell=centerCell,
     center_shift=0,
     engine=engine,
@@ -1295,3 +1316,92 @@ def build_cavity_500nm_v1(cavity_params,sim_params):
     )
     
     return cavity
+
+def buildUnitCell_rib(w0,h0,a,hx,hy):
+    """this function builds unit cells for ribbed cavities 
+
+    Args:
+        rib_cavity_params (_type_): _description_
+        rib_sim_params (_type_): _description_
+    """
+    shift = -1
+    npoints = 20
+    coef = hy / (a - hx) ** 2
+    bot = (w0 - hy / 2) / 2 + shift * hy / 4
+    # creates the unit cell
+    rib_up_verts = []
+    
+    for s in np.linspace(-a / 2, a / 2, num=npoints):
+        x = s
+        y = w0 / 2
+        rib_up_verts.append((x, y))
+    for s in np.linspace(a / 2, hx / 2, num=npoints):
+        x = s
+        y = -coef * (s - a / 2) ** 2 + bot + hy / 2
+        rib_up_verts.append((x, y))
+    for s in np.linspace(hx / 2, hx - a / 2, num=npoints):
+        x = s
+        y = bot + coef * (s - hx + a / 2) ** 2
+        rib_up_verts.append((x, y))
+
+    for s in np.linspace(a / 2 - hx, -hx / 2, num=npoints):
+        x = s
+        y = bot + coef * (s + hx - a / 2) ** 2
+        rib_up_verts.append((x, y))
+
+    for s in np.linspace(-hx / 2, -a / 2, num=npoints):
+        x = s
+        y = -coef * (s + a / 2) ** 2 + bot + hy / 2
+        rib_up_verts.append((x, y))
+        # rib_up_verts.append((-a / 2, w0 / 2))
+        # rib_up_verts.append((-a / 2, w0))
+        # rib_up_verts.append((a / 2, w0))
+        # rib_up_verts.append((a / 2, w0 / 2))
+    rib_up = PolygonStructure(pos=Vec3(0), verts=rib_up_verts, height=h0,
+                                  material=DielectricMaterial(1, order=1))
+    rib_down_verts = []
+    for (x, y) in rib_up_verts:
+        rib_down_verts.append((x, -y))
+    rib_down = PolygonStructure(pos=Vec3(0), verts=rib_down_verts, height=h0,
+                                    material=DielectricMaterial(1, order=1))
+    return [rib_up, rib_down]
+
+def sim_bandGap_rib(a,hx,hy,w0,h0):
+    """the function generates the bandgap associated with the simulated unit cell for the rib cavities
+
+    Args:
+        a (float): the lattice constant 
+        hx (float): hole diameter in the x direction
+        hy (float): hole diameter in the y direction
+        w0 (float): the beam width
+        h0 (float): the beam height
+        
+    Returns:
+        _type_: _description_
+    """
+    print("Starting sim ===================================")
+    start_time = datetime.now()
+    cell = buildUnitCell_rib(w0,h0,a,hx,hy)
+
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.6e15, 100000))
+
+    diel_freq = r2[0] # the dielectric band frequency 
+    air_freq = r2[1] # the air band frequyency 
+    bg = air_freq - diel_freq # the band gap 
+    mg = (diel_freq + air_freq) / 2 # the mid band gap 
+    bg_mg_rat = bg / mg 
+
+    delta_k = .5-a*mg/2.998e8
+    end_time = datetime.now()
+
+    print('--------')
+    print('Duration: {}'.format(end_time - start_time))
+    print('Lower band edge frequency: %f THz' % (diel_freq / 1e12))
+    print('Higher band edge frequency: %f THz' % (air_freq / 1e12))
+    print("Bandgap ratio: %f percent" % (bg_mg_rat * 100))
+    print("Midgap frequency: %f THz" % (mg / 1e12))
+    print("Delta k: %f " % delta_k)
+    print('\n')
+
+    return diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg
+
