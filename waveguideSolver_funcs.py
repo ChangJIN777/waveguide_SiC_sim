@@ -1404,7 +1404,9 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     hy = rib_cavity_params["hy"]
     w0 = rib_cavity_params["beam_width"]
     h0 = rib_cavity_params["thickness"]
-    cell = buildUnitCell_rib(w0,h0,a,hx,hy)
+    engine, man_mesh = setup_engine(rib_sim_params)
+    cell_components = buildUnitCell_rib(w0,h0,a,hx,hy)
+    cell = UnitCell(structures=cell_components, size=Vec3(a,w0,h0), engine=engine)
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.6e15, 100000))
 
