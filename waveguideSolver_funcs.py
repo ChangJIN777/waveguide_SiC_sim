@@ -1130,6 +1130,8 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
     t = cavity_params["C_lattice_tapering_prefactor"]
     TN = cavity_params["TN"]
     prefactor_mirror_R = cavity_params["M_lattice_prefactor"]
+    do_sc = cavity_params["do_sc"]
+    sc_gap = cavity_params["sc_gap"]
     engine, man_mesh = setup_engine(sim_params)
     hxmin_wvg = d_min*hx
     hymin_wvg = d_min*hy
@@ -1139,27 +1141,42 @@ def sim_ellipticalCavity_v2(cavity_params,sim_params):
     # The target resonance frequency, in Hz
     # 916nm = 327.3e12 Hz
     target_frequency = sim_params["target_frequency"]
+    # used for side coupling
+    sc_pos = Vec3(0, sc_gap + w0, 0)
+    wg_size = Vec3(a, w0, h0)
+    sc_cell_box = BoxStructure(sc_pos, wg_size,
+                                DielectricMaterial(n_f, order=2, color="blue"))
 
     print("Start sim ==============================")
     centerCell = MN_L+TN-1 
     start_time = datetime.now()
     #build the left mirror cell region 
-    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,engine)
+    mirror_cells_left = buildMirrorRegion_elliptical(a,hx,hy,MN_L,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
 
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
     amin = t*a # the defect lattice constant 
-    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+    mirror_cells_right = buildMirrorRegion_elliptical(a_R,hx,hy,MN_R,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
 
     #building cubic tapered cell region
-    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+    taper_cells = buildTaperRegion_elliptical(a,a_R,amin,hx,hy,TN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
     
     #add waveguide region 
-    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
+    waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
+    
+    # if we are using sidecoupling
+    if do_sc:
+        structs = [BoxStructure(Vec3(0), Vec3(l, w0, h0),
+                                DielectricMaterial(n_f, order=2, color="red")),
+                   BoxStructure(sc_pos, Vec3(l, w0, h0),
+                                DielectricMaterial(n_f, order=2, color="red"))
+                   ]
+    else:
+        structs = [ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ]
     
     cavity = Cavity1D(
     unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right + waveguide_cells,
-    structures=[ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ],
+    structures= structs,
     center_cell=centerCell,
     center_shift=0,
     engine=engine,
@@ -1276,6 +1293,9 @@ def build_cavity_500nm_v1(cavity_params,sim_params):
     #set the center of the device (for double sided cavities)
     centerCell = MN_L+TN-1 
     # used for side coupling
+    sc_pos = Vec3(0, sc_gap + w0, 0)
+    wg_size = Vec3(a, w0, h0)
+
     sc_cell_box = BoxStructure(sc_pos, wg_size,
                                 DielectricMaterial(n_f, order=2, color="blue"))
 
@@ -1296,8 +1316,6 @@ def build_cavity_500nm_v1(cavity_params,sim_params):
     
     # if we are using sidecoupling
     if do_sc:
-        wg_size = Vec3(a, w0, h0)
-        sc_pos = Vec3(0, sc_gap + w0, 0)
         structs = [BoxStructure(Vec3(0), Vec3(l, w0, h0),
                                 DielectricMaterial(n_f, order=2, color="red")),
                    BoxStructure(sc_pos, Vec3(l, w0, h0),

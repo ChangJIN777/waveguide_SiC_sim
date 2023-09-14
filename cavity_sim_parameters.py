@@ -33,7 +33,7 @@ class cavity_sim_parameters:
         "M_lattice_prefactor": 0.965, # For the weaker mirror region: the prefactor that specifies the lattice constants of the weaker mirror region 
         # the parameters used for doing sidecouplings
         "do_sc": False, # Boolean used to determine if we are doing side coupling or not 
-        "sc_gap": 10e-9, # the gap between the side coupling waveguide and the caivty
+        "sc_gap": 100e-9, # the gap between the side coupling waveguide and the caivty
     }
         
     sim_params = {

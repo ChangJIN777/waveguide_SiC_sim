@@ -20,6 +20,8 @@ cavity_params = cavity_sim_parameters.cavity_params
 sim_params = cavity_sim_parameters.sim_params
 sim_params["show_field_profile"] = True
 sim_params["save_fsps"] = True
+# testing the side coupling code 
+cavity_params["do_sc"] = True
 
 # improve the mesh resolution
 sim_params["mesh_res"] = 12e-9
