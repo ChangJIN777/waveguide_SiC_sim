@@ -88,8 +88,8 @@ class cavity_sim_parameters:
         "simulationData_fileName": "SiC_500nm_testRun_t1.txt",
         "mesh_res": 15e-9, # specify the resolution of the meshing we are using 
         "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
-        "running_cluster": True, # specify if we are running the code on the cluster 
-        "running_local": False, # specify if we are running on local PC
+        "running_cluster": False, # specify if we are running the code on the cluster 
+        "running_local": True, # specify if we are running on local PC
         "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
         "boundary_condition": ['ymin','zmin'], # specify the symmetry to save time on simulation
         "show_field_profile": False
