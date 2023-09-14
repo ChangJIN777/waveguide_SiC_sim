@@ -22,6 +22,8 @@ sim_params["show_field_profile"] = True
 sim_params["save_fsps"] = True
 # testing the side coupling code 
 cavity_params["do_sc"] = True
+# Note: we can not use y symmetry when doing side coupling
+sim_params["boundary_condition"] = ['zmin']
 
 # improve the mesh resolution
 sim_params["mesh_res"] = 12e-9
