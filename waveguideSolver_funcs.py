@@ -1384,7 +1384,7 @@ def buildUnitCell_rib(w0,h0,a,hx,hy):
                                     material=DielectricMaterial(1, order=1))
     return [rib_up, rib_down]
 
-def sim_bandGap_rib(a,hx,hy,w0,h0):
+def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     """the function generates the bandgap associated with the simulated unit cell for the rib cavities
 
     Args:
@@ -1399,6 +1399,11 @@ def sim_bandGap_rib(a,hx,hy,w0,h0):
     """
     print("Starting sim ===================================")
     start_time = datetime.now()
+    a = rib_cavity_params["a"]
+    hx = rib_cavity_params["hx"]
+    hy = rib_cavity_params["hy"]
+    w0 = rib_cavity_params["beam_width"]
+    h0 = rib_cavity_params["thickness"]
     cell = buildUnitCell_rib(w0,h0,a,hx,hy)
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.6e15, 100000))
