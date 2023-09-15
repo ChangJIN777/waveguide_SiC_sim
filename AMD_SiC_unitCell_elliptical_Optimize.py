@@ -13,6 +13,7 @@ import os
 from datetime import datetime
 
 from waveguideSolver_funcs import *
+from cavity_sim_parameters import *
 
 #lattice constant
 a = 284.3e-09
@@ -33,8 +34,11 @@ target_frequency = 327.3e12
 prefactor_mirror_R = 1
 #the refractive index associated with the material 
 n_f = 2.6
-#the minimum lattice constant in the waveguide region 
-amin_wvg = t_wvg*a
+
+# debugging
+sim_params = cavity_sim_parameters.sim_params
+engine = setup_engine(sim_params)
+sim_bandGap_elliptical(a,hx,hy,w0,n_f,engine=engine)
 
 # # sweep through hy and record the bandgap and midband value 
 # hy_list = np.linspace(hy/2,hy,20)
