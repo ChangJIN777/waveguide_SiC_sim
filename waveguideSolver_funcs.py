@@ -1430,7 +1430,7 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     cell_components = buildUnitCell_rib(a,hx,hy,w0,h0,n_f)
     cell = UnitCell(structures=cell_components, size=Vec3(a,w0,h0), engine=engine)
 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.8e15, 100000))
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.8e15, 10000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 

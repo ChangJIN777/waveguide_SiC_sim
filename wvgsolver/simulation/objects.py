@@ -181,8 +181,9 @@ class UnitCell(SimulationObject):
     sim_size = self._size*sim_size
     sim_size.x = self._size.x
 
+    # NOTE: need to figurer out a way to force the simulation to only have TM mode
     sess.set_sim_region(pos=Vec3(self._size.x * (window_pos - 0.5), 0, 0), size=sim_size, boundaries={
-      "ymin": "antisymmetric" if (mode_orientation=='TE' or mode_orientation=='TM') else "pml"
+      "ymin": "antisymmetric" if (mode_orientation=='TE') else "pml"
     })
     sess.set_sim_time(run_time)
 
