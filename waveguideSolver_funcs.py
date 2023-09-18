@@ -1602,7 +1602,7 @@ def buildMirrorRegion_rib(a,hx,hy,MN,w0,h0,n_f,engine):
         MN (int): the number of mirror unit cells
         engine: the FDTD engine used to simulate the waveguide region
     """
-    mirror_cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
+    mirror_cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f)
     mirror_cells = [mirror_cell] * MN
     return mirror_cells
 
@@ -1624,6 +1624,6 @@ def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
     taper_cells = []
     aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
     for i in aList_taper:
-        temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f,engine)
+        temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f)
         taper_cells += [temp_cell]
     return taper_cells
