@@ -183,7 +183,7 @@ class UnitCell(SimulationObject):
 
     # NOTE: need to figurer out a way to force the simulation to only have TM mode
     sess.set_sim_region(pos=Vec3(self._size.x * (window_pos - 0.5), 0, 0), size=sim_size, boundaries={
-      "ymin": "antisymmetric" if (mode_orientation=='TE') else "pml"
+      "ymin": "antisymmetric" if mode_orientation=='TE' else ("symmetric" if mode_orientation=='TE' else "pml")
     })
     sess.set_sim_time(run_time)
 
@@ -402,7 +402,11 @@ class Cavity1D(Waveguide):
           self.symmetries.append('antisymmetric')
 
       if boundary == 'zmin':
-        self.symmetries.append('symmetric')
+        # changed by Chang 091823 for simulating both the TE and TM modes
+        if self.component == 'Ey':
+          self.symmetries.append('symmetric')
+        else:
+          self.symmetries.append('antisymmetric')
            
 
   def get_unit_cells(self):
@@ -516,7 +520,7 @@ class Cavity1D(Waveguide):
 
   def _simulate_resonance(self, sess, target_freq=400e12, source_pulselength=60e-15, analyze_fspan=3e14, \
       analyze_time=590e-15, eref_time=80e-15, TEonly=True, sim_size=Vec3(2, 4, 4), energy_downsample=2,
-      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False):
+      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False, mode_orientation='TM'):
     
     """Simulate the cavity's resonance frequency and obtain directional Q factors, mode volume, and 
     electric field profile data. The simulation comprises of one dipole polarized along the y-axis
@@ -597,7 +601,8 @@ class Cavity1D(Waveguide):
     elif self.component[1] == 'z':
       axis = Vec3(0,0,1)
 
-    dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
+    # dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
+    dipole_type = 'Magnetic dipole' if mode_orientation == 'TM' else 'Electric dipole'
 
     if (target_freq is None) == False: 
       sess.set_sources(DipoleSource(f=target_freq, pulse_length=source_pulselength, pulse_offset=2.1*source_pulselength,

@@ -29,4 +29,5 @@ rib_sim_params["running_local"] = True
 # improve the mesh resolution
 rib_sim_params["mesh_res"] = 12e-9
 
+rib_sim_params["hy"] = 3e-7
 r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)

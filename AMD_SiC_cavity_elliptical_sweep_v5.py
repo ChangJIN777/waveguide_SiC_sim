@@ -11,40 +11,66 @@ import scipy.optimize
 import numpy as np
 import os
 from datetime import datetime
-from cavity_sim_parameters import *
 
 from waveguideSolver_funcs import *
 
+#lattice constant
+a = 263.3e-09
+#hole diameter in the x direction 
+hx = 72.40e-09 
+#hole diameter in the y direction 
+hy = 127.5e-09
+#beam width prefactor
+w0 = 468.6e-09
+#taper prefactor (for the defect region)
+t = 0.818
+#taper prefactor (for the waveguide region)
+t_wvg = 0.852
+#beam height (set by epi-layer thickness)
+h0 = 500e-9
+# cavity beam length
+l = 20e-6
+# The target resonance frequency, in Hz
+# 916nm = 327.3e12
+target_frequency = 327.3e12
+target_wavelength = 9.16e-07
+#the prefactor associated with the weaker mirror region
+prefactor_mirror_R = 0.965
+#the refractive index associated with the material 
+n_f = 2.6
+#the minimum lattice constant in the waveguide region 
+amin_wvg = t_wvg*a
+# Use level 4 automeshing accuracy, and show the Lumerical GUI while running simulations 
+# FDTDloc="/n/sw/lumerical-2021-R2-2717-7bf43e7149_seas/"
+FDTDloc="C:/Program Files/Lumerical/v221/" # note: this is specified to be run on Feynman 
+# engine = LumericalEngine(mesh_accuracy=5, hide=False, lumerical_path=FDTDloc, working_path="./fsps")
+engine = LumericalEngine(mesh_accuracy=4, hide=True, lumerical_path=FDTDloc, save_fsp=False)
+#the minimum lattice constant in the tapering region
+amin = a*t
+#the minimum radius prefactor we are tapering to 
+d_min = 0.437
+#the left mirror cell number 
+MN_L = 10 
+#the right mirror cell number 
+MN_R = 3
+#the number of taper unit cells 
+TN = 6
+TN_L = 6 
+TN_R = 6
+#set the center of the device
+centerCell = MN_L+TN_L-1
+#the number of cells in the waveguide region
+WN = 3
 #filename we are saving the data under 
-file_name = "cellNumSweep_500nm_trial1.csv"
+file_name = "OptimizeListFull_Overcoupled_cavity_500nm_testRun_2.csv"
 
 # debugging 
 #hx_min = d_min*hx
 #hy_min = d_min*hy
 #sim_ellipticalCavity_v2(a,hx,hx_min,hy,hy_min,t,t_wvg,target_frequency,file_name,MN_L,MN_R,TN,w0=w0,engine=engine)
 
-# import the cavity and simulation parameters 
-cavity_params = cavity_sim_parameters.cavity_params
-sim_params = cavity_sim_parameters.sim_params
-# setup the simulation 
-sim_params["simulationData_fileName"] = file_name
-sim_params["hide_GUI"] = True
-sim_params["save_fsps"] = False
+# sweeping the unit cell parameters
 
-# # sweeping the unit cell parameters
-# hx_list = np.linspace(50e-09,100e-09,10)
-# hy_list = np.linspace(100e-09,150e-09,10)
-# for hx in hx_list:
-#     for hy in hy_list:
-#         cavity_params["hx"] = hx
-#         cavity_params["hy"] = hy
-#         sim_ellipticalCavity_v2(cavity_params,sim_params)
-
-# sweeping the cell numbers 
-MN_Right_list = [4,5,6,7]
-for MN_R in MN_Right_list:
-    cavity_params["MN_Right"] = MN_R
-    sim_ellipticalCavity_v2(cavity_params,sim_params)
 
 # # sweeping the taper prefactor 
 # t_list = np.linspace(0.4,1,20)
@@ -71,3 +97,11 @@ for MN_R in MN_Right_list:
 # p0 = [w0]
 # bnd = [(None,None)]
 # popt = scipy.optimize.minimize(sweep_beamWidth_ellipticalCavity_v2,p0,method='Nelder-Mead')
+
+# # sweeping the cell numbers 
+# TN_list = [2,3,4,5,6,7,8]
+# MN_L_list = [1,2,3,4,5,6,7,8,9,10]
+# for TN in TN_list:
+#     for MN_L in MN_L_list:
+#         param = [MN_L,TN]
+#         sweep_cellNum_ellipticalCavity(param)

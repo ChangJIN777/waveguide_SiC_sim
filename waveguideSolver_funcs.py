@@ -1428,8 +1428,7 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     h0 = rib_cavity_params["thickness"]
     n_f = rib_cavity_params["n_refractive"]
     engine, man_mesh = setup_engine(rib_sim_params)
-    cell_components = buildUnitCell_rib(a,hx,hy,w0,h0,n_f)
-    cell = UnitCell(structures=cell_components, size=Vec3(a,w0,h0), engine=engine)
+    cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.8e15, 10000))
 
@@ -1555,7 +1554,8 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     center_cell=centerCell,
     center_shift=0,
     engine=engine,
-    boundaries=rib_sim_params["boundary_condition"]
+    boundaries=rib_sim_params["boundary_condition"],
+    component='Ex' # added for TM mode simulation
     )
 
     # By setting the save path here, the cavity will save itself after each simulation to this file
