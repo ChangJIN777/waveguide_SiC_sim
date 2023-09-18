@@ -1355,7 +1355,7 @@ def build_cavity_500nm_v1(cavity_params,sim_params):
     
     return cavity
 
-def buildUnitCell_rib(a,hx,hy,w0,h0,n_f):
+def buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine):
     """this function builds unit cells for ribbed cavities 
 
     Args:
@@ -1403,7 +1403,8 @@ def buildUnitCell_rib(a,hx,hy,w0,h0,n_f):
         rib_down_verts.append((x, -y))
     rib_down = PolygonStructure(pos=Vec3(0), verts=rib_down_verts, height=h0,
                                     material=DielectricMaterial(1, order=1, color="blue"))
-    return [cell_box, rib_up, rib_down]
+    rib_cell = UnitCell(structures=[cell_box, rib_up, rib_down], size=Vec3(a,w0,h0), engine=engine)
+    return rib_cell
 
 def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     """the function generates the bandgap associated with the simulated unit cell for the rib cavities
@@ -1470,8 +1471,7 @@ def band_structure_rib(rib_cavity_params,rib_sim_params):
     h0 = rib_cavity_params["thickness"]
     n_f = rib_cavity_params["n_refractive"]
     engine, man_mesh = setup_engine(rib_sim_params)
-    cell_components = buildUnitCell_rib(a,hx,hy,w0,h0,n_f)
-    cell = UnitCell(structures=cell_components, size=Vec3(a,w0,h0), engine=engine)
+    cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
     r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.5e15, 150000))
     # # # Plot the bandstructure
     r1.show()
@@ -1602,7 +1602,7 @@ def buildMirrorRegion_rib(a,hx,hy,MN,w0,h0,n_f,engine):
         MN (int): the number of mirror unit cells
         engine: the FDTD engine used to simulate the waveguide region
     """
-    mirror_cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f)
+    mirror_cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
     mirror_cells = [mirror_cell] * MN
     return mirror_cells
 
@@ -1624,6 +1624,6 @@ def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
     taper_cells = []
     aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
     for i in aList_taper:
-        temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f)
+        temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f,engine)
         taper_cells += [temp_cell]
     return taper_cells
