@@ -123,7 +123,7 @@ class UnitCell(SimulationObject):
     return first, second
 
   def _simulate_bandstructure(self, sess, ks=(0, 0.5, 20), freqs=(0.2e15, 0.6e15, 100000), run_time=600e-15, \
-    window_pos=0.5, mode_orientation='TM', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 0, 1), \
+    window_pos=0.5, mode_orientation='TM', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
     sim_size=3, analyze_region=0.1): 
     """Simulate the bandstructure of this unit cell by calculating the frequency domain left after an
     electric dipole pulse is allowed to dissipate through an infinite (implemented using boundary conditions)
@@ -182,12 +182,16 @@ class UnitCell(SimulationObject):
     sim_size.x = self._size.x
 
     sess.set_sim_region(pos=Vec3(self._size.x * (window_pos - 0.5), 0, 0), size=sim_size, boundaries={
-      "ymin": "antisymmetric" if mode_orientation=='TE' else ("symmetric" if mode_orientation=='TM' else "pml")
+      "ymin": "antisymmetric" if (mode_orientation=='TE' or mode_orientation=='TM') else "pml"
     })
     sess.set_sim_time(run_time)
 
     nsweeps = len(ks)
     output = np.zeros((nsweeps, len(freqs)))
+    
+    # switching dipole types based on if we are simulating the TM or TE mode
+    dipole_type = 'Magnetic dipole' if mode_orientation == 'TM' else 'Electric dipole'
+    
     for s in range(nsweeps):
       k = ks[s]
       sess.set_sim_region(boundaries={ "x": { "type": "bloch", "k": k } })
@@ -196,7 +200,7 @@ class UnitCell(SimulationObject):
         r = np.random.random_sample((3, )) - 0.5
         pos = Vec3(r[0] + (window_pos-0.5), 0.5*(r[1] + 0.5) if (mode_orientation=='TM' or mode_orientation=='TE') else r[1], r[2]) * self._size * dipole_region
         d = 2*(np.random.random_sample((3,)) - 0.5)
-        dipoles.append(DipoleSource(frange=(freqs[0], freqs[-1]), pos=pos, axis=Vec3(d[0], d[1], d[2]) * dipole_directions, phase=(pos.x*k*2*np.pi/self._size.x)))
+        dipoles.append(DipoleSource(frange=(freqs[0], freqs[-1]), pos=pos, axis=Vec3(d[0], d[1], d[2]) * dipole_directions, phase=(pos.x*k*2*np.pi/self._size.x), dipole_type=dipole_type))
       sess.set_sources(dipoles)
 
       sweep = sess.run(FrequencySpectrum(BBox(
