@@ -16,29 +16,24 @@ from waveguideSolver_funcs import *
 from cavity_sim_parameters import *
 
 #lattice constant
-a = 284.3e-09
+a = 2.655634610941198e-7
 #hole diameter in the x direction
-hx = 72.40e-09 
+hx = 9.347181843644768e-08
 #hole diameter in the y direction
-hy = 127.5e-09
+hy = 1.191433948602531e-07
 #beam width 
-w0 = 468.6e-09
+w0 = 5.050493279419303e-07
 #beam height (set by epi-layer thickness)
 h0 = 500e-9
-# cavity beam length
-l = 10e-6
-# The target resonance frequency, in Hz
-# 916nm = 327.3e12
-target_frequency = 327.3e12
-#the prefactor associated with the weaker mirror region
-prefactor_mirror_R = 1
 #the refractive index associated with the material 
 n_f = 2.6
 
 # debugging
 sim_params = cavity_sim_parameters.sim_params
-engine = setup_engine(sim_params)
-sim_bandGap_elliptical(a,hx,hy,w0,n_f,engine=engine)
+sim_params["save_fsps"] = False
+sim_params["hide_GUI"] = True
+engine, man_mesh = setup_engine(sim_params)
+sim_bandGap_elliptical(a,hx,hy,w0,h0,n_f,engine)
 
 # # sweep through hy and record the bandgap and midband value 
 # hy_list = np.linspace(hy/2,hy,20)
