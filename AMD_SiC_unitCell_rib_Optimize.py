@@ -49,13 +49,13 @@ rib_sim_params["hide_GUI"] = True
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 # # sweep the dimensions of the rib unit cell 
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_t3.txt"
-a_min = 2e-7 
+a_min = 2.5e-7 
 a_max = 3e-7 
 hx_min = 0.5e-7
 hx_max = 2e-7
 hy_min = 4e-7
 hy_max = 5e-7
-a_list = np.linspace(a_min,a_max,10)
+a_list = np.linspace(a_min,a_max,5)
 hx_list = np.linspace(hx_min,hx_max,10)
 hy_list = np.linspace(hy_min,hy_max,10)
 for a in a_list:

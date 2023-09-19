@@ -44,7 +44,7 @@ class cavity_sim_parameters:
         "hide_GUI": False, # specify if we are going to hide the guide 
         "save_fsps": True, # specify if we are going to save the fsps file 
         "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
-        "simulationData_fileName": "SiC_500nm_testRun_t1.txt",
+        "simulationData_fileName": "SiC_500nm_testRun_t1.csv",
         "mesh_res": 15e-9, # specify the resolution of the meshing we are using 
         "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
         "running_cluster": False, # specify if we are running the code on the cluster 
@@ -88,7 +88,7 @@ class cavity_sim_parameters:
         "hide_GUI": False, # specify if we are going to hide the guide 
         "save_fsps": False, # specify if we are going to save the fsps file 
         "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
-        "simulationData_fileName": "SiC_500nm_testRun_t1.txt",
+        "simulationData_fileName": "SiC_500nm_testRun_t1.csv",
         "mesh_res": 15e-9, # specify the resolution of the meshing we are using 
         "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
         "running_cluster": True, # specify if we are running the code on the cluster 
