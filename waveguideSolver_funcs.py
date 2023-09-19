@@ -187,7 +187,7 @@ def sim_bandGap_elliptical(a,hx,hy,w0,h0,n_f,engine):
     """
     print("Starting sim ===================================")
     start_time = datetime.now()
-    cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine)
+    cell = buildUnitCell_elliptical_v1(a,hx,hy,w0,h0,n_f,engine)
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.6e15, 100000))
 
@@ -226,7 +226,7 @@ def sim_bandGap(a,d,w,h0,n_f,engine):
         _type_: _description_
     """
     start_time = datetime.now()
-    cell = buildUnitCell(a,d,w,h0,n_f,engine=engine)
+    cell = buildUnitCell(a,d,w,h0,n_f,engine)
 
     r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
 
@@ -249,10 +249,10 @@ def sim_bandGap(a,d,w,h0,n_f,engine):
 
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k
 
-def band_structure(a,d,w,h0,n_f,engine):
+def band_structure(a,hx,hy,wo,h0,n_f,engine):
     
     start_time = datetime.now()
-    cell = buildUnitCell(a,d,w,h0,n_f,engine)
+    cell = buildUnitCell_elliptical_v1(a,hx,hy,w0,h0,n_f,engine)
     # r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 12), freqs=(0.25e15, 0.7e15, 100000),
     #                    dipole_region=Vec3(0.8, 0, 0), window_pos = 0)
     r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.5e15, 150000))
@@ -403,6 +403,26 @@ def buildWaveguideRegion_left_v2(a,d,d_min,t_wvg,WN,w,h0,n_f,engine):
         waveguide_hole_L = CylinderStructure(Vec3(0), h0, d_wv[i]*a_wv[i]/2, DielectricMaterial(1, order=1, color="blue"))
         waveguide_cells_L += [UnitCell(structures=[ waveguide_box_L, waveguide_hole_L ], size=Vec3(a_wv[i],w0,h0), engine=engine)]
     return waveguide_cells_L
+
+def buildUnitCell_elliptical_v1(a,hx,hy,w0,h0,n_f,engine):
+    """the function use the given parameters to build a unit cell with elliptical holes
+
+    Args:
+        a (float): the lattice constant 
+        hx (float): hole diameter in the x direction
+        hy (float): hole diameter in the y direction
+        w0 (float): the beam width 
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        engine : the FDTD engine used to simulate the waveguide region
+
+    Returns:
+        cell: the UnitCell object in waveguide solver 
+    """
+    cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
+    hole = CylinderStructure(Vec3(0), h0, hx, DielectricMaterial(1, order=1, color="blue"),radius2=hy)
+    cell = UnitCell(structures=[ cell_box, hole ], size=Vec3(a,w0,h0), engine=engine)
+    return cell
 
 def buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """the function use the given parameters to build a unit cell with elliptical holes
@@ -558,7 +578,7 @@ def band_structure_elliptical(a,hx,hy,w0,h0,n_f,engine):
     """
     print("Starting simulation =============================")
     start_time = datetime.now()
-    cell = buildUnitCell_elliptical(a,hx,hy,w0,h0,n_f,engine)
+    cell = buildUnitCell_elliptical_v1(a,hx,hy,w0,h0,n_f,engine)
     # r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 12), freqs=(0.25e15, 0.7e15, 100000),
     #                    dipole_region=Vec3(0.8, 0, 0), window_pos = 0)
     r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.6e15, 100000))
@@ -1335,7 +1355,7 @@ def build_cavity_500nm_v1(cavity_params,sim_params):
     
     return cavity
 
-def buildUnitCell_rib(w0,h0,a,hx,hy):
+def buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine):
     """this function builds unit cells for ribbed cavities 
 
     Args:
@@ -1375,16 +1395,18 @@ def buildUnitCell_rib(w0,h0,a,hx,hy):
         # rib_up_verts.append((-a / 2, w0))
         # rib_up_verts.append((a / 2, w0))
         # rib_up_verts.append((a / 2, w0 / 2))
+    cell_box = BoxStructure(Vec3(0), Vec3(a,w0,h0), DielectricMaterial(n_f, order=2, color="red"))
     rib_up = PolygonStructure(pos=Vec3(0), verts=rib_up_verts, height=h0,
-                                  material=DielectricMaterial(1, order=1))
+                                  material=DielectricMaterial(1, order=1, color="blue"))
     rib_down_verts = []
     for (x, y) in rib_up_verts:
         rib_down_verts.append((x, -y))
     rib_down = PolygonStructure(pos=Vec3(0), verts=rib_down_verts, height=h0,
-                                    material=DielectricMaterial(1, order=1))
-    return [rib_up, rib_down]
+                                    material=DielectricMaterial(1, order=1, color="blue"))
+    rib_cell = UnitCell(structures=[cell_box, rib_up, rib_down], size=Vec3(a,w0,h0), engine=engine)
+    return rib_cell
 
-def sim_bandGap_rib(a,hx,hy,w0,h0):
+def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     """the function generates the bandgap associated with the simulated unit cell for the rib cavities
 
     Args:
@@ -1399,9 +1421,16 @@ def sim_bandGap_rib(a,hx,hy,w0,h0):
     """
     print("Starting sim ===================================")
     start_time = datetime.now()
-    cell = buildUnitCell_rib(w0,h0,a,hx,hy)
+    a = rib_cavity_params["a"]
+    hx = rib_cavity_params["hx"]
+    hy = rib_cavity_params["hy"]
+    w0 = rib_cavity_params["beam_width"]
+    h0 = rib_cavity_params["thickness"]
+    n_f = rib_cavity_params["n_refractive"]
+    engine, man_mesh = setup_engine(rib_sim_params)
+    cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.6e15, 100000))
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.8e15, 10000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
@@ -1421,5 +1450,212 @@ def sim_bandGap_rib(a,hx,hy,w0,h0):
     print("Delta k: %f " % delta_k)
     print('\n')
 
+    # report the relevant data 
+    target_frequency = rib_sim_params["target_frequency"]
+    detuning = np.abs(target_frequency - mg)
+    data = [a,hx,hy,bg,mg,diel_freq,air_freq]
+    file_name = rib_sim_params["simulationData_fileName"]
+    file_loc = rib_sim_params["simulationData_loc"]
+    record_data(data,file_name,file_loc)
+
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg
 
+def band_structure_rib(rib_cavity_params,rib_sim_params):
+    
+    start_time = datetime.now()
+    a = rib_cavity_params["a"]
+    hx = rib_cavity_params["hx"]
+    hy = rib_cavity_params["hy"]
+    w0 = rib_cavity_params["beam_width"]
+    h0 = rib_cavity_params["thickness"]
+    n_f = rib_cavity_params["n_refractive"]
+    engine, man_mesh = setup_engine(rib_sim_params)
+    cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
+    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.5e15, 150000))
+    # # # Plot the bandstructure
+    r1.show()
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
+
+def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
+    """
+    this function sweeps through the hy associated with the cavity and calculate the associated Q
+
+    Args:
+        cavity_params: data struct containing all the parameters needed to build the cavity
+        sim_params: data struct containing all the parameters needed to run the simulation 
+    Returns:
+        _type_: none
+    """
+    
+    # read the relevant parameter data 
+    a = rib_cavity_params["a"]
+    hx = rib_cavity_params["hx"]
+    hy = rib_cavity_params["hy"]
+    MN_L = rib_cavity_params["MN_Left"]
+    MN_R = rib_cavity_params["MN_Right"]
+    WN = rib_cavity_params["WN"]
+    t_wvg = rib_cavity_params["WG_lattice_tapering_prefactor"]
+    w0 = rib_cavity_params["beam_width"]
+    h0 = rib_cavity_params["thickness"]
+    l = rib_cavity_params["cavity_length"]
+    n_f = rib_cavity_params["n_refractive"]
+    d_min = rib_cavity_params["WG_hole_tapering_prefactor"]
+    t = rib_cavity_params["C_lattice_tapering_prefactor"]
+    TN = rib_cavity_params["TN"]
+    prefactor_mirror_R = rib_cavity_params["M_lattice_prefactor"]
+    do_sc = rib_cavity_params["do_sc"]
+    sc_gap = rib_cavity_params["sc_gap"]
+    engine, man_mesh = setup_engine(rib_sim_params)
+    hxmin_wvg = d_min*hx
+    hymin_wvg = d_min*hy
+    # default location of the data files 
+    file_loc = rib_sim_params["simulationData_loc"]
+    file_name = rib_sim_params["simulationData_fileName"]
+    # The target resonance frequency, in Hz
+    # 916nm = 327.3e12 Hz
+    target_frequency = rib_sim_params["target_frequency"]
+    # used for side coupling
+    sc_pos = Vec3(0, sc_gap + w0, 0)
+    wg_size = Vec3(a, w0, h0)
+    sc_cell_box = BoxStructure(sc_pos, wg_size,
+                                DielectricMaterial(n_f, order=2, color="blue"))
+
+    print("Start sim ==============================")
+    centerCell = MN_L+TN-1 
+    start_time = datetime.now()
+    #build the left mirror cell region 
+    mirror_cells_left = buildMirrorRegion_rib(a,hx,hy,MN_L,w0,h0,n_f,engine)
+
+    #build the right mirror cell region 
+    a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
+    amin = t*a # the defect lattice constant 
+    mirror_cells_right = buildMirrorRegion_rib(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+
+    #building cubic tapered cell region
+    taper_cells = buildTaperRegion_rib(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+    
+    # #add waveguide region 
+    # waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
+    
+    # if we are using sidecoupling
+    if do_sc:
+        structs = [BoxStructure(Vec3(0), Vec3(l, w0, h0),
+                                DielectricMaterial(n_f, order=2, color="red")),
+                   BoxStructure(sc_pos, Vec3(l, w0, h0),
+                                DielectricMaterial(n_f, order=2, color="red"))
+                   ]
+    else:
+        structs = [ BoxStructure(Vec3(0), Vec3(l, w0, h0), DielectricMaterial(n_f, order=2, color="red")) ]
+    
+    cavity = Cavity1D(
+    unit_cells=  mirror_cells_left + taper_cells + mirror_cells_right,
+    structures= structs,
+    center_cell=centerCell,
+    center_shift=0,
+    engine=engine,
+    boundaries=rib_sim_params["boundary_condition"],
+    component='Ex' # added for TM mode simulation
+    )
+
+    # By setting the save path here, the cavity will save itself after each simulation to this file
+    cavity.save("cavity.obj")
+
+    # simulating the resonance and the Q 
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8))
+    
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
+
+    # Print the reults and plot the electric field profiles
+    print("F: %f, Vmode: %f, Qwvg: %f, Qsc: %f" % (
+        r1["freq"], r1["vmode"],
+        1/(1/r1["qxmin"] + 1/r1["qxmax"]),
+        1/(2/r1["qymax"] + 1/r1["qzmin"] + 1/r1["qzmax"])
+    ))
+    if rib_sim_params["show_field_profile"]:
+        r1["xyprofile"].show()
+        r1["yzprofile"].show()
+
+    cavity = Cavity1D(load_path="cavity.obj",engine=engine)
+    r1 = cavity.get_results("resonance")[-1]
+
+    # check detuning (prevent unrealistically small mode volumn)
+    r1 = check_detuning(r1,target_frequency,rib_cavity_params,rib_sim_params)
+    # report and save the results 
+    report_results(r1['res'],rib_cavity_params,rib_sim_params,file_name,file_loc)
+
+    return r1
+
+
+
+def buildMirrorRegion_rib(a,hx,hy,MN,w0,h0,n_f,engine):
+    """the function used to build rib unit cells
+
+    Args:
+        a (float): the lattice constant used to build the mirror region 
+        hx (float): hole diameter in the x direction
+        hy (float): hole diameter in the y direction
+        w0 (float): the beam width 
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        MN (int): the number of mirror unit cells
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    mirror_cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
+    mirror_cells = [mirror_cell] * MN
+    return mirror_cells
+
+def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
+    """the function used to build taper region with rib unit cells
+
+    Args:
+        a_L (float): the lattice constant used to build the mirror region on the left side 
+        a_R (float): the lattice constant used to build the mirror region on the right side 
+        hx (float): hole diameter in the x direction
+        hy (float): hole diameter in the y direction
+        w0 (float): the beam width 
+        amin: the minimum lattice constant in the tapering region
+        h0 (float): the beam height
+        n_f (float): the refractive index associated with the material
+        TN (int): the number of tapering cells 
+        engine: the FDTD engine used to simulate the waveguide region
+    """
+    taper_cells = []
+    aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
+    for i in aList_taper:
+        temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f,engine)
+        taper_cells += [temp_cell]
+    return taper_cells
+
+def ribUnitCellOptimization_SiC(rib_cavity_params,rib_sim_params):
+    """this function is used to optimize the unit cells for the mirror regions of the cavity
+
+    Returns:
+        fitness: the optimization parameter 
+    """
+    print("Starting sim ===================") # for debugging purpose
+    a = rib_cavity_params["a"]
+    hx = rib_cavity_params["hx"]
+    hy = rib_cavity_params["hy"]
+    w0 = rib_cavity_params["beam_width"]
+    h0 = rib_cavity_params["thickness"]
+    n_f = rib_cavity_params["n_refractive"]
+    target_frequency = rib_sim_params["target_frequency"]
+    # simulate the band gap of the unit cell 
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_rib(rib_cavity_params,rib_sim_params)
+    wavelength_tolerance = 5e-9
+    wavelength_detune = (3e8)/(target_frequency)-(3e8)/(mg)
+    wavelength_pen = np.exp(-((wavelength_detune)/wavelength_tolerance)**2) # the wavelength detuning penalty
+    detuning = target_frequency - mg
+    fitness = -1*bg_mg_rat*wavelength_pen
+    
+    a_nm = a*1e9
+    hx_nm = hx*1e9
+    hy_nm = hy*1e9
+    wavelength_detune_nm = wavelength_detune*1e9
+    print("a: %f (nm), hx: %f, hy: %f" % (a_nm, hx_nm, hy_nm))
+    print("Detune: %f (nm)" % (wavelength_detune_nm))
+    print("Fitness: %f" % (fitness))    
+    
+    return fitness

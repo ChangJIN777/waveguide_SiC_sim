@@ -123,7 +123,7 @@ class UnitCell(SimulationObject):
     return first, second
 
   def _simulate_bandstructure(self, sess, ks=(0, 0.5, 20), freqs=(0.2e15, 0.6e15, 100000), run_time=600e-15, \
-    window_pos=0.5, TEonly=True, ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
+    window_pos=0.5, mode_orientation='TM', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
     sim_size=3, analyze_region=0.1): 
     """Simulate the bandstructure of this unit cell by calculating the frequency domain left after an
     electric dipole pulse is allowed to dissipate through an infinite (implemented using boundary conditions)
@@ -150,8 +150,10 @@ class UnitCell(SimulationObject):
       of the unit cell. A value of 0 means make the simulation window overlap exactly with the first copy, then
       as we increase it to 0.5 we move the window to be centered between the two copies, and then moving it to 1
       makes it overlap exactly with the second cell.
-    TEonly : bool
-      Whether or not to enforce TE only modes by applying an antisymmetric boundary condition along the y-axis.
+    mode_orientation : integer (either 0, 1, or 2)
+      if mode_orientation=='TE', then we will enforce TE only modes by applying an antisymmetric boundary condition along the y-axis
+      if mode_orientation=='TM', then we will enforce TM only modes by applying a symmetric boundary condition along the y-axis
+      if mode_orientation==anything else, then the boundary condition is set to pml
     ndipoles : int
       The number of dipoles to use to generate the initial pulse
     dipole_region : Vec3 or float
@@ -179,29 +181,35 @@ class UnitCell(SimulationObject):
     sim_size = self._size*sim_size
     sim_size.x = self._size.x
 
+    # NOTE: need to figurer out a way to force the simulation to only have TM mode
     sess.set_sim_region(pos=Vec3(self._size.x * (window_pos - 0.5), 0, 0), size=sim_size, boundaries={
-      "ymin": "antisymmetric" if TEonly else "pml"
+      "ymin": "antisymmetric" if mode_orientation=='TE' else ("symmetric" if mode_orientation=='TE' else "pml")
     })
     sess.set_sim_time(run_time)
 
     nsweeps = len(ks)
     output = np.zeros((nsweeps, len(freqs)))
+    
+    # switching dipole types based on if we are simulating the TM or TE mode
+    dipole_type = 'Magnetic dipole' if mode_orientation == 'TM' else 'Electric dipole'
+    
     for s in range(nsweeps):
       k = ks[s]
       sess.set_sim_region(boundaries={ "x": { "type": "bloch", "k": k } })
       dipoles = []
       for i in range(ndipoles):
         r = np.random.random_sample((3, )) - 0.5
-        pos = Vec3(r[0] + (window_pos-0.5), 0.5*(r[1] + 0.5) if TEonly else r[1], r[2]) * self._size * dipole_region
+        pos = Vec3(r[0] + (window_pos-0.5), 0.5*(r[1] + 0.5) if (mode_orientation=='TM' or mode_orientation=='TE') else r[1], r[2]) * self._size * dipole_region
         d = 2*(np.random.random_sample((3,)) - 0.5)
-        dipoles.append(DipoleSource(frange=(freqs[0], freqs[-1]), pos=pos, axis=Vec3(d[0], d[1], d[2]) * dipole_directions, phase=(pos.x*k*2*np.pi/self._size.x)))
+        dipoles.append(DipoleSource(frange=(freqs[0], freqs[-1]), pos=pos, axis=Vec3(d[0], d[1], d[2]) * dipole_directions, phase=(pos.x*k*2*np.pi/self._size.x), dipole_type=dipole_type))
       sess.set_sources(dipoles)
 
       sweep = sess.run(FrequencySpectrum(BBox(
-        Vec3(self._size.x * (window_pos - 0.5), self._size.y*0.5*(analyze_region.y if isinstance(analyze_region, Vec3) else analyze_region) if TEonly else 0, 0),
+        Vec3(self._size.x * (window_pos - 0.5), self._size.y*0.5*(analyze_region.y if isinstance(analyze_region, Vec3) else analyze_region) if (mode_orientation==0 or mode_orientation==1) else 0, 0),
         self._size*analyze_region
       ), freqs))
-      output[s,:] = sweep[:,0]
+      #output[s,:] = sweep[:,0] old 
+      output[s,:] = sweep[0][:,0] # modified by Chang because the previous version is causing problems
       logging.info("Sweep %d/%d completed (k=%f)" % (s + 1, nsweeps, k))
     
     return Bandstructure(output, (ks, freqs, self._size.x))
@@ -394,7 +402,11 @@ class Cavity1D(Waveguide):
           self.symmetries.append('antisymmetric')
 
       if boundary == 'zmin':
-        self.symmetries.append('symmetric')
+        # changed by Chang 091823 for simulating both the TE and TM modes
+        if self.component == 'Ey':
+          self.symmetries.append('antisymmetric')
+        else:
+          self.symmetries.append('symmetric')
            
 
   def get_unit_cells(self):
@@ -508,7 +520,7 @@ class Cavity1D(Waveguide):
 
   def _simulate_resonance(self, sess, target_freq=400e12, source_pulselength=60e-15, analyze_fspan=3e14, \
       analyze_time=590e-15, eref_time=80e-15, TEonly=True, sim_size=Vec3(2, 4, 4), energy_downsample=2,
-      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False):
+      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False, mode_orientation='TM'):
     
     """Simulate the cavity's resonance frequency and obtain directional Q factors, mode volume, and 
     electric field profile data. The simulation comprises of one dipole polarized along the y-axis
@@ -589,7 +601,8 @@ class Cavity1D(Waveguide):
     elif self.component[1] == 'z':
       axis = Vec3(0,0,1)
 
-    dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
+    # dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
+    dipole_type = 'Magnetic dipole' if mode_orientation == 'TM' else 'Electric dipole'
 
     if (target_freq is None) == False: 
       sess.set_sources(DipoleSource(f=target_freq, pulse_length=source_pulselength, pulse_offset=2.1*source_pulselength,
