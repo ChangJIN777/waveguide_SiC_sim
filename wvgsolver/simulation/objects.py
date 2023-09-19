@@ -404,9 +404,9 @@ class Cavity1D(Waveguide):
       if boundary == 'zmin':
         # changed by Chang 091823 for simulating both the TE and TM modes
         if self.component == 'Ey':
-          self.symmetries.append('symmetric')
-        else:
           self.symmetries.append('antisymmetric')
+        else:
+          self.symmetries.append('symmetric')
            
 
   def get_unit_cells(self):

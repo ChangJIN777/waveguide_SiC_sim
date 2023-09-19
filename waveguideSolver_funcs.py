@@ -1627,3 +1627,35 @@ def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
         temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f,engine)
         taper_cells += [temp_cell]
     return taper_cells
+
+def ribUnitCellOptimization_SiC(rib_cavity_params,rib_sim_params):
+    """this function is used to optimize the unit cells for the mirror regions of the cavity
+
+    Returns:
+        fitness: the optimization parameter 
+    """
+    print("Starting sim ===================") # for debugging purpose
+    a = rib_cavity_params["a"]
+    hx = rib_cavity_params["hx"]
+    hy = rib_cavity_params["hy"]
+    w0 = rib_cavity_params["beam_width"]
+    h0 = rib_cavity_params["thickness"]
+    n_f = rib_cavity_params["n_refractive"]
+    target_frequency = rib_sim_params["target_frequency"]
+    # simulate the band gap of the unit cell 
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_rib(rib_cavity_params,rib_sim_params)
+    wavelength_tolerance = 5e-9
+    wavelength_detune = (3e8)/(target_frequency)-(3e8)/(mg)
+    wavelength_pen = np.exp(-((wavelength_detune)/wavelength_tolerance)**2) # the wavelength detuning penalty
+    detuning = target_frequency - mg
+    fitness = -1*bg_mg_rat*wavelength_pen
+    
+    a_nm = a*1e9
+    hx_nm = hx*1e9
+    hy_nm = hy*1e9
+    wavelength_detune_nm = wavelength_detune*1e9
+    print("a: %f (nm), hx: %f, hy: %f" % (a_nm, hx_nm, hy_nm))
+    print("Detune: %f (nm)" % (wavelength_detune_nm))
+    print("Fitness: %f" % (fitness))    
+    
+    return fitness
