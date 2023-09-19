@@ -38,8 +38,8 @@ def ribUnitCellOptimization(p):
 
 
 # running the simulation locally 
-rib_sim_params["running_cluster"] = False
-rib_sim_params["running_local"] = True
+rib_sim_params["running_cluster"] = True
+rib_sim_params["running_local"] = False
 rib_sim_params["hide_GUI"] = True
 
 ## DEBUGGING ##
@@ -48,7 +48,7 @@ rib_sim_params["hide_GUI"] = True
 # sim_bandGap_rib(rib_cavity_params,rib_sim_params)
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 # # sweep the dimensions of the rib unit cell 
-rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_t2.txt"
+rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_t3.txt"
 # a_min = 2.6e-7 
 # a_max = 2.7e-7 
 # a_list = np.linspace(a_min,a_max,5)
