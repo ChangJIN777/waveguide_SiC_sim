@@ -55,10 +55,10 @@ hx_min = 0.5e-7
 hx_max = 2e-7
 hy_min = 4e-7
 hy_max = 5e-7
-a_list = np.linspace(a_min,a_max,5)
+a_list = np.linspace(a_min,a_max,10)
 hx_list = np.linspace(hx_min,hx_max,10)
 hy_list = np.linspace(hy_min,hy_max,10)
-hx = 0.5e-7
+hx = 1e-7
 hy = 4e-7
 for a in a_list:
     # for hx in hx_list:
