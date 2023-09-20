@@ -192,7 +192,7 @@ class UnitCell(SimulationObject):
     
     # switching dipole types based on if we are simulating the TM or TE mode
     dipole_type = 'Magnetic dipole' if mode_orientation == 'H' else 'Electric dipole'
-    dipole_directions = Vec3(0, 1, 0) if mode_orientation == 'TE' else Vec3(0, 1, 0)
+    dipole_directions = Vec3(0, 0, 1) if mode_orientation == 'TM' else Vec3(0, 1, 0)
     
     for s in range(nsweeps):
       k = ks[s]
