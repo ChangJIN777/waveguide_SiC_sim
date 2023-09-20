@@ -40,7 +40,7 @@ def ribUnitCellOptimization(p):
 # running the simulation locally 
 rib_sim_params["running_cluster"] = True
 rib_sim_params["running_local"] = False
-rib_sim_params["hide_GUI"] = False
+rib_sim_params["hide_GUI"] = True
 
 ## DEBUGGING ##
 # testing the bandgap simulation 
