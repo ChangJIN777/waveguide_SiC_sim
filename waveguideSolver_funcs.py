@@ -67,6 +67,19 @@ def buildTapering_asymmetric(a_L,a_R,amin,taperNum):
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
+def buildTapering_asymmetric_rib(a_L,a_R,amin,taperNum):
+    """
+    function for calculating the lattice constants for the tapering region of the cavity 
+    Note: this is used to build ASYMMETRIC taper cell region. In this case, we have a center defect unit cell in which the defect sits
+    amin: the minimum lattice constant in the tapering region
+    taperNum: the number of tapering cells
+    """
+    a_taper_R = cubic_tapering(a_R,amin,taperNum=taperNum)
+    a_taper_L = cubic_tapering(a_L,amin,taperNum=taperNum)
+    a_taper_L = a_taper_L[::-1]
+    tapering_region = np.concatenate((a_taper_L, amin, a_taper_R), axis=None)
+    return tapering_region
+
 def buildTapering_asymmetric_v2(a_L,a_R,amin,TN_L,TN_R):
     """
     function for calculating the lattice constants for the tapering region of the cavity 
@@ -1622,7 +1635,7 @@ def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
         engine: the FDTD engine used to simulate the waveguide region
     """
     taper_cells = []
-    aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
+    aList_taper = buildTapering_asymmetric_rib(a_L,a_R,amin,TN)
     for i in aList_taper:
         temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f,engine)
         taper_cells += [temp_cell]
