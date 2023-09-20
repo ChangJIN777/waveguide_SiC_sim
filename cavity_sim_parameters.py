@@ -58,7 +58,7 @@ class cavity_sim_parameters:
         # unit cell dimensions
         "a": 2.666666666666666e-7, #lattice constant 
         "hx": 1e-7,
-        "hy": 4.5e-07,
+        "hy": 4e-07,
         "thickness": 500e-9,
         "beam_width": 5.050493279419303e-07,
         "nPoints": 20, # specify the number of points used to make up the gaussian curve
