@@ -50,8 +50,8 @@ rib_sim_params["hide_GUI"] = True
 # # sweep the dimensions of the rib unit cell 
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_t5.txt"
 a = 2.666666666666666e-7
-a_min = a*0.8
-a_max = a*1.2
+a_min = a*0.5
+a_max = a*0.8
 hx_min = 0.5e-7
 hx_max = 2e-7
 hy_min = 4e-7
