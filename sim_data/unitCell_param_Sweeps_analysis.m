@@ -5,10 +5,18 @@ clear; clc;
 data = importdata("SiC_500nm_rib_unitcell_testSweep_t4.txt");
 mg = data(:,5);
 bg = data(:,7);
+bg_mg_rat = data(:,4);
 %% plot the mg of all the trials
 target_freq = 327.3e12;
 wavelength_detuning = ((3e8)/target_freq-(3e8)./mg).*1e9;
 %% plot the detuning of the mg from the target
-plot(wavelength_detuning);
+figure; plot(wavelength_detuning);
 %% plot the bandgap
-plot(bg);
+figure; plot(bg);
+%% plot the fitness 
+wavelength_tolerance = 5;
+wavelength_pen = exp(-((wavelength_detuning)./wavelength_tolerance).^2);
+fitness = bg_mg_rat.*wavelength_pen;
+figure; plot(fitness);
+
+
