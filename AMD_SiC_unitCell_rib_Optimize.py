@@ -60,13 +60,14 @@ hx_list = np.linspace(hx_min,hx_max,10)
 hy_list = np.linspace(hy_min,hy_max,10)
 hx = 1e-7
 hy = 4e-7
-for a in a_list:
-    # for hx in hx_list:
+a = 2.666666666666666e-7
+for hx in hx_list:
+    for hx in hx_list:
     #     for hy in hy_list:
-    rib_cavity_params["a"] = a
-    rib_cavity_params["hx"] = hx 
-    rib_cavity_params["hy"] = hy
-    sim_bandGap_rib(rib_cavity_params,rib_sim_params)
+        rib_cavity_params["a"] = a
+        rib_cavity_params["hx"] = hx 
+        rib_cavity_params["hy"] = hy
+        sim_bandGap_rib(rib_cavity_params,rib_sim_params)
 
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
 # a0 = rib_cavity_params["a"]

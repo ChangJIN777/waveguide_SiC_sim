@@ -2,9 +2,13 @@
 % solver 
 clear; clc;
 %% import and store the data from the txt file 
-data = importdata("SiC_500nm_rib_unitcell_testSweep_t3.txt");
+data = importdata("SiC_500nm_rib_unitcell_testSweep_t4.txt");
 mg = data(:,5);
+bg = data(:,7);
 %% plot the mg of all the trials
 target_freq = 327.3e12;
 wavelength_detuning = ((3e8)/target_freq-(3e8)./mg).*1e9;
+%% plot the detuning of the mg from the target
 plot(wavelength_detuning);
+%% plot the bandgap
+plot(bg);
