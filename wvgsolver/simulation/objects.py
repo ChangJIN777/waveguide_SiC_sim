@@ -339,7 +339,7 @@ class Cavity1D(Waveguide):
   """
   def __init__(self, unit_cells=[], structures=[], size=None, center_cell=None,
                center_shift=None, engine=None, load_path=None, metadata=None,
-               component = 'Ex', boundaries = ['ymin'],
+               component = 'Ez', boundaries = ['ymin'],
                **kwargs):
     """
     Parameters
@@ -595,13 +595,16 @@ class Cavity1D(Waveguide):
 
     #setting source
 
-    if self.component[1] == 'x':
-      axis = Vec3(1,0,0)
-    elif self.component[1] == 'y':
-      axis = Vec3(0,1,0)
-    elif self.component[1] == 'z':
-      axis = Vec3(0,0,1)
+    # if self.component[1] == 'x':
+    #   axis = Vec3(1,0,0)
+    # elif self.component[1] == 'y':
+    #   axis = Vec3(0,1,0)
+    # elif self.component[1] == 'z':
+    #   axis = Vec3(0,0,1)
 
+    # debugging
+    axis = Vec3(0,0,1)
+    
     dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
 
     if (target_freq is None) == False: 
