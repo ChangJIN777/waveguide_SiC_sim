@@ -2,9 +2,11 @@
 % solver 
 clear; clc;
 %% import and store the data from the txt file 
-data = importdata("SiC_500nm_rib_unitcell_testSweep_t4.txt");
+data = importdata("SiC_500nm_rib_unitcell_testSweep_t5.txt");
+dielectric_band = data(:,6);
+air_band = data(:,7);
 mg = data(:,5);
-bg = data(:,7);
+bg = data(:,4);
 bg_mg_rat = data(:,4);
 %% plot the mg of all the trials
 target_freq = 327.3e12;
