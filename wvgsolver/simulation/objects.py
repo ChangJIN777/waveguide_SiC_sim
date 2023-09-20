@@ -339,7 +339,7 @@ class Cavity1D(Waveguide):
   """
   def __init__(self, unit_cells=[], structures=[], size=None, center_cell=None,
                center_shift=None, engine=None, load_path=None, metadata=None,
-               component = 'Ez', boundaries = ['ymin'],
+               component = 'Ex', boundaries = ['ymin'],
                **kwargs):
     """
     Parameters
