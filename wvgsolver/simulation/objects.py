@@ -520,7 +520,7 @@ class Cavity1D(Waveguide):
     return Quasipotential(output)
 
   def _simulate_resonance(self, sess, target_freq=400e12, source_pulselength=60e-15, analyze_fspan=3e14, \
-      analyze_time=590e-15, eref_time=80e-15, TEonly=True, sim_size=Vec3(2, 4, 4), energy_downsample=2,
+      analyze_time=590e-15, eref_time=80e-15, TEonly=False, sim_size=Vec3(2, 4, 4), energy_downsample=2,
       centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False, mode_orientation='TM'):
     
     """Simulate the cavity's resonance frequency and obtain directional Q factors, mode volume, and 
