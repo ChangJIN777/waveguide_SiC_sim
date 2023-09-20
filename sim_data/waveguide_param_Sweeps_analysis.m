@@ -2,7 +2,7 @@
 % solver 
 clear; clc;
 %% import and store the data from the txt file 
-data = importdata("OptimizeListFull_with_waveguide_test_sweep_t4.csv");
+data = importdata("OptimizeListFull_with_waveguide_test_sweep_t3.csv");
 weak_mirror_prefac = data(:,1);
 sim_run = linspace(1,length(weak_mirror_prefac),length(weak_mirror_prefac));
 waveguide_prefac = data(:,2); 
