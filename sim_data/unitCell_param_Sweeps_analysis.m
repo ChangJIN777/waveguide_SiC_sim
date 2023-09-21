@@ -20,5 +20,3 @@ wavelength_tolerance = 5;
 wavelength_pen = exp(-((wavelength_detuning)./wavelength_tolerance).^2);
 fitness = bg_mg_rat.*wavelength_pen;
 figure; plot(fitness);
-
-
