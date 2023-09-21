@@ -1535,7 +1535,7 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
                                 DielectricMaterial(n_f, order=2, color="blue"))
 
     print("Start sim ==============================")
-    centerCell = MN_L+TN
+    centerCell = MN_L+TN-1
     start_time = datetime.now()
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_rib(a,hx,hy,MN_L,w0,h0,n_f,engine)
