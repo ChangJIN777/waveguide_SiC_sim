@@ -38,8 +38,8 @@ def ribUnitCellOptimization(p):
 
 
 # running the simulation locally 
-rib_sim_params["running_cluster"] = True
-rib_sim_params["running_local"] = False
+rib_sim_params["running_cluster"] = False
+rib_sim_params["running_local"] = True
 rib_sim_params["hide_GUI"] = True
 
 ## DEBUGGING ##
