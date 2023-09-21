@@ -30,5 +30,6 @@ rib_sim_params["running_local"] = False
 rib_sim_params["mesh_res"] = 12e-9
 rib_sim_params["a"] = 2.666666666666666e-07
 rib_sim_params["boundary_condition"] = ['ymin']
+rib_cavity_params["C_lattice_tapering_prefactor"] = 0.9
 
 r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
