@@ -27,9 +27,9 @@ rib_sim_params["running_cluster"] = True
 rib_sim_params["running_local"] = False
 
 # improve the mesh resolution
-rib_sim_params["mesh_res"] = 15e-9
+rib_sim_params["mesh_res"] = 10e-9
 rib_cavity_params["a"] = 2.659218106995883e-07
 rib_sim_params["boundary_condition"] = ['ymin']
-rib_cavity_params["C_lattice_tapering_prefactor"] = 0.8
+rib_cavity_params["C_lattice_tapering_prefactor"] = 0.85
 
 r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
