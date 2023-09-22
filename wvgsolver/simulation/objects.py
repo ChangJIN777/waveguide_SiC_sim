@@ -183,7 +183,7 @@ class UnitCell(SimulationObject):
 
     # NOTE: need to figurer out a way to force the simulation to only have TM mode
     sess.set_sim_region(pos=Vec3(self._size.x * (window_pos - 0.5), 0, 0), size=sim_size, boundaries={
-      "ymin": "antisymmetric" if mode_orientation=='TE' else ("symmetric" if mode_orientation=='TE' else "pml")
+      "ymin": "antisymmetric" if mode_orientation=='TE' else ("symmetric" if mode_orientation=='TM' else "pml")
     })
     sess.set_sim_time(run_time)
 
@@ -191,7 +191,8 @@ class UnitCell(SimulationObject):
     output = np.zeros((nsweeps, len(freqs)))
     
     # switching dipole types based on if we are simulating the TM or TE mode
-    dipole_type = 'Magnetic dipole' if mode_orientation == 'TM' else 'Electric dipole'
+    dipole_type = 'Magnetic dipole' if mode_orientation == 'H' else 'Electric dipole'
+    dipole_directions = Vec3(0, 0, 1) if mode_orientation == 'TM' else Vec3(0, 1, 0)
     
     for s in range(nsweeps):
       k = ks[s]
@@ -338,7 +339,7 @@ class Cavity1D(Waveguide):
   """
   def __init__(self, unit_cells=[], structures=[], size=None, center_cell=None,
                center_shift=None, engine=None, load_path=None, metadata=None,
-               component = 'Ey', boundaries = ['ymin'],
+               component = 'Ez', boundaries = ['ymin'],
                **kwargs):
     """
     Parameters
@@ -396,10 +397,10 @@ class Cavity1D(Waveguide):
           self.symmetries.append('antisymmetric')
 
       if boundary == 'ymin':
-        if self.component == 'Ex':
-          self.symmetries.append('symmetric')
-        else:
+        if self.component == 'Ey':
           self.symmetries.append('antisymmetric')
+        else:
+          self.symmetries.append('symmetric')
 
       if boundary == 'zmin':
         # changed by Chang 091823 for simulating both the TE and TM modes
@@ -519,7 +520,7 @@ class Cavity1D(Waveguide):
     return Quasipotential(output)
 
   def _simulate_resonance(self, sess, target_freq=400e12, source_pulselength=60e-15, analyze_fspan=3e14, \
-      analyze_time=590e-15, eref_time=80e-15, TEonly=True, sim_size=Vec3(2, 4, 4), energy_downsample=2,
+      analyze_time=590e-15, eref_time=80e-15, TEonly=False, sim_size=Vec3(2, 4, 4), energy_downsample=2,
       centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False, mode_orientation='TM'):
     
     """Simulate the cavity's resonance frequency and obtain directional Q factors, mode volume, and 
@@ -594,15 +595,17 @@ class Cavity1D(Waveguide):
 
     #setting source
 
-    if self.component[1] == 'x':
-      axis = Vec3(1,0,0)
-    elif self.component[1] == 'y':
-      axis = Vec3(0,1,0)
-    elif self.component[1] == 'z':
-      axis = Vec3(0,0,1)
+    # if self.component[1] == 'x':
+    #   axis = Vec3(1,0,0)
+    # elif self.component[1] == 'y':
+    #   axis = Vec3(0,1,0)
+    # elif self.component[1] == 'z':
+    #   axis = Vec3(0,0,1)
 
-    # dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
-    dipole_type = 'Magnetic dipole' if mode_orientation == 'TM' else 'Electric dipole'
+    # debugging
+    axis = Vec3(0,0,1)
+    
+    dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
 
     if (target_freq is None) == False: 
       sess.set_sources(DipoleSource(f=target_freq, pulse_length=source_pulselength, pulse_offset=2.1*source_pulselength,

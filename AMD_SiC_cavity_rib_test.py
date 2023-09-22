@@ -28,5 +28,7 @@ rib_sim_params["running_local"] = False
 
 # improve the mesh resolution
 rib_sim_params["mesh_res"] = 15e-9
+rib_sim_params["a"] = 2.666666666666666e-07
+rib_sim_params["boundary_condition"] = ['ymin']
 
 r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)

@@ -67,6 +67,19 @@ def buildTapering_asymmetric(a_L,a_R,amin,taperNum):
     tapering_region = np.concatenate((a_taper_L, a_taper_R), axis=None)
     return tapering_region
 
+def buildTapering_asymmetric_rib(a_L,a_R,amin,taperNum):
+    """
+    function for calculating the lattice constants for the tapering region of the cavity 
+    Note: this is used to build ASYMMETRIC taper cell region. In this case, we have a center defect unit cell in which the defect sits
+    amin: the minimum lattice constant in the tapering region
+    taperNum: the number of tapering cells
+    """
+    a_taper_R = cubic_tapering(a_R,amin,taperNum=taperNum)
+    a_taper_L = cubic_tapering(a_L,amin,taperNum=taperNum)
+    a_taper_L = a_taper_L[::-1]
+    tapering_region = np.concatenate((a_taper_L, amin, a_taper_R), axis=None)
+    return tapering_region
+
 def buildTapering_asymmetric_v2(a_L,a_R,amin,TN_L,TN_R):
     """
     function for calculating the lattice constants for the tapering region of the cavity 
@@ -1430,7 +1443,7 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     engine, man_mesh = setup_engine(rib_sim_params)
     cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.8e15, 10000))
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.8e15, 100000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
@@ -1522,7 +1535,7 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
                                 DielectricMaterial(n_f, order=2, color="blue"))
 
     print("Start sim ==============================")
-    centerCell = MN_L+TN-1 
+    centerCell = MN_L+TN
     start_time = datetime.now()
     #build the left mirror cell region 
     mirror_cells_left = buildMirrorRegion_rib(a,hx,hy,MN_L,w0,h0,n_f,engine)
@@ -1622,7 +1635,7 @@ def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
         engine: the FDTD engine used to simulate the waveguide region
     """
     taper_cells = []
-    aList_taper = buildTapering_asymmetric(a_L,a_R,amin,TN)
+    aList_taper = buildTapering_asymmetric_rib(a_L,a_R,amin,TN)
     for i in aList_taper:
         temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f,engine)
         taper_cells += [temp_cell]
