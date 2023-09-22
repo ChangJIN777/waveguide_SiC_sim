@@ -27,7 +27,7 @@ rib_sim_params["running_cluster"] = True
 rib_sim_params["running_local"] = False
 
 # simulation settings 
-rib_sim_params["mesh_res"] = 15e-9
+rib_sim_params["mesh_res"] = 12e-9
 rib_sim_params["boundary_condition"] = ['ymin']
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t2.csv"
 rib_sim_params["show_field_profile"] = False
