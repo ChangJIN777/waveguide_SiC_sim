@@ -35,7 +35,7 @@ rib_sim_params["show_field_profile"] = False
 # geometry settings
 a = 2.659218106995883e-07
 
-taperingPrefac_min = 0.6 
+taperingPrefac_min = 0.7 
 taperingPrefac_max = 0.95 
 a_min = a*0.9
 a_max = a*1.1
