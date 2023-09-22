@@ -21,6 +21,8 @@ rib_sim_params = cavity_sim_parameters.rib_sim_params
 rib_sim_params["show_field_profile"] = True
 rib_sim_params["save_fsps"] = False
 rib_sim_params["hide_GUI"] = False
+rib_sim_params["show_field_profile"] = False
+
 # testing the side coupling code 
 rib_cavity_params["do_sc"] = False
 rib_sim_params["running_cluster"] = True 
