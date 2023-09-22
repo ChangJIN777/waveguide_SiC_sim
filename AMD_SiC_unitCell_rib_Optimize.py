@@ -38,8 +38,8 @@ def ribUnitCellOptimization(p):
 
 
 # running the simulation locally 
-rib_sim_params["running_cluster"] = False
-rib_sim_params["running_local"] = True
+rib_sim_params["running_cluster"] = True
+rib_sim_params["running_local"] = False
 rib_sim_params["hide_GUI"] = True
 
 ## DEBUGGING ##
@@ -50,9 +50,9 @@ rib_sim_params["hide_GUI"] = True
 
 # # sweep the dimensions of the rib unit cell 
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_t6.txt"
-a = 2.666666666666666e-7
-a_min = a*0.95
-a_max = a*1.15
+a = 2.659218106995883e-07
+a_min = a*0.995
+a_max = a*1.005
 hx_min = 0.5e-7
 hx_max = 2e-7
 hy_min = 4e-7

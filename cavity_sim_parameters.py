@@ -56,7 +56,7 @@ class cavity_sim_parameters:
     
     rib_cavity_params = {
         # unit cell dimensions
-        "a": 2.65e-07, #lattice constant 
+        "a": 2.659218106995883e-7, #lattice constant 
         "hx": 1e-7,
         "hy": 4e-07,
         "thickness": 500e-9,
@@ -65,13 +65,13 @@ class cavity_sim_parameters:
         # material parameters
         "n_refractive": 2.6,
         # device parameters 
-        "MN_Left": 5, # the number of mirror cells on the left side of the cavity 
-        "MN_Right": 5, # the number of mirror cells on the right side of the cavity
+        "MN_Left": 10, # the number of mirror cells on the left side of the cavity 
+        "MN_Right": 10, # the number of mirror cells on the right side of the cavity
         "TN": 6, # symmetric cavity: the number of unit cells in the tapering region 
         "WN": 3, # the number of unit cells in the waveguide region 
         "WG_hole_tapering_prefactor": 0.437, # For the waveguide region: the prefactor that defines the minimum hole dimensions we are tapering to
-        "C_lattice_tapering_prefactor": 0.7, # For the cavity region: the prefactor that defines the minimum lattice constant in the cavity region 
-        "WG_lattice_tapering_prefactor": 0.7, # For the waveguide region: the prefactor that defines the minimum lattice constant in the waveguide region 
+        "C_lattice_tapering_prefactor": 0.85, # For the cavity region: the prefactor that defines the minimum lattice constant in the cavity region 
+        "WG_lattice_tapering_prefactor": 0.85, # For the waveguide region: the prefactor that defines the minimum lattice constant in the waveguide region 
         "cavity_length": 20e-6, # the length of the device (most be larger than the simulation size)
         "M_lattice_prefactor": 1, # For the weaker mirror region: the prefactor that specifies the lattice constants of the weaker mirror region 
         "shift": -1, # DONT KNOW WHAT THIS IS YET <-- ask Michael 

@@ -2,7 +2,7 @@
 % solver 
 clear; clc;
 %% import and store the data from the txt file 
-data = importdata("SiC_500nm_rib_unitcell_testSweep_t5.txt");
+data = importdata("SiC_500nm_rib_unitcell_testSweep_t6.txt");
 dielectric_band = data(:,6);
 air_band = data(:,7);
 mg = data(:,5);
@@ -20,5 +20,3 @@ wavelength_tolerance = 5;
 wavelength_pen = exp(-((wavelength_detuning)./wavelength_tolerance).^2);
 fitness = bg_mg_rat.*wavelength_pen;
 figure; plot(fitness);
-
-

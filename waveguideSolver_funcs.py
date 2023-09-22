@@ -1109,7 +1109,7 @@ def check_detuning(r1,source_frequency,cavity_params,sim_params):
     """
     freq = r1["res"]["freq"]
     wavelen_pen = np.exp(-((source_frequency - freq) / source_frequency) ** 2)
-    rerun_thresh = 0.95
+    rerun_thresh = 0.98
     if wavelen_pen < rerun_thresh:
         # shift source frequency to cavity resonance and rerun simulation.
         # (this should help avoid non cavities with artificially low mode volumes)
