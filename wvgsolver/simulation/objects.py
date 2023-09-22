@@ -123,7 +123,7 @@ class UnitCell(SimulationObject):
     return first, second
 
   def _simulate_bandstructure(self, sess, ks=(0, 0.5, 20), freqs=(0.2e15, 0.6e15, 100000), run_time=600e-15, \
-    window_pos=0.5, mode_orientation='TM', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
+    window_pos=0.5, mode_orientation='TE', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
     sim_size=3, analyze_region=0.1): 
     """Simulate the bandstructure of this unit cell by calculating the frequency domain left after an
     electric dipole pulse is allowed to dissipate through an infinite (implemented using boundary conditions)
@@ -339,7 +339,7 @@ class Cavity1D(Waveguide):
   """
   def __init__(self, unit_cells=[], structures=[], size=None, center_cell=None,
                center_shift=None, engine=None, load_path=None, metadata=None,
-               component = 'Ez', boundaries = ['ymin'],
+               component = 'Ey', boundaries = ['ymin'],
                **kwargs):
     """
     Parameters
@@ -520,8 +520,8 @@ class Cavity1D(Waveguide):
     return Quasipotential(output)
 
   def _simulate_resonance(self, sess, target_freq=400e12, source_pulselength=60e-15, analyze_fspan=3e14, \
-      analyze_time=590e-15, eref_time=80e-15, TEonly=False, sim_size=Vec3(2, 4, 4), energy_downsample=2,
-      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False, mode_orientation='TM'):
+      analyze_time=590e-15, eref_time=80e-15, TEonly=True, sim_size=Vec3(2, 4, 4), energy_downsample=2,
+      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False, mode_orientation='TE'):
     
     """Simulate the cavity's resonance frequency and obtain directional Q factors, mode volume, and 
     electric field profile data. The simulation comprises of one dipole polarized along the y-axis
@@ -595,15 +595,15 @@ class Cavity1D(Waveguide):
 
     #setting source
 
-    # if self.component[1] == 'x':
-    #   axis = Vec3(1,0,0)
-    # elif self.component[1] == 'y':
-    #   axis = Vec3(0,1,0)
-    # elif self.component[1] == 'z':
-    #   axis = Vec3(0,0,1)
+    if self.component[1] == 'x':
+      axis = Vec3(1,0,0)
+    elif self.component[1] == 'y':
+      axis = Vec3(0,1,0)
+    elif self.component[1] == 'z':
+      axis = Vec3(0,0,1)
 
-    # debugging
-    axis = Vec3(0,0,1)
+    # # debugging
+    # axis = Vec3(0,0,1)
     
     dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
 

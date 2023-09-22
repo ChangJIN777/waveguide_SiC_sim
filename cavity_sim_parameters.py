@@ -97,5 +97,5 @@ class cavity_sim_parameters:
         "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
         "boundary_condition": ['ymin','zmin'], # specify the symmetry to save time on simulation
         "show_field_profile": False, 
-        "mode": 'TM' # specify the orientation of the mode profile s
+        "mode": 'TE' # specify the orientation of the mode profile s
     }

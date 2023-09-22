@@ -49,10 +49,10 @@ rib_sim_params["hide_GUI"] = True
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 
 # # sweep the dimensions of the rib unit cell 
-rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_t6.txt"
+rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_TE_t1.txt"
 a = 2.659218106995883e-07
-a_min = a*0.995
-a_max = a*1.005
+a_min = a*0.8
+a_max = a*1.2
 hx_min = 0.5e-7
 hx_max = 2e-7
 hy_min = 4e-7
