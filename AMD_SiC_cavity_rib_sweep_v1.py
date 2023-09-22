@@ -30,6 +30,8 @@ rib_sim_params["running_local"] = False
 rib_sim_params["mesh_res"] = 15e-9
 rib_sim_params["boundary_condition"] = ['ymin']
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t1.csv"
+rib_sim_params["show_field_profile"] = False
+
 # geometry settings
 rib_cavity_params["a"] = 2.659218106995883e-07
 
