@@ -21,7 +21,6 @@ rib_sim_params = cavity_sim_parameters.rib_sim_params
 rib_sim_params["show_field_profile"] = True
 rib_sim_params["save_fsps"] = False
 rib_sim_params["hide_GUI"] = False
-rib_sim_params["show_field_profile"] = False
 
 # testing the side coupling code 
 rib_cavity_params["do_sc"] = False
@@ -32,6 +31,6 @@ rib_sim_params["running_local"] = False
 rib_sim_params["mesh_res"] = 12e-9
 rib_cavity_params["a"] = 2.659218106995883e-07
 rib_sim_params["boundary_condition"] = ['ymin']
-rib_cavity_params["C_lattice_tapering_prefactor"] = 0.85
+rib_cavity_params["C_lattice_tapering_prefactor"] = 0.95
 
 r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
