@@ -29,15 +29,20 @@ rib_sim_params["running_local"] = False
 # simulation settings 
 rib_sim_params["mesh_res"] = 15e-9
 rib_sim_params["boundary_condition"] = ['ymin']
-rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t1.csv"
+rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t2.csv"
 rib_sim_params["show_field_profile"] = False
 
 # geometry settings
-rib_cavity_params["a"] = 2.659218106995883e-07
+a = 2.659218106995883e-07
 
 taperingPrefac_min = 0.6 
 taperingPrefac_max = 0.95 
+a_min = a*0.95
+a_max = a*1.05
 taperingPrefac_list = np.linspace(taperingPrefac_min,taperingPrefac_max,10)
+a_list = np.linspace(a_min,a_max,10)
 for taperingPrefac in taperingPrefac_list:
-    rib_cavity_params["C_lattice_tapering_prefactor"] = taperingPrefac
-    r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
+    for a in a_list:
+        rib_cavity_params["C_lattice_tapering_prefactor"] = taperingPrefac
+        rib_cavity_params["a"] = a
+        r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
