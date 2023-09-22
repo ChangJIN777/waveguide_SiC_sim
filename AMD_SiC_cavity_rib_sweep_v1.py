@@ -37,8 +37,8 @@ a = 2.659218106995883e-07
 
 taperingPrefac_min = 0.6 
 taperingPrefac_max = 0.95 
-a_min = a*0.95
-a_max = a*1.05
+a_min = a*0.9
+a_max = a*1.1
 taperingPrefac_list = np.linspace(taperingPrefac_min,taperingPrefac_max,10)
 a_list = np.linspace(a_min,a_max,10)
 for taperingPrefac in taperingPrefac_list:
