@@ -56,7 +56,7 @@ class cavity_sim_parameters:
     
     rib_cavity_params = {
         # unit cell dimensions
-        "a": 2.659218106995883e-07, #lattice constant 
+        "a": 2.659218106995883e-7, #lattice constant 
         "hx": 1e-7,
         "hy": 4e-07,
         "thickness": 500e-9,

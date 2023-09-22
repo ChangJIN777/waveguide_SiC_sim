@@ -20,16 +20,22 @@ rib_cavity_params = cavity_sim_parameters.rib_cavity_params
 rib_sim_params = cavity_sim_parameters.rib_sim_params
 rib_sim_params["show_field_profile"] = True
 rib_sim_params["save_fsps"] = False
-rib_sim_params["hide_GUI"] = False
+rib_sim_params["hide_GUI"] = True
 # testing the side coupling code 
 rib_cavity_params["do_sc"] = False
 rib_sim_params["running_cluster"] = True 
 rib_sim_params["running_local"] = False
 
-# improve the mesh resolution
-rib_sim_params["mesh_res"] = 12e-9
-rib_cavity_params["a"] = 2.659218106995883e-07
+# simulation settings 
+rib_sim_params["mesh_res"] = 15e-9
 rib_sim_params["boundary_condition"] = ['ymin']
-rib_cavity_params["C_lattice_tapering_prefactor"] = 0.85
+rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t1.csv"
+# geometry settings
+rib_cavity_params["a"] = 2.659218106995883e-07
 
-r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
+taperingPrefac_min = 0.6 
+taperingPrefac_max = 0.95 
+taperingPrefac_list = np.linspace(taperingPrefac_min,taperingPrefac_max,10)
+for taperingPrefac in taperingPrefac_list:
+    rib_cavity_params["C_lattice_tapering_prefactor"] = taperingPrefac
+    r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
