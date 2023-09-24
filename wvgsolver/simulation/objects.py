@@ -391,10 +391,10 @@ class Cavity1D(Waveguide):
     self.symmetries = []
     for boundary in self.boundaries:
       if boundary == 'xmin':
-        if self.component == 'Ey':
-          self.symmetries.append('symmetric')
-        else:
+        if self.component == 'Ex':
           self.symmetries.append('antisymmetric')
+        else:
+          self.symmetries.append('symmetric')
 
       if boundary == 'ymin':
         if self.component == 'Ey':
@@ -404,7 +404,7 @@ class Cavity1D(Waveguide):
 
       if boundary == 'zmin':
         # changed by Chang 091823 for simulating both the TE and TM modes
-        if self.component == 'Ey':
+        if self.component == 'Ez':
           self.symmetries.append('antisymmetric')
         else:
           self.symmetries.append('symmetric')
@@ -580,8 +580,6 @@ class Cavity1D(Waveguide):
     """
     size = self._getsize()
     
-
-
     #sim region
     bbox = BBox(Vec3(0), size * sim_size)
 
@@ -595,15 +593,12 @@ class Cavity1D(Waveguide):
 
     #setting source
 
-    # if self.component[1] == 'x':
-    #   axis = Vec3(1,0,0)
-    # elif self.component[1] == 'y':
-    #   axis = Vec3(0,1,0)
-    # elif self.component[1] == 'z':
-    #   axis = Vec3(0,0,1)
-
-    # debugging
-    axis = Vec3(0,1,0)
+    if self.component[1] == 'x':
+      axis = Vec3(1,0,0)
+    elif self.component[1] == 'y':
+      axis = Vec3(0,1,0)
+    elif self.component[1] == 'z':
+      axis = Vec3(0,0,1)
     
     dipole_type = 'Magnetic dipole' if self.component[0] == 'H' else 'Electric dipole'
 

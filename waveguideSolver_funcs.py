@@ -1528,6 +1528,7 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     # The target resonance frequency, in Hz
     # 916nm = 327.3e12 Hz
     target_frequency = rib_sim_params["target_frequency"]
+    mode_orientation = rib_sim_params["mode"]
     # used for side coupling
     sc_pos = Vec3(0, sc_gap + w0, 0)
     wg_size = Vec3(a, w0, h0)
@@ -1551,6 +1552,12 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     # #add waveguide region 
     # waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
     
+    # whether we are simulating for the TE or the TM mode 
+    if mode_orientation == 'TM':
+        E_component = 'Ez'
+    else:
+        E_component = 'Ey'
+    
     # if we are using sidecoupling
     if do_sc:
         structs = [BoxStructure(Vec3(0), Vec3(l, w0, h0),
@@ -1568,14 +1575,14 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     center_shift=0,
     engine=engine,
     boundaries=rib_sim_params["boundary_condition"],
-    component='Ex' # added for TM mode simulation
+    component=E_component # added for TM mode simulation
     )
 
     # By setting the save path here, the cavity will save itself after each simulation to this file
     cavity.save("cavity.obj")
 
     # simulating the resonance and the Q 
-    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8))
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8),mode_orientation=mode_orientation)
     
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
