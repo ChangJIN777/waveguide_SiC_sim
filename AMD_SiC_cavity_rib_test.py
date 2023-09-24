@@ -30,7 +30,7 @@ rib_sim_params["running_local"] = False
 # improve the mesh resolution
 rib_sim_params["mesh_res"] = 12e-9
 # rib_cavity_params["a"] = 2.836499314128942e-07 # for the TE mode 
-rib_cavity_params["a"] = 2.659218106995883e-7 # for the TM mode 
+rib_cavity_params["a"] = 2.6e-7 # for the TM mode 
 rib_sim_params["boundary_condition"] = ['ymin','zmin','xmin']
 rib_sim_params["mode"] = 'TM'
 rib_cavity_params["C_lattice_tapering_prefactor"] = 0.7

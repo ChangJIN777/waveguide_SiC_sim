@@ -32,7 +32,7 @@ rib_sim_params["boundary_condition"] = ['ymin','zmin']
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t3.csv"
 
 # geometry settings
-a = 2.659218106995883e-07
+a = 2.6e-07
 taperingPrefac_min = 0.7 
 taperingPrefac_max = 0.95 
 a_min = a*0.8
