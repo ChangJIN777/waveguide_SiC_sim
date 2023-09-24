@@ -30,10 +30,10 @@ rib_sim_params["running_local"] = False
 # improve the mesh resolution
 rib_sim_params["mesh_res"] = 12e-9
 # rib_cavity_params["a"] = 2.836499314128942e-07 # for the TE mode 
-rib_cavity_params["a"] = 2.6e-7 # for the TM mode 
+rib_cavity_params["a"] = 2.600124371284864e-07 # for the TM mode 
 rib_sim_params["boundary_condition"] = ['ymin','zmin']
 rib_sim_params["mode"] = 'TM'
-rib_cavity_params["C_lattice_tapering_prefactor"] = 0.7
+rib_cavity_params["C_lattice_tapering_prefactor"] = 0.7833333333333333
 rib_sim_params["freq_span"] = 3e14 
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_debugging_cavity.csv"
 
