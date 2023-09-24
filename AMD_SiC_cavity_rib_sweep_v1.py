@@ -18,7 +18,7 @@ from cavity_sim_parameters import *
 # import the cavity and simulation parameters 
 rib_cavity_params = cavity_sim_parameters.rib_cavity_params
 rib_sim_params = cavity_sim_parameters.rib_sim_params
-rib_sim_params["show_field_profile"] = True
+rib_sim_params["show_field_profile"] = False
 rib_sim_params["save_fsps"] = False
 rib_sim_params["hide_GUI"] = True
 # testing the side coupling code 
@@ -28,17 +28,15 @@ rib_sim_params["running_local"] = False
 
 # simulation settings 
 rib_sim_params["mesh_res"] = 12e-9
-rib_sim_params["boundary_condition"] = ['ymin']
-rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t2.csv"
-rib_sim_params["show_field_profile"] = False
+rib_sim_params["boundary_condition"] = ['ymin','zmin']
+rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t3.csv"
 
 # geometry settings
 a = 2.659218106995883e-07
-
 taperingPrefac_min = 0.7 
 taperingPrefac_max = 0.95 
-a_min = a*0.9
-a_max = a*1.1
+a_min = a*0.8
+a_max = a*1.2
 taperingPrefac_list = np.linspace(taperingPrefac_min,taperingPrefac_max,10)
 a_list = np.linspace(a_min,a_max,10)
 for taperingPrefac in taperingPrefac_list:

@@ -38,6 +38,7 @@ rib_sim_params["freq_span"] = 3e14
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_debugging_cavity.csv"
 
 # sweep the target wavelength 
+rib_sim_params["show_field_profile"] = False
 freq_span = 10e12 
 central_freq = rib_sim_params["target_frequency"]
 freq_start = central_freq - freq_span
