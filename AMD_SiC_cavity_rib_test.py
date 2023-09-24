@@ -20,7 +20,7 @@ rib_cavity_params = cavity_sim_parameters.rib_cavity_params
 rib_sim_params = cavity_sim_parameters.rib_sim_params
 rib_sim_params["show_field_profile"] = True
 rib_sim_params["save_fsps"] = False
-rib_sim_params["hide_GUI"] = False
+rib_sim_params["hide_GUI"] = True
 
 # testing the side coupling code 
 rib_cavity_params["do_sc"] = False
@@ -34,6 +34,15 @@ rib_cavity_params["a"] = 2.659218106995883e-7 # for the TM mode
 rib_sim_params["boundary_condition"] = ['ymin','zmin','xmin']
 rib_sim_params["mode"] = 'TM'
 rib_cavity_params["C_lattice_tapering_prefactor"] = 0.7
-rib_sim_params["freq_span"] = 3e12 
+rib_sim_params["freq_span"] = 3e14 
+rib_sim_params["simulationData_fileName"] = "SiC_500nm_debugging_cavity.csv"
 
-r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
+# sweep the target wavelength 
+freq_span = 10e12 
+central_freq = rib_sim_params["target_frequency"]
+freq_start = central_freq - freq_span
+freq_end = central_freq + freq_span
+freq_lists = np.linspace(freq_start,freq_end,5)
+for freq in freq_lists:
+    rib_sim_params["target_frequency"] = freq 
+    r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
