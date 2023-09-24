@@ -1529,6 +1529,7 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     # 916nm = 327.3e12 Hz
     target_frequency = rib_sim_params["target_frequency"]
     mode_orientation = rib_sim_params["mode"]
+    freq_span = rib_sim_params["freq_span"]
     # used for side coupling
     sc_pos = Vec3(0, sc_gap + w0, 0)
     wg_size = Vec3(a, w0, h0)
@@ -1582,7 +1583,7 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     cavity.save("cavity.obj")
 
     # simulating the resonance and the Q 
-    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8),mode_orientation=mode_orientation)
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8),mode_orientation=mode_orientation, analyze_fspan=freq_span)
     
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))

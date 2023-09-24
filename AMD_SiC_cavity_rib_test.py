@@ -34,5 +34,6 @@ rib_cavity_params["a"] = 2.659218106995883e-7 # for the TM mode
 rib_sim_params["boundary_condition"] = ['ymin','zmin','xmin']
 rib_sim_params["mode"] = 'TM'
 rib_cavity_params["C_lattice_tapering_prefactor"] = 0.7
+rib_sim_params["freq_span"] = 3e12 
 
 r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
