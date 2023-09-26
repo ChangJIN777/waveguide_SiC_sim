@@ -123,7 +123,7 @@ class UnitCell(SimulationObject):
     return first, second
 
   def _simulate_bandstructure(self, sess, ks=(0, 0.5, 20), freqs=(0.2e15, 0.6e15, 100000), run_time=600e-15, \
-    window_pos=0.5, mode_orientation='TE', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
+    window_pos=0.5, mode_orientation='TM', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
     sim_size=3, analyze_region=0.1): 
     """Simulate the bandstructure of this unit cell by calculating the frequency domain left after an
     electric dipole pulse is allowed to dissipate through an infinite (implemented using boundary conditions)
@@ -520,8 +520,8 @@ class Cavity1D(Waveguide):
     return Quasipotential(output)
 
   def _simulate_resonance(self, sess, target_freq=400e12, source_pulselength=60e-15, analyze_fspan=3e14, \
-      analyze_time=590e-15, eref_time=80e-15, TEonly=True, sim_size=Vec3(2, 4, 4), energy_downsample=2,
-      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False, mode_orientation='TE'):
+      analyze_time=590e-15, eref_time=80e-15, TEonly=False, sim_size=Vec3(2, 4, 4), energy_downsample=2,
+      centerWl = 1e-6, deltaWl = 0.1e-6,optimize_for_short_pulse = False, mode_orientation='TM'):
     
     """Simulate the cavity's resonance frequency and obtain directional Q factors, mode volume, and 
     electric field profile data. The simulation comprises of one dipole polarized along the y-axis
