@@ -49,9 +49,9 @@ rib_sim_params["hide_GUI"] = True
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 
 # # sweep the dimensions of the rib unit cell 
-rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_TM_t4.txt"
+rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_TM_t5.txt"
 rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
-a = 3.1e-07
+a = 3.05e-07
 hx = 1.8e-07 # for the TM mode 
 hy = 3.84e-07 # for the TM mode 
 a_min = a*0.95
@@ -60,16 +60,16 @@ hx_min = hx*0.8
 hx_max = hx*1.2
 hy_min = hy*0.8
 hy_max = hy*1.2
-a_list = np.linspace(a_min,a_max,10)
+a_list = np.linspace(a_min,a_max,5)
 hx_list = np.linspace(hx_min,hx_max,10)
 hy_list = np.linspace(hy_min,hy_max,10)
 for a in a_list:
-    # for hx in hx_list:
-    #     for hy in hy_list:
-    rib_cavity_params["a"] = a
-    rib_cavity_params["hx"] = hx 
-    rib_cavity_params["hy"] = hy
-    sim_bandGap_rib(rib_cavity_params,rib_sim_params)
+    for hx in hx_list:
+        for hy in hy_list:
+            rib_cavity_params["a"] = a
+            rib_cavity_params["hx"] = hx 
+            rib_cavity_params["hy"] = hy
+            sim_bandGap_rib(rib_cavity_params,rib_sim_params)
 
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
 # a0 = rib_cavity_params["a"]
