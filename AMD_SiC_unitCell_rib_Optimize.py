@@ -49,13 +49,13 @@ rib_sim_params["hide_GUI"] = True
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 
 # # sweep the dimensions of the rib unit cell 
-rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_TM_t3.txt"
+rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_TM_t4.txt"
 rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
-a = 3.3333333333333335e-07
+a = 3.7e-07
 hx = 1.8e-07 # for the TM mode 
 hy = 3.84e-07 # for the TM mode 
-a_min = a*0.8
-a_max = a*1.2
+a_min = a*0.95
+a_max = a*1.05
 hx_min = hx*0.8
 hx_max = hx*1.2
 hy_min = hy*0.8
