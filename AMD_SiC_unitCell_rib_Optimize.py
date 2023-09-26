@@ -51,7 +51,7 @@ rib_sim_params["hide_GUI"] = True
 # # sweep the dimensions of the rib unit cell 
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_unitcell_testSweep_TM_t3.txt"
 rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
-a = 3e-07
+a = 3.3333333333333335e-07
 hx = 1.8e-07 # for the TM mode 
 hy = 3.84e-07 # for the TM mode 
 a_min = a*0.8
@@ -63,8 +63,6 @@ hy_max = hy*1.2
 a_list = np.linspace(a_min,a_max,10)
 hx_list = np.linspace(hx_min,hx_max,10)
 hy_list = np.linspace(hy_min,hy_max,10)
-hx = 1e-7
-hy = 4e-7
 for a in a_list:
     # for hx in hx_list:
     #     for hy in hy_list:
