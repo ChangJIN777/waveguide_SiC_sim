@@ -33,11 +33,11 @@ rib_sim_params["mode"] = 'TM'
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t4.csv"
 
 # geometry settings
-a = 2.659218106995883e-07
+a = 3.3333333333333335e-07
 taperingPrefac_min = 0.7 
 taperingPrefac_max = 0.95 
-a_min = a*0.8
-a_max = a*1.2
+a_min = a*0.95
+a_max = a*1.05
 taperingPrefac_list = np.linspace(taperingPrefac_min,taperingPrefac_max,10)
 a_list = np.linspace(a_min,a_max,10)
 for taperingPrefac in taperingPrefac_list:
