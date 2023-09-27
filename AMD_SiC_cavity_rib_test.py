@@ -30,9 +30,9 @@ rib_sim_params["running_local"] = False
 # improve the mesh resolution
 rib_sim_params["mesh_res"] = 12e-9
 # rib_cavity_params["a"] = 2.836499314128942e-07 # for the TE mode 
-rib_cavity_params["a"] = 2.8974999999999996e-07 # for the TM mode 
-rib_cavity_params["hx"] = 1.84e-07 # for the TM mode 
-rib_cavity_params["hy"] = 3.584e-07 # for the TM mode 
+rib_cavity_params["a"] = 3.05e-07 # for the TM mode 
+rib_cavity_params["hx"] = 1.44e-07 # for the TM mode 
+rib_cavity_params["hy"] = 3.072e-07 # for the TM mode 
 rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
 rib_sim_params["boundary_condition"] = ['ymin','zmin']
 rib_sim_params["mode"] = 'TM'
