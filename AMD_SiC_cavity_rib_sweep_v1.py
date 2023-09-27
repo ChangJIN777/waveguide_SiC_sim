@@ -33,6 +33,9 @@ rib_sim_params["mode"] = 'TM'
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t5.csv"
 
 # geometry settings
+rib_cavity_params["hx"] = 1.8e-07 # for the TM mode 
+rib_cavity_params["hy"] = 3.84e-07 # for the TM mode 
+rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
 a = 3.05e-07
 taperingPrefac_min = 0.7 
 taperingPrefac_max = 0.95 
