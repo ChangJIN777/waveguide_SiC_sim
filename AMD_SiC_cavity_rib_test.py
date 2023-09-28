@@ -24,7 +24,7 @@ rib_sim_params["hide_GUI"] = False
 
 # testing the side coupling code 
 rib_cavity_params["do_sc"] = False
-rib_sim_params["running_cluster"] = True 
+rib_sim_params["running_cluster"] = True  
 rib_sim_params["running_local"] = False
 
 # improve the mesh resolution
