@@ -1368,7 +1368,7 @@ def build_cavity_500nm_v1(cavity_params,sim_params):
     
     return cavity
 
-def buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine):
+def buildUnitCell_rib(a,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """this function builds unit cells for ribbed cavities 
 
     Args:
@@ -1416,7 +1416,11 @@ def buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine):
         rib_down_verts.append((x, -y))
     rib_down = PolygonStructure(pos=Vec3(0), verts=rib_down_verts, height=h0,
                                     material=DielectricMaterial(1, order=1, color="blue"))
-    rib_cell = UnitCell(structures=[cell_box, rib_up, rib_down], size=Vec3(a,w0,h0), engine=engine)
+
+    if do_sc:
+        rib_cell = UnitCell(structures=[ cell_box, rib_up, rib_down, sc_cell_box], size=Vec3(a, 2 * w0 + sc_gap, h0), engine=engine)
+    else:
+        rib_cell = UnitCell(structures=[cell_box, rib_up, rib_down], size=Vec3(a,w0,h0), engine=engine)
     return rib_cell
 
 def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
@@ -1540,15 +1544,15 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     centerCell = MN_L+TN
     start_time = datetime.now()
     #build the left mirror cell region 
-    mirror_cells_left = buildMirrorRegion_rib(a,hx,hy,MN_L,w0,h0,n_f,engine)
+    mirror_cells_left = buildMirrorRegion_rib(a,hx,hy,MN_L,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
 
     #build the right mirror cell region 
     a_R = a*prefactor_mirror_R # the lattice constant associated with the right mirror region 
     amin = t*a # the defect lattice constant 
-    mirror_cells_right = buildMirrorRegion_rib(a_R,hx,hy,MN_R,w0,h0,n_f,engine)
+    mirror_cells_right = buildMirrorRegion_rib(a_R,hx,hy,MN_R,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
 
     #building cubic tapered cell region
-    taper_cells = buildTaperRegion_rib(a,a_R,amin,hx,hy,TN,w0,h0,n_f,engine)
+    taper_cells = buildTaperRegion_rib(a,a_R,amin,hx,hy,TN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
     
     # #add waveguide region 
     # waveguide_cells = buildWaveguideRegion_elliptical_right_v2(a,hx,hxmin_wvg,hy,hymin_wvg,t_wvg,WN,w0,h0,n_f,engine)
@@ -1610,7 +1614,7 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
 
 
 
-def buildMirrorRegion_rib(a,hx,hy,MN,w0,h0,n_f,engine):
+def buildMirrorRegion_rib(a,hx,hy,MN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """the function used to build rib unit cells
 
     Args:
@@ -1623,11 +1627,11 @@ def buildMirrorRegion_rib(a,hx,hy,MN,w0,h0,n_f,engine):
         MN (int): the number of mirror unit cells
         engine: the FDTD engine used to simulate the waveguide region
     """
-    mirror_cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
+    mirror_cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
     mirror_cells = [mirror_cell] * MN
     return mirror_cells
 
-def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
+def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """the function used to build taper region with rib unit cells
 
     Args:
@@ -1645,7 +1649,7 @@ def buildTaperRegion_rib(a_L,a_R,amin,hx,hy,TN,w0,h0,n_f,engine):
     taper_cells = []
     aList_taper = buildTapering_asymmetric_rib(a_L,a_R,amin,TN)
     for i in aList_taper:
-        temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f,engine)
+        temp_cell = buildUnitCell_rib(i,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine)
         taper_cells += [temp_cell]
     return taper_cells
 

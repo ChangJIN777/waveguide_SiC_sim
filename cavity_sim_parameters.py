@@ -61,7 +61,7 @@ class cavity_sim_parameters:
         "hx": 1e-7,
         "hy": 4e-07,
         "thickness": 500e-9,
-        "beam_width": 5.050493279419303e-07,
+        "beam_width": 4e-07,
         "nPoints": 20, # specify the number of points used to make up the gaussian curve
         # material parameters
         "n_refractive": 2.6,
