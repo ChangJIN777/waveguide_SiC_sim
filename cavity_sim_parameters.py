@@ -78,7 +78,7 @@ class cavity_sim_parameters:
         "shift": -1, # DONT KNOW WHAT THIS IS YET <-- ask Michael 
         # the parameters used for doing sidecouplings
         "do_sc": False, # Boolean used to determine if we are doing side coupling or not 
-        "sc_gap": 300e-9 # the gap between the side coupling waveguide and the caivty
+        "sc_gap": 500e-9 # the gap between the side coupling waveguide and the caivty
     }
         
     rib_sim_params = {

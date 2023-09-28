@@ -23,14 +23,14 @@ rib_sim_params["save_fsps"] = False
 rib_sim_params["hide_GUI"] = False
 
 # testing the side coupling code 
-rib_cavity_params["do_sc"] = False
+rib_cavity_params["do_sc"] = True
 rib_sim_params["running_cluster"] = True  
 rib_sim_params["running_local"] = False
 
 # improve the mesh resolution
 rib_sim_params["mesh_res"] = 12e-9
 # rib_cavity_params["a"] = 2.836499314128942e-07 # for the TE mode 
-rib_cavity_params["a"] = 2.85e-07 # for the TM mode 
+rib_cavity_params["a"] = 3e-07 # for the TM mode 
 rib_cavity_params["hx"] = 1.8e-07 # for the TM mode 
 rib_cavity_params["hy"] = 3.84e-07 # for the TM mode 
 rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
