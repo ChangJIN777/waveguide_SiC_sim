@@ -36,15 +36,14 @@ rib_sim_params["simulationData_fileName"] = "SiC_500nm_rib_testRun_t5.csv"
 rib_cavity_params["hx"] = 1.8e-07 # for the TM mode 
 rib_cavity_params["hy"] = 3.84e-07 # for the TM mode 
 rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
+rib_cavity_params["C_lattice_tapering_prefactor"] = 0.839
 a = 3.05e-07
-taperingPrefac_min = 0.7 
-taperingPrefac_max = 0.95 
+hx = 1.8e-07 
+hy = 3.84e-07 
+w0 = 4e-07
 a_min = a*0.95
 a_max = a*1.05
-taperingPrefac_list = np.linspace(taperingPrefac_min,taperingPrefac_max,10)
 a_list = np.linspace(a_min,a_max,10)
-for taperingPrefac in taperingPrefac_list:
-    for a in a_list:
-        rib_cavity_params["C_lattice_tapering_prefactor"] = taperingPrefac
-        rib_cavity_params["a"] = a
-        r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
+for a in a_list:
+    rib_cavity_params["a"] = a
+    r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
