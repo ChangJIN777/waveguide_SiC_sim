@@ -23,9 +23,12 @@ sim_params["hide_GUI"] = False
 sim_params["save_fsps"] = True
 sim_params["running_cluster"] = True   
 sim_params["running_local"] = False
-sim_params["boundary_condition"] = ['zmin']
+sim_params["boundary_condition"] = ['zmin','xmin']
 # testing the side coupling code 
 cavity_params["do_sc"] = True
+cavity_params["M_lattice_prefactor"] = 1
+cavity_params["MN_Right"] = 10
+cavity_params["WN"] = 0
 
 # improve the mesh resolution
 sim_params["mesh_res"] = 12e-9
