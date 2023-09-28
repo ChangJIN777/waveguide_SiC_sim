@@ -1587,7 +1587,7 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     cavity.save("cavity.obj")
 
     # simulating the resonance and the Q 
-    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(3,3,8),mode_orientation=mode_orientation, analyze_fspan=freq_span)
+    r1 = cavity.simulate("resonance", target_freq=target_frequency, source_pulselength=200e-15, analyze_time=1000e-15,mesh_regions = [man_mesh], sim_size=Vec3(1.5,3,8),mode_orientation=mode_orientation, analyze_fspan=freq_span)
     
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
