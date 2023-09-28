@@ -23,6 +23,7 @@ sim_params["hide_GUI"] = False
 sim_params["save_fsps"] = True
 sim_params["running_cluster"] = True   
 sim_params["running_local"] = False
+sim_params["boundary_condition"] = ['zmin']
 # testing the side coupling code 
 cavity_params["do_sc"] = True
 

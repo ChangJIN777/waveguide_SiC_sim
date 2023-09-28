@@ -78,7 +78,7 @@ class cavity_sim_parameters:
         "shift": -1, # DONT KNOW WHAT THIS IS YET <-- ask Michael 
         # the parameters used for doing sidecouplings
         "do_sc": False, # Boolean used to determine if we are doing side coupling or not 
-        "sc_gap": 500e-9 # the gap between the side coupling waveguide and the caivty
+        "sc_gap": 300e-9 # the gap between the side coupling waveguide and the caivty
     }
         
     rib_sim_params = {
@@ -91,7 +91,7 @@ class cavity_sim_parameters:
         "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
         "simulationData_fileName": "SiC_500nm_testRun_t1.csv",
         "mesh_res": 15e-9, # specify the resolution of the meshing we are using 
-        "mesh_box": Vec3(4e-6,3e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
+        "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
         "running_cluster": True, # specify if we are running the code on the cluster 
         "running_local": False, # specify if we are running on local PC
         "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
