@@ -40,6 +40,7 @@ rib_sim_params["mode"] = 'TM'
 rib_cavity_params["C_lattice_tapering_prefactor"] = 0.867
 rib_sim_params["freq_span"] = 3e14 
 rib_sim_params["simulationData_fileName"] = "SiC_500nm_debugging_cavity.csv"
+rib_cavity_params["sc_gap"] = 6e-7
 
 # testing the rib cavity
 r1 = sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params)
