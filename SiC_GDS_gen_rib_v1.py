@@ -102,9 +102,21 @@ rib_sim_params = cavity_sim_parameters.rib_sim_params
 rib_sim_params["running_cluster"] = False  
 rib_sim_params["running_local"] = True
 
+rib_cavity_params["a"] = 3e-07 # for the TM mode 
+rib_cavity_params["hx"] = 1.8e-07 # for the TM mode 
+rib_cavity_params["hy"] = 3.84e-07 # for the TM mode 
+rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
+rib_cavity_params["C_lattice_tapering_prefactor"] = 0.867
+rib_cavity_params["sc_gap"] = 4e-7
+
+# testing the side coupling code 
+rib_cavity_params["do_sc"] = True
+rib_sim_params["running_cluster"] = True  
+rib_sim_params["running_local"] = False
+
 # generate GDS from the design (dosage test)
 cavity_temp = build_rib_cavity_v1(rib_cavity_params,rib_sim_params)
 parser = DielectricExtrusionFaceGDSParser(cavity_temp)
 parser.show()
-file_name = "SiC_rib_cavity_v1_test.gds"
+file_name = "SiC_rib_cavity_sideCoupling_v1_test.gds"
 parser.save(file_name)
