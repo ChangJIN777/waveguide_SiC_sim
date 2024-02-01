@@ -522,7 +522,6 @@ def buildTaperRegion_elliptical_asymmetric(a_L,a_R,amin,hx,hy,TN_L,TN_R,w0,h0,n_
         taper_cells += [temp_cell]
     return taper_cells
 
-
 def unitCellOptimization_SiC_elliptical(params):
     """this function is used to optimize the unit cells for the waveguide regions of the cavity
 
@@ -1497,7 +1496,7 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
 
     f0 = 234.2e12 # for silicon at 1280nm 
     f_span = 5e12 
-    r2 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(f0-f_span, f0+f_span, 150000))
+    r2 = cell.simulate("bandgap", freqs=(f0-f_span, f0+f_span, 150000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
