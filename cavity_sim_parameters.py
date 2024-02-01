@@ -60,16 +60,17 @@ class cavity_sim_parameters:
         "a": 3e-07, #lattice constant 
         "hx": 1.8e-07,
         "hy": 3.84e-07,
-        "thickness": 500e-9,
+        "thickness": 220e-9,
         "beam_width": 4e-07,
+        "spine_width": 0.1e-6, # um 
         "nPoints": 20, # specify the number of points used to make up the gaussian curve
         # material parameters
-        "n_refractive": 2.6,
+        "n_refractive": 3.5,
         # device parameters 
         "MN_Left": 10, # the number of mirror cells on the left side of the cavity 
         "MN_Right": 10, # the number of mirror cells on the right side of the cavity
         "TN": 6, # symmetric cavity: the number of unit cells in the tapering region 
-        "WN": 3, # the number of unit cells in the waveguide region 
+        "WN": 5, # the number of unit cells in the waveguide region 
         "WG_hole_tapering_prefactor": 0.437, # For the waveguide region: the prefactor that defines the minimum hole dimensions we are tapering to
         "C_lattice_tapering_prefactor": 0.867, # For the cavity region: the prefactor that defines the minimum lattice constant in the cavity region 
         "WG_lattice_tapering_prefactor": 0.85, # For the waveguide region: the prefactor that defines the minimum lattice constant in the waveguide region 
@@ -97,6 +98,6 @@ class cavity_sim_parameters:
         "mesh_accuracy": 4, # specify the mesh accuracy of the engine 
         "boundary_condition": ['ymin','zmin'], # specify the symmetry to save time on simulation
         "show_field_profile": False, 
-        "mode": 'TE', # specify the orientation of the mode profile s
+        "mode": 'TM', # specify the orientation of the mode profile s
         "freq_span": 3e14 # the span of frequency used for the dipole source 
     }

@@ -1423,6 +1423,53 @@ def buildUnitCell_rib(a,hx,hy,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
         rib_cell = UnitCell(structures=[cell_box, rib_up, rib_down], size=Vec3(a,w0,h0), engine=engine)
     return rib_cell
 
+def gen_ribUnitCell_v2(hy,latticeConstant,spine_width,n_f,thickness,engine,xPos=0,yPos=0,upperFactor=1,lowerFactor=1):
+        """_summary_
+
+        Args:
+            xPos (float, um): the position of the rib unit cell 
+            amplitude (float, um): the amplitude of the rib unit cell 
+            latticeConstant (float, um): the lattice constant of the unit cell 
+            spine_width (float, um): the spin width of the unit cell
+            thickness (_type_, optional): _description_. Defaults to cavity_params['thickness'].
+            n_f (_type_, optional): _description_. Defaults to cavity_params['n_refractive'].
+
+        Returns:
+            _type_: _description_
+        """
+        position = xPos
+        beam_width = 2*hy+spine_width
+
+        thickness=thickness
+
+        e = 6 # Exponent
+        
+        array = []
+
+        xaxis = np.linspace(position-latticeConstant/2, position + latticeConstant/2, 501) # Defining x-axis
+        x = np.linspace(-latticeConstant/2,latticeConstant/2,501)
+
+        array = upperFactor*hy*((np.cos((np.pi/latticeConstant)*x))**e)+spine_width/2+yPos # Making the unit cell
+        array2 = -lowerFactor*hy*((np.cos((np.pi/latticeConstant)*x))**e)-spine_width/2+yPos
+            
+        rib_up_verts = []
+        rib_down_verts = []
+
+        for (x,y_top,y_bottom) in zip(xaxis,array,array2):
+            rib_up_verts.append((x,y_top))
+            rib_down_verts.append((x,y_bottom))
+
+        cell_box = BoxStructure(Vec3(0), Vec3(latticeConstant,beam_width,thickness), DielectricMaterial(1, order=2, color="red"))
+        spine = BoxStructure(Vec3(0), Vec3(latticeConstant,spine_width,thickness), DielectricMaterial(n_f, order=1, color="blue"))
+        rib_up = PolygonStructure(pos=Vec3(0), verts=rib_up_verts, height=thickness,
+                                    material=DielectricMaterial(n_f, order=1, color="blue"))
+        
+        rib_down = PolygonStructure(pos=Vec3(0), verts=rib_down_verts, height=thickness,
+                                        material=DielectricMaterial(n_f, order=1, color="blue"))
+        rib_cell = UnitCell(structures=[cell_box, rib_up, rib_down,spine], size=Vec3(latticeConstant,beam_width,thickness), engine=engine)
+
+        return rib_cell
+
 def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     """the function generates the bandgap associated with the simulated unit cell for the rib cavities
 
@@ -1439,15 +1486,18 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     print("Starting sim ===================================")
     start_time = datetime.now()
     a = rib_cavity_params["a"]
-    hx = rib_cavity_params["hx"]
+    spine_width = rib_cavity_params["spine_width"]
     hy = rib_cavity_params["hy"]
+    thickness = rib_cavity_params["thickness"]
     w0 = rib_cavity_params["beam_width"]
     h0 = rib_cavity_params["thickness"]
     n_f = rib_cavity_params["n_refractive"]
     engine, man_mesh = setup_engine(rib_sim_params)
-    cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
+    cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine)
 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.8e15, 100000))
+    f0 = 234.2e12 # for silicon at 1280nm 
+    f_span = 5e12 
+    r2 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(f0-f_span, f0+f_span, 150000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
@@ -1467,13 +1517,13 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     print("Delta k: %f " % delta_k)
     print('\n')
 
-    # report the relevant data 
-    target_frequency = rib_sim_params["target_frequency"]
-    detuning = np.abs(target_frequency - mg)
-    data = [a,hx,hy,bg,mg,diel_freq,air_freq]
-    file_name = rib_sim_params["simulationData_fileName"]
-    file_loc = rib_sim_params["simulationData_loc"]
-    record_data(data,file_name,file_loc)
+    # # report the relevant data 
+    # target_frequency = rib_sim_params["target_frequency"]
+    # detuning = np.abs(target_frequency - mg)
+    # data = [a,hx,hy,bg,mg,diel_freq,air_freq]
+    # file_name = rib_sim_params["simulationData_fileName"]
+    # file_loc = rib_sim_params["simulationData_loc"]
+    # record_data(data,file_name,file_loc)
 
     return diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg
 
@@ -1481,14 +1531,17 @@ def band_structure_rib(rib_cavity_params,rib_sim_params):
     
     start_time = datetime.now()
     a = rib_cavity_params["a"]
-    hx = rib_cavity_params["hx"]
+    spine_width = rib_cavity_params["spine_width"]
     hy = rib_cavity_params["hy"]
+    thickness = rib_cavity_params["thickness"]
     w0 = rib_cavity_params["beam_width"]
     h0 = rib_cavity_params["thickness"]
     n_f = rib_cavity_params["n_refractive"]
     engine, man_mesh = setup_engine(rib_sim_params)
-    cell = buildUnitCell_rib(a,hx,hy,w0,h0,n_f,engine)
-    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(0.15e15, 0.5e15, 150000))
+    cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine)
+    f0 = 234.2e12 # for silicon at 1280nm 
+    f_span = 5e12 
+    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(f0-f_span, f0+f_span, 150000))
     # # # Plot the bandstructure
     r1.show()
     end_time = datetime.now()
@@ -1611,8 +1664,6 @@ def sim_rib_Cavity_v1(rib_cavity_params,rib_sim_params):
     report_results(r1['res'],rib_cavity_params,rib_sim_params,file_name,file_loc)
 
     return r1
-
-
 
 def buildMirrorRegion_rib(a,hx,hy,MN,w0,h0,n_f,do_sc,sc_gap,sc_cell_box,engine):
     """the function used to build rib unit cells
