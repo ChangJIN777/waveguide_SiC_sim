@@ -1494,9 +1494,9 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     engine, man_mesh = setup_engine(rib_sim_params)
     cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine)
 
-    f0 = 234.2e12 # for silicon at 1280nm 
-    f_span = 5e12 
-    r2 = cell.simulate("bandgap", freqs=(f0-f_span, f0+f_span, 150000))
+    # f0 = 234.2e12 # for silicon at 1280nm 
+    # f_span = 5e12 
+    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 

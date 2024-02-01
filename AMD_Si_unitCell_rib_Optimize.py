@@ -17,30 +17,32 @@ from cavity_sim_parameters import *
 
 
 # import the cavity and simulation parameters 
-rib_cavity_params = cavity_sim_parameters.rib_cavity_params
-rib_sim_params = cavity_sim_parameters.rib_sim_params
+sim_params = cavity_sim_parameters.rib_sim_params
+cavity_params = cavity_sim_parameters.rib_cavity_params
 
-# define the function used for optimizing the rib unit cells 
-def ribUnitCellOptimization(p):
-    """this function is used to optimize the unit cells of rib cavities
-    Args:
-        params (list): 
-            params[0]: the lattice constant a
-            params[1]: hx
-            params[2]: hy
-    """
-    rib_cavity_params["a"] = p[0]
-    rib_cavity_params["hx"] = p[1]
-    rib_cavity_params["hy"] = p[2]
+# # define the function used for optimizing the rib unit cells 
+# def ribUnitCellOptimization(p):
+#     """this function is used to optimize the unit cells of rib cavities
+#     Args:
+#         params (list): 
+#             params[0]: the lattice constant a
+#             params[1]: hx
+#             params[2]: hy
+#     """
+#     rib_cavity_params["a"] = p[0]
+#     rib_cavity_params["hx"] = p[1]
+#     rib_cavity_params["hy"] = p[2]
 
-    fitness = (rib_cavity_params,rib_sim_params)
-    return -1*fitness
+#     fitness = (rib_cavity_params,rib_sim_params)
+#     return -1*fitness
 
 
 # running the simulation locally 
-rib_sim_params["running_cluster"] = True
-rib_sim_params["running_local"] = False
-rib_sim_params["hide_GUI"] = True
+sim_params["running_cluster"] = False
+sim_params["running_local"] = True
+sim_params["hide_GUI"] = True
+sim_params["save_fsps"] = False
+
 
 ## DEBUGGING ##
 # testing the bandgap simulation 
@@ -49,27 +51,27 @@ rib_sim_params["hide_GUI"] = True
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 
 # # sweep the dimensions of the rib unit cell 
-rib_sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TM_t1.txt"
-rib_cavity_params["beam_width"] = 4e-07 # for the TM mode 
-a = 3.05e-07
+sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TM_t1.txt"
+a = 3.e-07
 hx = 1.8e-07 # for the TM mode 
 hy = 3.84e-07 # for the TM mode 
-a_min = a*0.95
-a_max = a*1.05
+a_min = a*0.5
+a_max = a
 hx_min = hx*0.8
 hx_max = hx*1.2
 hy_min = hy*0.8
 hy_max = hy*1.2
-a_list = np.linspace(a_min,a_max,5)
+a_list = np.linspace(a_min,a_max,15)
 hx_list = np.linspace(hx_min,hx_max,10)
 hy_list = np.linspace(hy_min,hy_max,10)
+sim_data_folder = sim_params["simulationData_loc"]
+sim_data_fileName = sim_params["simulationData_fileName"]
 for a in a_list:
-    for hx in hx_list:
-        for hy in hy_list:
-            rib_cavity_params["a"] = a
-            rib_cavity_params["hx"] = hx 
-            rib_cavity_params["hy"] = hy
-            sim_bandGap_rib(rib_cavity_params,rib_sim_params)
+    cavity_params['a'] = a
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_rib(cavity_params,sim_params)
+    data = [a, diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg]
+    record_data(data,sim_data_fileName,sim_data_folder)
+
 
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################
 # a0 = rib_cavity_params["a"]
