@@ -1790,11 +1790,7 @@ def ribUnitCellOptimization_Si(params):
     """
     print("Starting sim ===================") # for debugging purpose
     a = params[0]
-    hx = params[1]
-    hy = params[2]
     rib_cavity_params['a'] = a
-    rib_cavity_params['hx'] = hx
-    rib_cavity_params['hy'] = hy 
     thickness = 220e-9
     n_f = 3.5
     target_frequency = 234.213e12 
@@ -1810,13 +1806,11 @@ def ribUnitCellOptimization_Si(params):
     fitness = -1*bg_mg_rat*wavelength_pen
     
     a_nm = a*1e9
-    hx_nm = hx*1e9
-    hy_nm = hy*1e9
     wavelength_detune_nm = wavelength_detune*1e9
-    print("a: %f (nm), hx: %f, hy: %f" % (a_nm, hx_nm, hy_nm))
+    print("a: %f (nm)" % (a_nm))
     print("Detune: %f (nm)" % (wavelength_detune_nm))
     print("Fitness: %f" % (fitness))   
-    data = [a_nm,hx_nm,hy_nm,bg_mg_rat,detuning,fitness] 
+    data = [a_nm,bg_mg_rat,detuning,fitness] 
     record_data(data,sim_data_fileName,sim_data_folder)
     
     return fitness
