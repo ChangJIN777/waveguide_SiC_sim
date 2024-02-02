@@ -17,10 +17,10 @@ class cavity_sim_parameters:
         "a": 2.655634610941198e-7, #lattice constant 
         "hx": 9.347181843644768e-08,
         "hy": 1.191433948602531e-07,
-        "thickness": 500e-9,
-        "beam_width": 5.050493279419303e-07,
+        "thickness": 220e-9,
+        "beam_width": 284.3e-9,
         # material parameters
-        "n_refractive": 2.6,
+        "n_refractive": 3.5,
         # device parameters 
         "MN_Left": 10, # the number of mirror cells on the left side of the cavity 
         "MN_Right": 6, # the number of mirror cells on the right side of the cavity
@@ -45,7 +45,7 @@ class cavity_sim_parameters:
         "hide_GUI": False, # specify if we are going to hide the guide 
         "save_fsps": True, # specify if we are going to save the fsps file 
         "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
-        "simulationData_fileName": "SiC_500nm_testRun_t1.csv",
+        "simulationData_fileName": "Si_220nm_hoe_unitcell_optimization_TE_t1.csv",
         "mesh_res": 15e-9, # specify the resolution of the meshing we are using 
         "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
         "running_cluster": False, # specify if we are running the code on the cluster 
@@ -90,7 +90,7 @@ class cavity_sim_parameters:
         "hide_GUI": False, # specify if we are going to hide the guide 
         "save_fsps": False, # specify if we are going to save the fsps file 
         "simulationData_loc": "./sim_data/", # the folder we are going to store the simulation data files in 
-        "simulationData_fileName": "SiC_500nm_testRun_t1.csv",
+        "simulationData_fileName": "Si_220nm_rib_unitcell_testSweep_TM_t2.csv",
         "mesh_res": 15e-9, # specify the resolution of the meshing we are using 
         "mesh_box": Vec3(4e-6,2e-6,2e-6), # specify the size of the fine meshing box (12nm for accuracy)
         "running_cluster": True, # specify if we are running the code on the cluster 

@@ -51,35 +51,35 @@ sim_params["save_fsps"] = False
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 
 # # sweep the dimensions of the rib unit cell 
-sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TM_t1.txt"
-a = 3.e-07
+sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TM_t2.txt"
+a = 6.e-07
 hx = 1.8e-07 # for the TM mode 
 hy = 3.84e-07 # for the TM mode 
-a_min = a*0.5
-a_max = a
+a_min = a
+a_max = a*1.5
 hx_min = hx*0.8
 hx_max = hx*1.2
 hy_min = hy*0.8
 hy_max = hy*1.2
-a_list = np.linspace(a_min,a_max,15)
+a_list = np.linspace(a_min,a_max,5)
 hx_list = np.linspace(hx_min,hx_max,10)
 hy_list = np.linspace(hy_min,hy_max,10)
-sim_data_folder = sim_params["simulationData_loc"]
-sim_data_fileName = sim_params["simulationData_fileName"]
-for a in a_list:
-    cavity_params['a'] = a
-    diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_rib(cavity_params,sim_params)
-    data = [a, diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg]
-    record_data(data,sim_data_fileName,sim_data_folder)
+# sim_data_folder = sim_params["simulationData_loc"]
+# sim_data_fileName = sim_params["simulationData_fileName"]
+# for a in a_list:
+#     cavity_params['a'] = a
+#     diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_rib(cavity_params,sim_params)
+#     data = [a, diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg]
+#     record_data(data,sim_data_fileName,sim_data_folder)
 
 
-# # optimizing for the mirror unit cells (SWEEPING CODE) ###################
-# a0 = rib_cavity_params["a"]
-# hx0 = rib_cavity_params["hx"]
-# hy0 = rib_cavity_params["hy"]
-# p0 = [a0,hx0,hy0]
-# bnd = ((2e-07,4e-07),(0,4e-7),(0,5e-7))
-# popt = scipy.optimize.minimize(ribUnitCellOptimization,p0,method='Nelder-Mead')
+# optimizing for the mirror unit cells (SWEEPING CODE) ###################
+a0 = 7.5e-7
+hx0 = 1.8e-7
+hy0 = 3.84e-07
+p0 = [a0,hx0,hy0]
+bnd = ((0,None),(0,None),(0,None))
+popt = scipy.optimize.minimize(ribUnitCellOptimization_Si,p0,method='Nelder-Mead')
 
 
 

@@ -13,6 +13,14 @@ import os
 from datetime import datetime
 import csv
 
+from cavity_sim_parameters import *
+
+# import the cavity and simulation parameters 
+sim_params = cavity_sim_parameters.sim_params
+cavity_params = cavity_sim_parameters.cavity_params
+rib_sim_params = cavity_sim_parameters.rib_sim_params
+rib_cavity_params = cavity_sim_parameters.rib_cavity_params
+
 #define the functions we are using to build the cavity geometry
 def cubic_tapering(a,amin,taperNum):
     """
@@ -1732,5 +1740,83 @@ def ribUnitCellOptimization_SiC(rib_cavity_params,rib_sim_params):
     print("a: %f (nm), hx: %f, hy: %f" % (a_nm, hx_nm, hy_nm))
     print("Detune: %f (nm)" % (wavelength_detune_nm))
     print("Fitness: %f" % (fitness))    
+    
+    return fitness
+
+def ellipseUnitCellOptimization_Si(params):
+    """this function is used to optimize the unit cells for the mirror regions of the cavity
+
+    Returns:
+        fitness: the optimization parameter 
+    """
+    print("Starting sim ===================") # for debugging purpose
+    a = params[0]
+    hx = params[1]
+    hy = params[2]
+    beam_width = 284.3e-9
+    thickness = 220e-9
+    n_f = 3.5
+    target_frequency = 234.213e12 
+    engine, mesh = setup_engine(sim_params)
+    sim_data_folder = sim_params["simulationData_loc"]
+    sim_data_fileName = sim_params["simulationData_fileName"]
+    sim_params["save_fsps"] = False
+    # simulate the band gap of the unit cell 
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_elliptical(a,hx,hy,beam_width,thickness,n_f,engine)
+    wavelength_tolerance = 5e-9
+    wavelength_detune = (3e8)/(target_frequency)-(3e8)/(mg)
+    wavelength_pen = np.exp(-((wavelength_detune)/wavelength_tolerance)**2) # the wavelength detuning penalty
+    detuning = target_frequency - mg
+    fitness = -1*bg_mg_rat*wavelength_pen
+    
+    a_nm = a*1e9
+    hx_nm = hx*1e9
+    hy_nm = hy*1e9
+    wavelength_detune_nm = wavelength_detune*1e9
+    print("a: %f (nm), hx: %f, hy: %f" % (a_nm, hx_nm, hy_nm))
+    print("Detune: %f (nm)" % (wavelength_detune_nm))
+    print("Fitness: %f" % (fitness))   
+    data = [a_nm,hx_nm,hy_nm,bg_mg_rat,detuning,fitness] 
+    record_data(data,sim_data_fileName,sim_data_folder)
+    
+    return fitness
+
+
+def ribUnitCellOptimization_Si(params):
+    """this function is used to optimize the unit cells for the mirror regions of the cavity
+
+    Returns:
+        fitness: the optimization parameter 
+    """
+    print("Starting sim ===================") # for debugging purpose
+    a = params[0]
+    hx = params[1]
+    hy = params[2]
+    rib_cavity_params['a'] = a
+    rib_cavity_params['hx'] = hx
+    rib_cavity_params['hy'] = hy 
+    thickness = 220e-9
+    n_f = 3.5
+    target_frequency = 234.213e12 
+    sim_data_folder = rib_sim_params["simulationData_loc"]
+    sim_data_fileName = rib_sim_params["simulationData_fileName"]
+    rib_sim_params["save_fsps"] = False
+    # simulate the band gap of the unit cell 
+    diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_rib(rib_cavity_params,rib_sim_params)
+    wavelength_tolerance = 1e-9
+    wavelength_detune = (3e8)/(target_frequency)-(3e8)/(mg)
+    wavelength_pen = np.exp(-((wavelength_detune)/wavelength_tolerance)**2) # the wavelength detuning penalty
+    detuning = target_frequency - mg
+    fitness = -1*bg_mg_rat*wavelength_pen
+    
+    a_nm = a*1e9
+    hx_nm = hx*1e9
+    hy_nm = hy*1e9
+    wavelength_detune_nm = wavelength_detune*1e9
+    print("a: %f (nm), hx: %f, hy: %f" % (a_nm, hx_nm, hy_nm))
+    print("Detune: %f (nm)" % (wavelength_detune_nm))
+    print("Fitness: %f" % (fitness))   
+    data = [a_nm,hx_nm,hy_nm,bg_mg_rat,detuning,fitness] 
+    record_data(data,sim_data_fileName,sim_data_folder)
     
     return fitness
