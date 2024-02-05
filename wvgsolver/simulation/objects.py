@@ -123,7 +123,7 @@ class UnitCell(SimulationObject):
     return first, second
 
   def _simulate_bandstructure(self, sess, ks=(0, 0.5, 20), freqs=(0.2e15, 0.6e15, 100000), run_time=600e-15, \
-    window_pos=0.5, mode_orientation='TM', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
+    window_pos=0.5, mode_orientation='TE', ndipoles=5, dipole_region=Vec3(1, 0, 0), dipole_directions=Vec3(0, 1, 0), \
     sim_size=3, analyze_region=0.1): 
     """Simulate the bandstructure of this unit cell by calculating the frequency domain left after an
     electric dipole pulse is allowed to dissipate through an infinite (implemented using boundary conditions)

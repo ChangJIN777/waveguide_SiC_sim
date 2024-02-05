@@ -51,7 +51,7 @@ sim_params["save_fsps"] = False
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 
 # # sweep the dimensions of the rib unit cell 
-sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TM_t3.txt"
+sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TE_t1.txt"
 a = 6.e-07
 spine_width = 2e-07 # for the TM mode 
 hy = 3.456e-07 # for the TM mode 
