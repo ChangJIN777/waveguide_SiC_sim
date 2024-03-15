@@ -52,11 +52,11 @@ sim_params["save_fsps"] = False
 
 # # sweep the dimensions of the rib unit cell 
 sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TE_t1.txt"
-a = 6.e-07
-spine_width = 2e-07 # for the TM mode 
+a = 600e-09
+spine_width = 2e-07 # for the rib cavities
 hy = 3.456e-07 # for the TM mode 
-a_min = a
-a_max = a*1.5
+a_min = a*0.8
+a_max = a*1.2
 spine_width_min = spine_width
 spine_width_max = spine_width*3
 hy_min = hy*0.8

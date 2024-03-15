@@ -67,7 +67,7 @@ class UnitCell(SimulationObject):
   def get_size(self):
     return self._size
 
-  def _simulate_bandgap(self, sess, freqs=(0.2e15, 0.6e15, 100000), min_gap=1e13, k=0.5, **kwargs):
+  def _simulate_bandgap(self, sess, freqs=(0.1e15, 0.6e15, 100000), min_gap=1e13, k=0.5, **kwargs):
     """Simulates and calculates the bandgap of this unit cell. It does this by simulating the 
     bandstructure at the given normalized wave vector (usually 0.5), finding the two highest peaks
     in the frequency domain around the region of interest, and returns them sorted.

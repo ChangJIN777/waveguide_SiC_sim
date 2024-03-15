@@ -210,7 +210,7 @@ def sim_bandGap_elliptical(a,hx,hy,w0,h0,n_f,engine):
     start_time = datetime.now()
     cell = buildUnitCell_elliptical_v1(a,hx,hy,w0,h0,n_f,engine)
 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.6e15, 100000))
+    r2 = cell.simulate("bandgap", freqs=(0.05e15, 0.5e15, 100000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
