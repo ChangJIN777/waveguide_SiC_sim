@@ -369,7 +369,7 @@ def unitCellOptimization_SiC(params):
     return detuning
 
 def record_data(data,file_name,file_loc):
-    denstination = file_loc + file_name
+    denstination = file_loc + file_nam
     with open(denstination,"a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow(data)
@@ -1504,7 +1504,7 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
 
     # f0 = 234.2e12 # for silicon at 1280nm 
     # f_span = 5e12 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
+    r2 = cell.simulate("bandgap", freqs=(0.10e15, 0.5e15, 150000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
