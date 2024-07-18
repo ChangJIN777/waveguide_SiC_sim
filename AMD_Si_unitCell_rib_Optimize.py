@@ -51,28 +51,26 @@ sim_params["save_fsps"] = False
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 
 # # sweep the dimensions of the rib unit cell 
-sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TE_t1.txt"
-a = 600e-09
+sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TE_071724_t1.csv"
+a = 5.4e-7
 spine_width = 2e-07 # for the rib cavities
-hy = 3.456e-07 # for the TM mode 
-a_min = a*0.8
-a_max = a*1.2
-spine_width_min = spine_width
-spine_width_max = spine_width*3
+hy = 3.456e-07 # for the rib cavities
+a_min = a*0.9
+a_max = a*1.5
 hy_min = hy*0.8
 hy_max = hy*1.2
-a_list = np.linspace(a_min,a_max,5)
-spine_width_list = np.linspace(spine_width_min,spine_width_max,5)
+a_list = np.linspace(a_min,a_max,10)
 hy_list = np.linspace(hy_min,hy_max,5)
-sim_data_folder = sim_params["simulationData_loc"]
+sim_data_folder = './waveguide_SiC_sim/sim_data/'
 sim_data_fileName = sim_params["simulationData_fileName"]
 for a in a_list:
-    cavity_params['a'] = a
-    cavity_params['hy'] = hy
-    cavity_params['spine_width'] = spine_width
-    diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_rib(cavity_params,sim_params)
-    data = [a*1e9, hy*1e9, spine_width*1e9, diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg]
-    record_data(data,sim_data_fileName,sim_data_folder)
+    for hy in hy_list:
+        cavity_params['a'] = a
+        cavity_params['hy'] = hy
+        cavity_params['spine_width'] = spine_width
+        diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg = sim_bandGap_rib(cavity_params,sim_params)
+        data = [a*1e9, hy*1e9, spine_width*1e9, diel_freq, air_freq, mg, bg_mg_rat, delta_k, bg]
+        record_data(data,sim_data_fileName,sim_data_folder)
 
 
 # # optimizing for the mirror unit cells (SWEEPING CODE) ###################

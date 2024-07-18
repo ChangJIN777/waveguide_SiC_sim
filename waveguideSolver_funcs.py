@@ -1468,10 +1468,10 @@ def gen_ribUnitCell_v2(hy,latticeConstant,spine_width,n_f,thickness,engine,xPos=
 
         cell_box = BoxStructure(Vec3(0), Vec3(latticeConstant,beam_width,thickness), DielectricMaterial(1, order=2, color="red"))
         spine = BoxStructure(Vec3(0), Vec3(latticeConstant,spine_width,thickness), DielectricMaterial(n_f, order=1, color="blue"))
-        rib_up = PolygonStructure(pos=Vec3(0), verts=rib_up_verts, height=thickness,
+        rib_up = PolygonStructure(pos=Vec3(position,0,0), verts=rib_up_verts, height=thickness,
                                     material=DielectricMaterial(n_f, order=1, color="blue"))
         
-        rib_down = PolygonStructure(pos=Vec3(0), verts=rib_down_verts, height=thickness,
+        rib_down = PolygonStructure(pos=Vec3(position,0,0), verts=rib_down_verts, height=thickness,
                                         material=DielectricMaterial(n_f, order=1, color="blue"))
         rib_cell = UnitCell(structures=[cell_box, rib_up, rib_down,spine], size=Vec3(latticeConstant,beam_width,thickness), engine=engine)
 
@@ -1545,10 +1545,10 @@ def band_structure_rib(rib_cavity_params,rib_sim_params):
     h0 = rib_cavity_params["thickness"]
     n_f = rib_cavity_params["n_refractive"]
     engine, man_mesh = setup_engine(rib_sim_params)
-    cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine)
-    f0 = 234.2e12 # for silicon at 1280nm 
-    f_span = 5e12 
-    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(f0-f_span, f0+f_span, 150000))
+    cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine,xPos=a/2)
+    f0 = 226.08e12 # for silicon at 1326nm 
+    f_span = 10e12 
+    r1 = cell.simulate("bandstructure", ks=(0.1, 0.5, 8), freqs=(f0-f_span, f0+f_span, 150000))
     # # # Plot the bandstructure
     r1.show()
     end_time = datetime.now()
