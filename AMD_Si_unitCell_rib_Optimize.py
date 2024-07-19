@@ -51,17 +51,19 @@ sim_params["save_fsps"] = False
 # band_structure_rib(rib_cavity_params,rib_sim_params)
 
 # # sweep the dimensions of the rib unit cell 
-sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TE_t1.txt"
-a = 600e-09
-spine_width = 2e-07 # for the rib cavities
-hy = 3.456e-07 # for the TM mode 
-a_min = a*0.8
-a_max = a*1.2
+sim_params["simulationData_fileName"] = "Si_220nm_rib_unitcell_testSweep_TE_071824.txt"
+sim_params["simulationData_loc"] = "./waveguide_SiC_sim/sim_data/"
+nm = 1e-9 # nanometers in microns
+a = 500*nm
+spine_width = 200*nm # for the rib cavities
+hy = 414.72*nm # for the TM mode 
+a_min = a*0.4
+a_max = a
 spine_width_min = spine_width
 spine_width_max = spine_width*3
 hy_min = hy*0.8
 hy_max = hy*1.2
-a_list = np.linspace(a_min,a_max,5)
+a_list = np.linspace(a_min,a_max,15)
 spine_width_list = np.linspace(spine_width_min,spine_width_max,5)
 hy_list = np.linspace(hy_min,hy_max,5)
 sim_data_folder = sim_params["simulationData_loc"]

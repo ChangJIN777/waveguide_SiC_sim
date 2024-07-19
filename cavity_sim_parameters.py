@@ -20,7 +20,7 @@ class cavity_sim_parameters:
         "thickness": 220e-9,
         "beam_width": 284.3e-9,
         # material parameters
-        "n_refractive": 3.5,
+        "n_refractive": 3.9,
         # device parameters 
         "MN_Left": 10, # the number of mirror cells on the left side of the cavity 
         "MN_Right": 6, # the number of mirror cells on the right side of the cavity

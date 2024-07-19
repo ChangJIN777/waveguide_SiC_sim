@@ -1463,6 +1463,8 @@ def gen_ribUnitCell_v2(hy,latticeConstant,spine_width,n_f,thickness,engine,xPos=
         rib_down_verts = []
 
         for (x,y_top,y_bottom) in zip(xaxis,array,array2):
+            # rib_up_verts.append((x,y_top))
+            # rib_down_verts.append((x,y_bottom))
             rib_up_verts.append((x,y_top))
             rib_down_verts.append((x,y_bottom))
 
@@ -1500,11 +1502,11 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
     h0 = rib_cavity_params["thickness"]
     n_f = rib_cavity_params["n_refractive"]
     engine, man_mesh = setup_engine(rib_sim_params)
-    cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine)
+    cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine,xPos=a/2)
 
     # f0 = 234.2e12 # for silicon at 1280nm 
     # f_span = 5e12 
-    r2 = cell.simulate("bandgap", freqs=(0.15e15, 0.5e15, 100000))
+    r2 = cell.simulate("bandgap", freqs=(0.1e15, 0.5e15, 100000))
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
