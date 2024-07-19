@@ -369,7 +369,7 @@ def unitCellOptimization_SiC(params):
     return detuning
 
 def record_data(data,file_name,file_loc):
-    denstination = file_loc + file_name
+    denstination = file_loc + file_nam
     with open(denstination,"a") as file_csv:
         writer = csv.writer(file_csv, delimiter="\t")
         writer.writerow(data)
@@ -1470,10 +1470,10 @@ def gen_ribUnitCell_v2(hy,latticeConstant,spine_width,n_f,thickness,engine,xPos=
 
         cell_box = BoxStructure(Vec3(0), Vec3(latticeConstant,beam_width,thickness), DielectricMaterial(1, order=2, color="red"))
         spine = BoxStructure(Vec3(0), Vec3(latticeConstant,spine_width,thickness), DielectricMaterial(n_f, order=1, color="blue"))
-        rib_up = PolygonStructure(pos=Vec3(0), verts=rib_up_verts, height=thickness,
+        rib_up = PolygonStructure(pos=Vec3(position,0,0), verts=rib_up_verts, height=thickness,
                                     material=DielectricMaterial(n_f, order=1, color="blue"))
         
-        rib_down = PolygonStructure(pos=Vec3(0), verts=rib_down_verts, height=thickness,
+        rib_down = PolygonStructure(pos=Vec3(position,0,0), verts=rib_down_verts, height=thickness,
                                         material=DielectricMaterial(n_f, order=1, color="blue"))
         rib_cell = UnitCell(structures=[cell_box, rib_up, rib_down,spine], size=Vec3(latticeConstant,beam_width,thickness), engine=engine)
 
@@ -1506,7 +1506,11 @@ def sim_bandGap_rib(rib_cavity_params,rib_sim_params):
 
     # f0 = 234.2e12 # for silicon at 1280nm 
     # f_span = 5e12 
+<<<<<<< HEAD
     r2 = cell.simulate("bandgap", freqs=(0.1e15, 0.5e15, 100000))
+=======
+    r2 = cell.simulate("bandgap", freqs=(0.10e15, 0.5e15, 150000))
+>>>>>>> 2aa04ed5c6e8f90dcaa1482d36f1a2a3d31ef58b
 
     diel_freq = r2[0] # the dielectric band frequency 
     air_freq = r2[1] # the air band frequyency 
@@ -1547,10 +1551,10 @@ def band_structure_rib(rib_cavity_params,rib_sim_params):
     h0 = rib_cavity_params["thickness"]
     n_f = rib_cavity_params["n_refractive"]
     engine, man_mesh = setup_engine(rib_sim_params)
-    cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine)
-    f0 = 234.2e12 # for silicon at 1280nm 
-    f_span = 5e12 
-    r1 = cell.simulate("bandstructure", ks=(0.2, 0.5, 8), freqs=(f0-f_span, f0+f_span, 150000))
+    cell = gen_ribUnitCell_v2(hy,a,spine_width,n_f,thickness,engine,xPos=a/2)
+    f0 = 226.08e12 # for silicon at 1326nm 
+    f_span = 10e12 
+    r1 = cell.simulate("bandstructure", ks=(0.1, 0.5, 8), freqs=(f0-f_span, f0+f_span, 150000))
     # # # Plot the bandstructure
     r1.show()
     end_time = datetime.now()
